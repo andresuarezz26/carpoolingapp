@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CarpoolingApp</string>
+    <string name="title_activity_auth">AuthActivity</string>
+    <string name="error_username_empry">Usernmae cannot be empty</string>
+    <string name="error_password_empry">Password cannot be empty</string>
+    <string name="error_login_invalid">Invalid Login</string>
+</resources>
