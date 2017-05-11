@@ -2,9 +2,9 @@ package com.angular.gerardosuarez.carpoolingapp.mvp.presenter;
 
 import android.content.Intent;
 
+import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.activity.AuthActivity;
 import com.angular.gerardosuarez.carpoolingapp.activity.MainActivity;
-import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.mvp.event.OnLoginClickedEvent;
 import com.angular.gerardosuarez.carpoolingapp.mvp.event.OnLoginEvent;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.AuthModel;
@@ -26,42 +26,41 @@ public class AuthPresenter {
     }
 
     @Subscribe
-    public void onLoginClicked (OnLoginClickedEvent event){
+    public void onLoginClicked(OnLoginClickedEvent event) {
 
         String username = event.getUsername();
 
-        if (!Validator.getInstance().stringNotNull(username)){
+        if (!Validator.getInstance().stringNotNull(username)) {
             view.showErrorMessage(R.string.error_username_empry);
             return;
         }
 
         String password = event.getPassword();
 
-        if (!Validator.getInstance().stringNotNull(password)){
+        if (!Validator.getInstance().stringNotNull(password)) {
             view.showErrorMessage(R.string.error_password_empry);
             return;
         }
 
         model.authUser(username, password);
 
-        }
+    }
 
     @Subscribe
-    public void onLoginEvent (OnLoginEvent event) {
-        if (event.isSuccess()){
+    public void onLoginEvent(OnLoginEvent event) {
+        if (event.isSuccess()) {
             showMain();
             return;
-        }else{
+        } else {
             view.showErrorMessage(R.string.error_login_invalid);
         }
     }
 
-    public void showMain (){
-       final AuthActivity activity = (AuthActivity) view.getActivity();
-        if (activity == null){
+    public void showMain() {
+        final AuthActivity activity = (AuthActivity) view.getActivity();
+        if (activity == null) {
             return;
         }
-
         activity.startActivity(new Intent(activity, MainActivity.class));
     }
 }
