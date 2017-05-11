@@ -7,12 +7,12 @@ public class Validator {
 
     public static Validator validator;
 
-    public Validator(){
+    public Validator() {
 
     }
 
-    public static Validator getInstance(){
-        if( validator == null){
+    public static Validator getInstance() {
+        if (validator == null) {
             validator = new Validator();
         }
 
@@ -21,11 +21,12 @@ public class Validator {
 
     /**
      * Validates if the input is different to null and is not empty
+     *
      * @param input String
      * @return
      */
-    public boolean stringNotNull (String input){
-        if (input == null || input.equalsIgnoreCase("")){
+    public boolean stringNotNull(String input) {
+        if (input == null || input.equalsIgnoreCase("")) {
             return false;
         }
 

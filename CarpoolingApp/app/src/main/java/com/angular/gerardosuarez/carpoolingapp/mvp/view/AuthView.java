@@ -4,7 +4,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.angular.gerardosuarez.carpoolingapp.AuthActivity;
+import com.angular.gerardosuarez.carpoolingapp.activity.AuthActivity;
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.mvp.event.OnLoginClickedEvent;
 import com.squareup.otto.Bus;

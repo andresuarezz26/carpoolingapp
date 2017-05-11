@@ -19,7 +19,5 @@ public class AuthUser {
         boolean resultLogin = true;
 
         bus.post(new OnLoginEvent(resultLogin));
-
-
     }
 }

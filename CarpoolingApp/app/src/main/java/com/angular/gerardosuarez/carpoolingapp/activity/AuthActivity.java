@@ -1,9 +1,10 @@
-package com.angular.gerardosuarez.carpoolingapp;
+package com.angular.gerardosuarez.carpoolingapp.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.AuthModel;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.AuthPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.AuthView;
@@ -25,7 +26,7 @@ public class AuthActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if( presenter == null){
+        if (presenter == null) {
             presenter = new AuthPresenter(new AuthModel(ServiceUtils.getItemService()), new AuthView(this,
                     BusProvider.getInstance()));
         }

@@ -2,8 +2,8 @@ package com.angular.gerardosuarez.carpoolingapp.mvp.presenter;
 
 import android.content.Intent;
 
-import com.angular.gerardosuarez.carpoolingapp.AuthActivity;
-import com.angular.gerardosuarez.carpoolingapp.MainActivity;
+import com.angular.gerardosuarez.carpoolingapp.activity.AuthActivity;
+import com.angular.gerardosuarez.carpoolingapp.activity.MainActivity;
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.mvp.event.OnLoginClickedEvent;
 import com.angular.gerardosuarez.carpoolingapp.mvp.event.OnLoginEvent;
