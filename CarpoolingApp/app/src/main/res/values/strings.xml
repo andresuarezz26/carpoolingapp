@@ -4,4 +4,5 @@
     <string name="error_username_empry">Usernmae cannot be empty</string>
     <string name="error_password_empry">Password cannot be empty</string>
     <string name="error_login_invalid">Invalid Login</string>
+    <string name="error_google_services_conection">No puede conectarse a los servicios de Google.Intente más tarde.</string>
 </resources>
