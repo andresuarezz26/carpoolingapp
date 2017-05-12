@@ -50,14 +50,13 @@ public class AuthPresenter {
     public void onLoginEvent(OnLoginEvent event) {
         if (event.isSuccess()) {
             showMain();
-            return;
         } else {
             view.showErrorMessage(R.string.error_login_invalid);
         }
     }
 
     public void showMain() {
-        final AuthActivity activity = (AuthActivity) view.getActivity();
+        final AuthActivity activity = view.getActivity();
         if (activity == null) {
             return;
         }

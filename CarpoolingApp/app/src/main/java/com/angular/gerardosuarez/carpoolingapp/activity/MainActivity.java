@@ -1,6 +1,7 @@
 package com.angular.gerardosuarez.carpoolingapp.activity;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -12,24 +13,36 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+    public static final int PERMISSION_REQUEST_FINE_LOCATION = 1;
 
     MainPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
         if (presenter == null) {
             presenter = new MainPresenter(new MainView(this, BusProvider.getInstance()));
         }
-        presenter.init();
+        if (presenter.googleServicesAvailable()) {
+            setContentView(R.layout.activity_main);
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            presenter.initMap();
+        }
+
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         presenter.setMap(googleMap);
+        presenter.init();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_FINE_LOCATION) {
+            presenter.addLocationButton(permissions, grantResults);
+        }
     }
 }

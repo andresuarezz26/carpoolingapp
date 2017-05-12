@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
 public class MainView extends ActivityView<MainActivity> {
 
     private Bus bus;
-    GoogleMap map;
+    private GoogleMap map;
 
     public MainView(MainActivity activity, Bus bus) {
         super(activity);
@@ -23,16 +23,13 @@ public class MainView extends ActivityView<MainActivity> {
         this.bus = bus;
     }
 
+    public GoogleMap getMap() {
+        return map;
+    }
+
     public void initMap() {
-        MainActivity activity = getActivity();
-        if (getActivity() == null) {
-            return;
-        }
-        if (activity.getFragmentManager() == null) {
-            return;
-        }
-        MapFragment mapFragment = (MapFragment) activity.getFragmentManager().findFragmentById(R.id.mapFragment);
-        mapFragment.getMapAsync(activity);
+        MapFragment mapFragment = (MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.mapFragment);
+        mapFragment.getMapAsync(getActivity());
     }
 
     public void showErrorDialog(GoogleApiAvailability api, int availableId) {
