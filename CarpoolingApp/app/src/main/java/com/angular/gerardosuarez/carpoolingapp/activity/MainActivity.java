@@ -3,7 +3,6 @@ package com.angular.gerardosuarez.carpoolingapp.activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MainPresenter;
@@ -25,17 +24,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         if (presenter.googleServicesAvailable()) {
             setContentView(R.layout.activity_main);
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
             presenter.initMap();
         }
-
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         presenter.setMap(googleMap);
         presenter.init();
+        presenter.addMockMarkers();
     }
 
     @Override

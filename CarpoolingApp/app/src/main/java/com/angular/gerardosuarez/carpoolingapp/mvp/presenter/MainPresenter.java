@@ -12,8 +12,10 @@ import com.angular.gerardosuarez.carpoolingapp.mvp.view.MainView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 
-public class MainPresenter {
+public class MainPresenter implements GoogleMap.OnMarkerClickListener {
 
     private MainView view;
 
@@ -32,14 +34,14 @@ public class MainPresenter {
         if (view.getMap() == null) {
             return;
         }
+        view.getMap().setOnMarkerClickListener(this);
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             view.getMap().setMyLocationEnabled(true);
         } else {
             ActivityCompat.requestPermissions(activity,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    activity.PERMISSION_REQUEST_FINE_LOCATION);
-            // Show rationale and request permission.
+                    MainActivity.PERMISSION_REQUEST_FINE_LOCATION);
         }
     }
 
@@ -76,12 +78,41 @@ public class MainPresenter {
         if (permissions.length == 1 &&
                 permissions[0].equalsIgnoreCase(Manifest.permission.ACCESS_FINE_LOCATION) &&
                 grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 view.getMap().setMyLocationEnabled(true);
+                onLocaltionButtonListener();
             }
         } else {
             view.showToast(R.string.permission_denied);
             // Permission was denied. Display an error message.
         }
+    }
+
+    private void onLocaltionButtonListener() {
+        view.getMap().setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+                view.showToast(R.string.app_name);
+                return true;
+            }
+        });
+    }
+
+    public void addMockMarkers() {
+        view.setMarker(new LatLng(3.4, -76.5), "Cupo 1", 1);
+        view.setMarker(new LatLng(3.49, -76.54), "Cupo 2", 2);
+        view.setMarker(new LatLng(3.50, -76.52), "Cupo 3", 3);
+        view.setMarker(new LatLng(3.51, -76.5), "Cupo 4", 4);
+        view.setMarker(new LatLng(3.52, -76.5), "Cupo 5", 5);
+        view.setMarker(new LatLng(3.53, -76.523), "Cupo 6", 6);
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        if (marker == null) {
+            return false;
+        }
+        view.showToast(marker.getTitle() + " id: " + marker.getTag());
+        return true;
     }
 }
