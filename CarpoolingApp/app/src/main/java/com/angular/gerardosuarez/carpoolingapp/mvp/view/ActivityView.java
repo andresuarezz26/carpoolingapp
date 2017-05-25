@@ -27,7 +27,7 @@ public class ActivityView<T> {
         return (Context) getActivity();
     }
 
-    protected Resources getResources() {
+    public Resources getResources() {
         return getContext().getResources();
     }
 }

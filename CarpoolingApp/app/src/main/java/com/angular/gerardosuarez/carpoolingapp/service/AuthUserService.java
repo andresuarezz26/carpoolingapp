@@ -1,11 +1,8 @@
 package com.angular.gerardosuarez.carpoolingapp.service;
 
-import io.reactivex.functions.Consumer;
-import io.reactivex.subjects.PublishSubject;
+import com.angular.gerardosuarez.carpoolingapp.service.rx.DefaultServicePublisher;
 
-public class AuthUserService {
-
-    private PublishSubject<Boolean> subject = PublishSubject.create();
+public class AuthUserService extends DefaultServicePublisher<Boolean> {
 
     public void authUser(String username, String password) {
         //Do query to firebase here
@@ -14,11 +11,5 @@ public class AuthUserService {
         notifyAuthResult(resultLogin);
     }
 
-    private void notifyAuthResult(Boolean isLoged) {
-        subject.onNext(isLoged);
-    }
 
-    public void addOnAuthResultConsumer(Consumer<Boolean> consumer) {
-        subject.subscribe(consumer);
-    }
 }

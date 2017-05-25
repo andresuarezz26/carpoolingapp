@@ -35,6 +35,10 @@ public class MainPresenter implements GoogleMap.OnMarkerClickListener {
             return;
         }
         view.getMap().setOnMarkerClickListener(this);
+        requestPermissions(activity);
+    }
+
+    private void requestPermissions(Activity activity) {
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             view.getMap().setMyLocationEnabled(true);
@@ -48,7 +52,7 @@ public class MainPresenter implements GoogleMap.OnMarkerClickListener {
     public boolean googleServicesAvailable() {
         boolean isAvailable = false;
         if (view.getContext() == null) {
-            return false;
+            return isAvailable;
         }
         GoogleApiAvailability api = GoogleApiAvailability.getInstance();
         int availableId = api.isGooglePlayServicesAvailable(view.getContext());
