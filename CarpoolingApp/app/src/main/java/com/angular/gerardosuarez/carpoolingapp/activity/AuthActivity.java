@@ -3,18 +3,21 @@ package com.angular.gerardosuarez.carpoolingapp.activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.widget.EditText;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
-import com.angular.gerardosuarez.carpoolingapp.mvp.model.AuthModel;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.AuthPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.AuthView;
-import com.angular.gerardosuarez.carpoolingapp.utils.BusProvider;
-import com.angular.gerardosuarez.carpoolingapp.utils.ServiceUtils;
+import com.angular.gerardosuarez.carpoolingapp.service.AuthUserService;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class AuthActivity extends AppCompatActivity {
 
+    @BindView(R.id.edit_password) EditText editPassword;
+    @BindView(R.id.edit_username) EditText editUsername;
     AuthPresenter presenter;
 
     @Override
@@ -27,21 +30,15 @@ public class AuthActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         if (presenter == null) {
-            presenter = new AuthPresenter(new AuthModel(ServiceUtils.getItemService()), new AuthView(this,
-                    BusProvider.getInstance()));
+            presenter = new AuthPresenter(new AuthUserService(), new AuthView(this));
         }
-
+        presenter.init();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        BusProvider.unregister(presenter);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        BusProvider.register(presenter);
+    @OnClick(R.id.button_login)
+    void onLoginCLick() {
+        String username = editUsername.getText().toString();
+        String password = editPassword.getText().toString();
+        presenter.loginUser(username, password);
     }
 }

@@ -7,15 +7,13 @@ import android.support.annotation.Nullable;
 
 import java.lang.ref.WeakReference;
 
-/**
- * Created by gerardosuarez on 2/03/17.
- */
-public class ActivityView <T> {
 
-    private WeakReference <T> activityRef;
+public class ActivityView<T> {
+
+    private WeakReference<T> activityRef;
     private ProgressDialog progressDialog;
 
-    public ActivityView(T activity) {
+    protected ActivityView(T activity) {
         activityRef = new WeakReference<T>(activity);
     }
 
@@ -29,7 +27,7 @@ public class ActivityView <T> {
         return (Context) getActivity();
     }
 
-    public Resources getResources() {
+    protected Resources getResources() {
         return getContext().getResources();
     }
 }

@@ -6,7 +6,6 @@ import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.activity.AuthActivity;
 import com.angular.gerardosuarez.carpoolingapp.mvp.event.OnLoginClickedEvent;
 import com.angular.gerardosuarez.carpoolingapp.mvp.event.OnLoginEvent;
-import com.angular.gerardosuarez.carpoolingapp.mvp.model.AuthModel;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.AuthView;
 
 import org.junit.Before;

@@ -10,19 +10,16 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.squareup.otto.Bus;
 
 import butterknife.ButterKnife;
 
 public class MainView extends ActivityView<MainActivity> {
 
-    private Bus bus;
     private GoogleMap map;
 
-    public MainView(MainActivity activity, Bus bus) {
+    public MainView(MainActivity activity) {
         super(activity);
         ButterKnife.bind(this, activity);
-        this.bus = bus;
     }
 
     public GoogleMap getMap() {

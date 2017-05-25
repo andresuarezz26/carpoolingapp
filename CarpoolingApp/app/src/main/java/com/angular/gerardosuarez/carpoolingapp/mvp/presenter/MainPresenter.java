@@ -48,7 +48,7 @@ public class MainPresenter implements GoogleMap.OnMarkerClickListener {
     public boolean googleServicesAvailable() {
         boolean isAvailable = false;
         if (view.getContext() == null) {
-            return isAvailable;
+            return false;
         }
         GoogleApiAvailability api = GoogleApiAvailability.getInstance();
         int availableId = api.isGooglePlayServicesAvailable(view.getContext());

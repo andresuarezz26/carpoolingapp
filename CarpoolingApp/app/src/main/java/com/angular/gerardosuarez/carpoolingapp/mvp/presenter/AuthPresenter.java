@@ -1,65 +1,71 @@
 package com.angular.gerardosuarez.carpoolingapp.mvp.presenter;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.activity.AuthActivity;
 import com.angular.gerardosuarez.carpoolingapp.activity.MainActivity;
-import com.angular.gerardosuarez.carpoolingapp.mvp.event.OnLoginClickedEvent;
-import com.angular.gerardosuarez.carpoolingapp.mvp.event.OnLoginEvent;
-import com.angular.gerardosuarez.carpoolingapp.mvp.model.AuthModel;
+import com.angular.gerardosuarez.carpoolingapp.mvp.model.User;
+import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.rx.DefaultPresenterConsumer;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.AuthView;
+import com.angular.gerardosuarez.carpoolingapp.service.AuthUserService;
 import com.angular.gerardosuarez.carpoolingapp.utils.Validator;
-import com.squareup.otto.Subscribe;
 
-/**
- * Created by gerardosuarez on 2/03/17.
- */
 public class AuthPresenter {
 
-    private AuthModel model;
     private AuthView view;
+    private AuthUserService service;
 
-    public AuthPresenter(AuthModel model, AuthView view) {
-        this.model = model;
+    public AuthPresenter(AuthUserService service, AuthView view) {
         this.view = view;
+        this.service = service;
     }
 
-    @Subscribe
-    public void onLoginClicked(OnLoginClickedEvent event) {
+    public void init() {
+        service.addOnAuthResultConsumer(new AuthResultConsumer(this));
+    }
 
-        String username = event.getUsername();
-
+    public void loginUser(String username, String password) {
         if (!Validator.getInstance().stringNotNull(username)) {
             view.showErrorMessage(R.string.error_username_empry);
             return;
         }
-
-        String password = event.getPassword();
 
         if (!Validator.getInstance().stringNotNull(password)) {
             view.showErrorMessage(R.string.error_password_empry);
             return;
         }
 
-        model.authUser(username, password);
-
+        service.authUser(username, password);
     }
 
-    @Subscribe
-    public void onLoginEvent(OnLoginEvent event) {
-        if (event.isSuccess()) {
+    private void isLoginRight(Boolean result) {
+        if (result) {
             showMain();
         } else {
             view.showErrorMessage(R.string.error_login_invalid);
         }
     }
 
-    public void showMain() {
+    private void showMain() {
         final AuthActivity activity = view.getActivity();
         if (activity == null) {
             return;
         }
         activity.startActivity(new Intent(activity, MainActivity.class));
+        activity.finish();
+    }
+
+    private class AuthResultConsumer extends DefaultPresenterConsumer<Boolean, AuthPresenter> {
+
+        private AuthResultConsumer(@NonNull AuthPresenter presenter) {
+            super(presenter);
+        }
+
+        @Override
+        public void accept(Boolean result) throws Exception {
+            isLoginRight(result);
+        }
     }
 }
