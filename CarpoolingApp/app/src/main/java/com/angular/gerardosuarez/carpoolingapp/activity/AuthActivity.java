@@ -1,7 +1,6 @@
 package com.angular.gerardosuarez.carpoolingapp.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.EditText;
 
@@ -14,7 +13,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AuthActivity extends AppCompatActivity {
+public class AuthActivity extends BaseActivity {
 
     @BindView(R.id.edit_password) EditText editPassword;
     @BindView(R.id.edit_username) EditText editUsername;

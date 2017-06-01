@@ -10,6 +10,4 @@ public class AuthUserService extends DefaultServicePublisher<Boolean> {
 
         notifyAuthResult(resultLogin);
     }
-
-
 }

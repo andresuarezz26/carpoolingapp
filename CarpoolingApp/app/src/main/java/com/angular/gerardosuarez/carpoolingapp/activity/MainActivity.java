@@ -2,7 +2,6 @@ package com.angular.gerardosuarez.carpoolingapp.activity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MainPresenter;
@@ -10,7 +9,7 @@ import com.angular.gerardosuarez.carpoolingapp.mvp.view.MainView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MainActivity extends BaseActivity implements OnMapReadyCallback {
     public static final int PERMISSION_REQUEST_FINE_LOCATION = 1;
 
     MainPresenter presenter;

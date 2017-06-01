@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.activity.AuthActivity;
 import com.angular.gerardosuarez.carpoolingapp.activity.MainActivity;
-import com.angular.gerardosuarez.carpoolingapp.mvp.model.User;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.rx.DefaultPresenterConsumer;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.AuthView;
 import com.angular.gerardosuarez.carpoolingapp.service.AuthUserService;
@@ -48,7 +47,7 @@ public class AuthPresenter {
         }
     }
 
-    private void showMain() {
+    protected void showMain() {
         final AuthActivity activity = view.getActivity();
         if (activity == null) {
             return;

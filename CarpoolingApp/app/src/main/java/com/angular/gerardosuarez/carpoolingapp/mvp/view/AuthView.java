@@ -3,6 +3,7 @@ package com.angular.gerardosuarez.carpoolingapp.mvp.view;
 import android.widget.Toast;
 
 import com.angular.gerardosuarez.carpoolingapp.activity.AuthActivity;
+import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.base.ActivityView;
 
 import butterknife.ButterKnife;
 
