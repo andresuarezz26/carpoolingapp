@@ -13,4 +13,8 @@ public class MyProfilePresenter {
     public void init() {
 
     }
+
+    public void goToDriverMap() {
+        view.goToDriverMap();
+    }
 }

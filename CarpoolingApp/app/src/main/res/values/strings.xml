@@ -8,4 +8,7 @@
     <string name="permission_denied">Permiso no aceptado</string>
     <string name="driver">Conductor</string>
     <string name="passenger">Pasajero</string>
+    <string name="text_menu_my_profile">Mi Perfil</string>
+    <string name="text_menu_my_quota">Mis Cupos</string>
+    <string name="text_menu_map">Mapa</string>
 </resources>

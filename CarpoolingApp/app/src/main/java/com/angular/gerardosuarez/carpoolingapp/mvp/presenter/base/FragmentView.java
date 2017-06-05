@@ -1,7 +1,8 @@
 package com.angular.gerardosuarez.carpoolingapp.mvp.presenter.base;
 
+import android.app.Fragment;
+import android.content.Context;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 
 import com.angular.gerardosuarez.carpoolingapp.activity.BaseActivity;
 
@@ -17,6 +18,11 @@ public class FragmentView<T extends Fragment> {
     @Nullable
     public T getFragment() {
         return fragmentRef.get();
+    }
+
+    @Nullable
+    public Context getContext() {
+        return getActivity();
     }
 
     @Nullable
