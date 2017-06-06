@@ -7,6 +7,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.view.View;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
+import com.angular.gerardosuarez.carpoolingapp.activity.MainActivity;
 import com.angular.gerardosuarez.carpoolingapp.fragment.DriverMapFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyProfileFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.base.FragmentView;
@@ -33,7 +34,12 @@ public class MyProfileView extends FragmentView<MyProfileFragment> {
         }
         fragmentManager = activity.getFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.main_container, new DriverMapFragment());
+        DriverMapFragment mapFragment = (DriverMapFragment) fragmentManager.findFragmentByTag(MainActivity.DRIVER_MAP);
+        if (mapFragment != null) {
+            transaction.show(mapFragment);
+        } else {
+            transaction.add(R.id.main_container, new DriverMapFragment());
+        }
         transaction.commit();
     }
 

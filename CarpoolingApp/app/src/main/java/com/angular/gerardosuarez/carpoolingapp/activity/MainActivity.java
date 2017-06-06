@@ -15,6 +15,9 @@ import butterknife.ButterKnife;
 public class MainActivity extends BaseActivity {
     public static final int PERMISSION_REQUEST_FINE_LOCATION = 1;
 
+    public static final String DRIVER_MAP = "DRIVER_MAP";
+    public static final String MY_PROFILE = "MY_PROFILE";
+    public static final String MY_QUOTA = "MY_QUOTA";
 
     @BindView(R.id.bottom_navigation) BottomNavigationView bottomMenu;
     MainPresenter presenter;

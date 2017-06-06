@@ -16,12 +16,10 @@ import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.base.ActivityView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.angular.gerardosuarez.carpoolingapp.activity.MainActivity.DRIVER_MAP;
+
 public class MainView extends ActivityView<MainActivity> {
 
-
-    private static final String DRIVER_MAP = "DRIVER_MAP";
-    private static final String MY_PROFILE = "MY_PROFILE";
-    private static final String MY_QUOTA = "MY_QUOTA";
 
     @BindView(R.id.bottom_navigation) BottomNavigationView bottomMenu;
     private FragmentManager fragmentManager;
@@ -38,7 +36,7 @@ public class MainView extends ActivityView<MainActivity> {
         }
         fragmentManager = activity.getFragmentManager();
         final FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.main_container, new MyProfileFragment(), MY_PROFILE);
+        transaction.add(R.id.main_container, new MyProfileFragment(), MainActivity.MY_PROFILE);
         transaction.commit();
     }
 
@@ -65,8 +63,8 @@ public class MainView extends ActivityView<MainActivity> {
         }
         fragmentManager = activity.getFragmentManager();
         final FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.main_container, new MyProfileFragment(), MY_PROFILE);
-        DriverMapFragment mapFragment = (DriverMapFragment) fragmentManager.findFragmentByTag(DRIVER_MAP);
+        transaction.add(R.id.main_container, new MyProfileFragment(), MainActivity.MY_PROFILE);
+        DriverMapFragment mapFragment = (DriverMapFragment) fragmentManager.findFragmentByTag(MainActivity.DRIVER_MAP);
         if (mapFragment != null) {
             transaction.hide(mapFragment);
         }
@@ -80,8 +78,8 @@ public class MainView extends ActivityView<MainActivity> {
         }
         fragmentManager = activity.getFragmentManager();
         final FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.main_container, new MyQuotaFragment(), MY_QUOTA);
-        DriverMapFragment mapFragment = (DriverMapFragment) fragmentManager.findFragmentByTag(DRIVER_MAP);
+        transaction.add(R.id.main_container, new MyQuotaFragment(), MainActivity.MY_QUOTA);
+        DriverMapFragment mapFragment = (DriverMapFragment) fragmentManager.findFragmentByTag(MainActivity.DRIVER_MAP);
         if (mapFragment != null) {
             transaction.hide(mapFragment);
         }
