@@ -16,5 +16,6 @@ public class MyProfilePresenter {
 
     public void goToDriverMap() {
         view.goToDriverMap();
+        view.showMenu();
     }
 }

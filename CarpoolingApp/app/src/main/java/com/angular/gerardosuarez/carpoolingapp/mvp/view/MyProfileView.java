@@ -3,18 +3,27 @@ package com.angular.gerardosuarez.carpoolingapp.mvp.view;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.support.design.widget.BottomNavigationView;
+import android.view.View;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.fragment.DriverMapFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyProfileFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.base.FragmentView;
 
+import butterknife.ButterKnife;
+
 public class MyProfileView extends FragmentView<MyProfileFragment> {
 
     FragmentManager fragmentManager;
+    BottomNavigationView bottomMenu;
 
     public MyProfileView(MyProfileFragment fragment) {
         super(fragment);
+        if (fragment.getView() != null) {
+            ButterKnife.bind(this, fragment.getView());
+            bottomMenu = (BottomNavigationView) getActivity().findViewById(R.id.bottom_navigation);
+        }
     }
 
     public void goToDriverMap() {
@@ -24,7 +33,11 @@ public class MyProfileView extends FragmentView<MyProfileFragment> {
         }
         fragmentManager = activity.getFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.main_container, new DriverMapFragment());
+        transaction.replace(R.id.main_container, new DriverMapFragment());
         transaction.commit();
+    }
+
+    public void showMenu() {
+        bottomMenu.setVisibility(View.VISIBLE);
     }
 }

@@ -14,32 +14,4 @@
         app:itemIconTint="@color/colorAccent"
         app:itemTextColor="@color/colorAccent"
         app:menu="@menu/bottom_navigation_main" />
-
-
-    <Button
-        android:id="@+id/btn_main_my_profile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="Mi perfil"
-        android:visibility="gone" />
-
-    <Button
-        android:id="@+id/btn_main_my_quota"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@id/btn_main_my_profile"
-        android:text="Mis Cupos"
-        android:visibility="gone" />
-
-    <Button
-        android:id="@+id/btn_main_map"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@id/btn_main_my_quota"
-        android:text="Mapa"
-        android:visibility="gone" />
 </RelativeLayout>
