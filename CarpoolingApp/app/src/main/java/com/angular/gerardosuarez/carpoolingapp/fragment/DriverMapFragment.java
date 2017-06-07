@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 
 public class DriverMapFragment extends Fragment implements OnMapReadyCallback {
 
+    public static final String TAG = "map";
     public static final int PERMISSION_REQUEST_FINE_LOCATION = 1;
 
     private DriverMapPresenter presenter;

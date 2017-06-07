@@ -16,6 +16,7 @@ import butterknife.OnClick;
 
 public class MyProfileFragment extends Fragment {
 
+    public static final String TAG = "my_profile";
     private MyProfilePresenter presenter;
 
     @Override

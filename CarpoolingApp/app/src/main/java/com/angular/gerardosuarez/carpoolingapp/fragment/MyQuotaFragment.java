@@ -15,6 +15,7 @@ import butterknife.ButterKnife;
 
 public class MyQuotaFragment extends Fragment {
 
+    public static final String TAG = "my_quota";
     private MyQuotaPresenter presenter;
 
     @Override

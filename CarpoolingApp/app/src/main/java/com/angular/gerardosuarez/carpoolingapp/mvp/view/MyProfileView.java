@@ -34,11 +34,11 @@ public class MyProfileView extends FragmentView<MyProfileFragment> {
         }
         fragmentManager = activity.getFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        DriverMapFragment mapFragment = (DriverMapFragment) fragmentManager.findFragmentByTag(MainActivity.DRIVER_MAP);
+        DriverMapFragment mapFragment = (DriverMapFragment) fragmentManager.findFragmentByTag(MainActivity.DRIVER_MAP_FRAGMENT);
         if (mapFragment != null) {
             transaction.show(mapFragment);
         } else {
-            transaction.add(R.id.main_container, new DriverMapFragment());
+            transaction.add(R.id.main_container, new DriverMapFragment(), MainActivity.DRIVER_MAP_FRAGMENT);
         }
         transaction.commit();
     }
