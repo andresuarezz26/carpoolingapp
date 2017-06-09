@@ -9,6 +9,7 @@ import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MainPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MainView;
 import com.angular.gerardosuarez.carpoolingapp.navigation.NavigationManager;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,6 +24,7 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.bottom_navigation) BottomNavigationView bottomMenu;
     MainPresenter presenter;
     private NavigationManager navigationManager;
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

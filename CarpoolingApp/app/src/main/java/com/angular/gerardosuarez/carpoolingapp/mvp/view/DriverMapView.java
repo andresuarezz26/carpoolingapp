@@ -7,6 +7,7 @@ import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.fragment.DriverMapFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.base.FragmentView;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -53,4 +54,13 @@ public class DriverMapView extends FragmentView<DriverMapFragment> {
                 .setTag(id);
     }
 
+    public void setMarker(LatLng latLng, String title) {
+        map.addMarker(new MarkerOptions()
+                .position(latLng)
+                .title(title));
+    }
+
+    public void animateCamera(LatLng position) {
+        map.animateCamera(CameraUpdateFactory.newLatLng(position));
+    }
 }

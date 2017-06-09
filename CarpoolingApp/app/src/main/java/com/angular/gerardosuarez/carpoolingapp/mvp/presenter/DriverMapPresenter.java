@@ -5,17 +5,24 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.activity.MainActivity;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.DriverMapView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+
+import java.io.IOException;
+import java.util.List;
 
 public class DriverMapPresenter implements GoogleMap.OnMarkerClickListener {
 
@@ -38,6 +45,9 @@ public class DriverMapPresenter implements GoogleMap.OnMarkerClickListener {
         }
         view.getMap().setOnMarkerClickListener(this);
         requestPermissions(activity);
+        // Retrieve the PlaceAutocompleteFragment.
+
+
     }
 
     private void requestPermissions(Activity activity) {
@@ -131,6 +141,17 @@ public class DriverMapPresenter implements GoogleMap.OnMarkerClickListener {
         }
         view.showToast(marker.getTitle() + " id: " + marker.getTag());
         return true;
+    }
+
+    public void searchPlace(Place place) {
+        Activity activity = view.getActivity();
+        if (activity == null) {
+            return;
+        }
+        LatLng placeLocation = place.getLatLng();
+        String placeName = place.getName().toString();
+        view.animateCamera(placeLocation);
+        view.setMarker(placeLocation, placeName);
     }
 }
 
