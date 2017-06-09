@@ -81,5 +81,9 @@ public class NavigationManager {
         }
     }
 
+    public void destroyNavigation() {
+        navigationManager = null;
+    }
+
 
 }
