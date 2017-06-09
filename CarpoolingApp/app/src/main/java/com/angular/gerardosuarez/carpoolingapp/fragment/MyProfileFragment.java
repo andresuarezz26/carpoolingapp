@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MyProfilePresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyProfileView;
+import com.angular.gerardosuarez.carpoolingapp.navigation.NavigationManager;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -36,7 +37,8 @@ public class MyProfileFragment extends Fragment {
 
     @OnClick(R.id.btn_driver)
     void onDriverClick() {
-        presenter.goToDriverMap();
+        NavigationManager.getInstance(getFragmentManager()).goToDriverMapFragment();
+        presenter.showMenu();
     }
 
     @OnClick(R.id.btn_passenger)

@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MainPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MainView;
+import com.angular.gerardosuarez.carpoolingapp.navigation.NavigationManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,6 +22,7 @@ public class MainActivity extends BaseActivity {
 
     @BindView(R.id.bottom_navigation) BottomNavigationView bottomMenu;
     MainPresenter presenter;
+    private NavigationManager navigationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,8 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
         presenter = new MainPresenter(new MainView(this));
         presenter.init();
+        navigationManager = NavigationManager.getInstance(getFragmentManager());
+        navigationManager.goToMyProfileFragment();
 
         bottomMenu.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -36,13 +40,16 @@ public class MainActivity extends BaseActivity {
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.action_my_profile:
-                                presenter.goToMyProfileFragment();
+                                navigationManager.goToMyProfileFragment();
+                                //presenter.goToMyProfileFragment();
                                 break;
                             case R.id.action_my_quota:
-                                presenter.goToMyQuotaFragment();
+                                navigationManager.goToMyQuotaFragment();
+                                //presenter.goToMyQuotaFragment();
                                 break;
                             case R.id.action_map:
-                                presenter.goToDriverMapFragment();
+                                navigationManager.goToDriverMapFragment();
+                                //presenter.goToDriverMapFragment();
                                 break;
                         }
                         return true;

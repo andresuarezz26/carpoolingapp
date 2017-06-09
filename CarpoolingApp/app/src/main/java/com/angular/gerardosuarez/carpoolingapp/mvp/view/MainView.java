@@ -31,14 +31,7 @@ public class MainView extends ActivityView<MainActivity> {
     }
 
     public void init() {
-        Activity activity = getActivity();
-        if (activity == null) {
-            return;
-        }
-        fragmentManager = activity.getFragmentManager();
-        final FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.main_container, new MyProfileFragment(), MainActivity.MY_PROFILE_FRAGMENT);
-        transaction.commit();
+
     }
 
     public void goToDriverMapFragment() {
@@ -83,6 +76,27 @@ public class MainView extends ActivityView<MainActivity> {
         DriverMapFragment mapFragment = (DriverMapFragment) fragmentManager.findFragmentByTag(DriverMapFragment.TAG);
         performTransaction(myProfileFragment, quotaFragment, mapFragment, transaction);
         transaction.commit();
+    }
+
+    /**
+     * Pops all the queued fragments
+     */
+    private void popEveryFragment() {
+        // Clear all back stack.
+        Activity activity = getActivity();
+        if (activity == null) {
+            return;
+        }
+        fragmentManager = activity.getFragmentManager();
+        int backStackCount = fragmentManager.getBackStackEntryCount();
+        for (int i = 0; i < backStackCount; i++) {
+
+            // Get the back stack fragment id.
+            int backStackId = fragmentManager.getBackStackEntryAt(i).getId();
+
+            fragmentManager.popBackStack(backStackId, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+        }
     }
 
     private void performTransaction(Fragment currentFragment, Fragment newFragment, Fragment mapFragment, final FragmentTransaction transaction) {

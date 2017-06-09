@@ -11,11 +11,14 @@ public class MyProfilePresenter {
     }
 
     public void init() {
-
+        view.hideMenu();
     }
 
-    public void goToDriverMap() {
-        view.goToDriverMap();
+    public void hideMenu() {
+        view.hideMenu();
+    }
+
+    public void showMenu() {
         view.showMenu();
     }
 }
