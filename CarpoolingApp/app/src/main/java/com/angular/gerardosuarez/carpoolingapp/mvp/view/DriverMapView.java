@@ -13,7 +13,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class DriverMapView extends FragmentView<DriverMapFragment> {
+public class DriverMapView extends FragmentView<DriverMapFragment, Void> {
 
     private GoogleMap map;
 

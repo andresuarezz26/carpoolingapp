@@ -8,11 +8,22 @@ import com.angular.gerardosuarez.carpoolingapp.activity.BaseActivity;
 
 import java.lang.ref.WeakReference;
 
-public class FragmentView<T extends Fragment> {
+import io.reactivex.Observer;
+
+public class FragmentView<T extends Fragment, AO> {
     private WeakReference<T> fragmentRef;
+    private Observer<AO> adapterObserver;
 
     protected FragmentView(T fragment) {
         fragmentRef = new WeakReference<>(fragment);
+    }
+
+    public Observer<AO> getAdapterObserver() {
+        return adapterObserver;
+    }
+
+    public void setAdapterObserver(Observer<AO> observer) {
+        this.adapterObserver = observer;
     }
 
     @Nullable

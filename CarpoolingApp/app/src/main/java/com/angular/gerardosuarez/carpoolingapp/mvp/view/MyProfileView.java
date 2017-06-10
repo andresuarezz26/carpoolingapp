@@ -9,7 +9,7 @@ import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.base.FragmentView;
 
 import butterknife.ButterKnife;
 
-public class MyProfileView extends FragmentView<MyProfileFragment> {
+public class MyProfileView extends FragmentView<MyProfileFragment, Void> {
 
     BottomNavigationView bottomMenu;
 

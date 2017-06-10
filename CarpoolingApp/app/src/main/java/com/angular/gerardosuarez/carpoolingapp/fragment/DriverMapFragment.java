@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.DriverMapPresenter;
@@ -22,7 +21,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DriverMapFragment extends Fragment implements OnMapReadyCallback {
@@ -35,8 +33,6 @@ public class DriverMapFragment extends Fragment implements OnMapReadyCallback {
     public static final double LONGITUDE_CALI_SECOND = -76.4872;
 
     private DriverMapPresenter presenter;
-
-    @BindView(R.id.edit_location) EditText editTextLocation;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
