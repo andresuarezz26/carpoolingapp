@@ -12,7 +12,7 @@ import io.reactivex.Observer;
 
 public class FragmentView<T extends Fragment, AO> {
     private WeakReference<T> fragmentRef;
-    private Observer<AO> adapterObserver;
+    protected Observer<AO> adapterObserver;
 
     protected FragmentView(T fragment) {
         fragmentRef = new WeakReference<>(fragment);

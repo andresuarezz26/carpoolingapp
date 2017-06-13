@@ -15,16 +15,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity {
-    public static final int PERMISSION_REQUEST_FINE_LOCATION = 1;
-
-    public static final String DRIVER_MAP_FRAGMENT = "DRIVER_MAP_FRAGMENT";
-    public static final String MY_PROFILE_FRAGMENT = "MY_PROFILE_FRAGMENT";
-    public static final String MY_QUOTA_FRAGMENT = "MY_QUOTA_FRAGMENT";
 
     @BindView(R.id.bottom_navigation) BottomNavigationView bottomMenu;
     MainPresenter presenter;
     private NavigationManager navigationManager;
-    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,15 +37,12 @@ public class MainActivity extends BaseActivity {
                         switch (item.getItemId()) {
                             case R.id.action_my_profile:
                                 navigationManager.goToMyProfileFragment();
-                                //presenter.goToMyProfileFragment();
                                 break;
                             case R.id.action_my_quota:
                                 navigationManager.goToMyQuotaFragment();
-                                //presenter.goToMyQuotaFragment();
                                 break;
                             case R.id.action_map:
                                 navigationManager.goToDriverMapFragment();
-                                //presenter.goToDriverMapFragment();
                                 break;
                         }
                         return true;

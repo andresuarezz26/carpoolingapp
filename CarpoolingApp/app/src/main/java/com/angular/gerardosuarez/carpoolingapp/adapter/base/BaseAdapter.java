@@ -17,10 +17,6 @@ public abstract class BaseAdapter<T, OT, VH extends RecyclerView.ViewHolder> ext
     protected List<T> items;
     private WeakReference<Observer<OT>> observerRef;
 
-    public BaseAdapter() {
-        this.items = new ArrayList<>();
-    }
-
     public BaseAdapter(final Observer<OT> observer) {
         this.observerRef = new WeakReference<>(observer);
         this.items = new ArrayList<>();

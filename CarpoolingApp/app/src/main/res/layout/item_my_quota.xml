@@ -2,7 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/text_my_quota_name"
@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="51dp"
         android:layout_marginTop="16dp"
-        android:text="TextView"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -20,7 +19,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="51dp"
         android:layout_marginTop="7dp"
-        android:text="TextView"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_my_quota_name" />
 
@@ -30,17 +28,17 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="51dp"
         android:layout_marginTop="5dp"
-        android:text="TextView"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_my_quota_address" />
 
-    <Button
-        android:id="@+id/button2"
+    <ImageButton
+        android:id="@+id/btn_my_quota_remove"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="16dp"
         android:layout_marginTop="22dp"
-        android:text="Button"
+        android:background="@drawable/my_quota_remove_button"
+        android:contentDescription="@null"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

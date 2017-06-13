@@ -15,7 +15,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MyQuotaView extends FragmentView<MyQuotaFragment, Passenger> {
+public class MyQuotaView extends FragmentView<MyQuotaFragment, Integer> {
     @BindView(R.id.recycler_view_my_quota) RecyclerView recyclerView;
     private MyQuotaAdapter adapter;
 
@@ -29,11 +29,12 @@ public class MyQuotaView extends FragmentView<MyQuotaFragment, Passenger> {
         if (activity == null) {
             return;
         }
-        adapter = new MyQuotaAdapter();
+        adapter = new MyQuotaAdapter(adapterObserver);
         adapter.addAll(list);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         recyclerView.setAdapter(adapter);
     }
+
 
     public void addAll(List<Passenger> list) {
         adapter.addAll(list);

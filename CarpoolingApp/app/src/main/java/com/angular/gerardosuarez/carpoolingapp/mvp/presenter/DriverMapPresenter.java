@@ -5,14 +5,12 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.activity.MainActivity;
+import com.angular.gerardosuarez.carpoolingapp.fragment.DriverMapFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.DriverMapView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -20,9 +18,6 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-
-import java.io.IOException;
-import java.util.List;
 
 public class DriverMapPresenter implements GoogleMap.OnMarkerClickListener {
 
@@ -57,7 +52,7 @@ public class DriverMapPresenter implements GoogleMap.OnMarkerClickListener {
         } else {
             ActivityCompat.requestPermissions(activity,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    MainActivity.PERMISSION_REQUEST_FINE_LOCATION);
+                    DriverMapFragment.PERMISSION_REQUEST_FINE_LOCATION);
         }
     }
 
@@ -108,7 +103,6 @@ public class DriverMapPresenter implements GoogleMap.OnMarkerClickListener {
                 grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 view.getMap().setMyLocationEnabled(true);
-                onLocaltionButtonListener();
             }
         } else {
             view.showToast(R.string.permission_denied);

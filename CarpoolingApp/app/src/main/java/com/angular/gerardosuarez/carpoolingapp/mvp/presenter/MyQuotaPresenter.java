@@ -1,13 +1,11 @@
 package com.angular.gerardosuarez.carpoolingapp.mvp.presenter;
 
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.Passenger;
+import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.rx.DefaultPresenterObserver;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyQuotaView;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 
 public class MyQuotaPresenter {
 
@@ -18,6 +16,7 @@ public class MyQuotaPresenter {
     }
 
     public void init() {
+        view.setAdapterObserver(new MyQuotaObserver(this));
         view.init(mockPassengers());
     }
 
@@ -36,30 +35,18 @@ public class MyQuotaPresenter {
         passengers.add(p1);
         passengers.add(p2);
         return passengers;
-
     }
 
-    private class MyQuotaObserver implements Observer<Passenger> {
+    private class MyQuotaObserver extends DefaultPresenterObserver<Integer, MyQuotaPresenter> {
 
-
-        @Override
-        public void onSubscribe(Disposable d) {
-
+        public MyQuotaObserver(MyQuotaPresenter presenter) {
+            super(presenter);
         }
 
         @Override
-        public void onNext(Passenger passenger) {
-
-        }
-
-        @Override
-        public void onError(Throwable e) {
-
-        }
-
-        @Override
-        public void onComplete() {
-
+        public void onNext(Integer value) {
+            super.onNext(value);
+            view.remove(value);
         }
     }
 

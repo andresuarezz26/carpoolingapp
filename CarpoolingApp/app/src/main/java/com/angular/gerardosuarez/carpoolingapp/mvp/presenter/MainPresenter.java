@@ -21,19 +21,4 @@ public class MainPresenter {
         }
         view.init();
     }
-
-    public void goToDriverMapFragment() {
-        view.goToDriverMapFragment();
-        view.showMenu();
-    }
-
-    public void goToMyProfileFragment() {
-        view.goToMyProfileFragment();
-        view.hideMenu();
-    }
-
-    public void goToMyQuotaFragment() {
-        view.goToMyQuotaFragment();
-        view.showMenu();
-    }
 }
