@@ -40,9 +40,6 @@ public class DriverMapPresenter implements GoogleMap.OnMarkerClickListener {
         }
         view.getMap().setOnMarkerClickListener(this);
         requestPermissions(activity);
-        // Retrieve the PlaceAutocompleteFragment.
-
-
     }
 
     private void requestPermissions(Activity activity) {

@@ -11,4 +11,5 @@
     <string name="text_menu_my_profile">Mi Perfil</string>
     <string name="text_menu_my_quota">Mis Cupos</string>
     <string name="text_menu_map">Mapa</string>
+    <string name="text_start_travel">Iniciar Recorrido</string>
 </resources>

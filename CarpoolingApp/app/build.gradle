@@ -35,13 +35,16 @@ dependencies {
     //compile 'com.android.support:recyclerview-v7:25.1.0'
 
     //butterknife
-    compile 'com.google.android.gms:play-services-maps:10.2.4'
-    compile 'com.google.android.gms:play-services-places:10.2.4'
+    compile 'com.google.android.gms:play-services-maps:9.6.1'
+    compile 'com.google.android.gms:play-services-places:9.6.1'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.google.firebase:firebase-core:9.6.1'
+    compile 'com.google.firebase:firebase-auth:9.6.1'
+    compile 'com.google.firebase:firebase-database:9.6.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.jakewharton:butterknife:8.4.0'
+    compile 'com.jakewharton.timber:timber:4.5.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.0.5-beta'
@@ -49,7 +52,8 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 
-apply plugin: 'com.google.gms.google-services'
 repositories {
     mavenCentral()
 }
+
+apply plugin: 'com.google.gms.google-services'
