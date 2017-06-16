@@ -22,6 +22,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class DriverMapFragment extends Fragment implements OnMapReadyCallback {
 
@@ -68,7 +69,7 @@ public class DriverMapFragment extends Fragment implements OnMapReadyCallback {
 
             @Override
             public void onError(Status status) {
-                Log.e("DriverMapFragment", status.toString());
+                Timber.e(status.toString());
             }
         });
     }

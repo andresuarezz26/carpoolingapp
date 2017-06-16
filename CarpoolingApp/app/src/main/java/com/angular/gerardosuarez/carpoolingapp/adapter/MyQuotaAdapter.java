@@ -73,7 +73,7 @@ public class MyQuotaAdapter extends BaseAdapter<Passenger, Integer, MyQuotaAdapt
             if (observerRef == null) {
                 return;
             }
-            Observable.just(Integer.valueOf(position)).subscribe(observerRef.get());
+            Observable.just(position).subscribe(observerRef.get());
         }
     }
 }
