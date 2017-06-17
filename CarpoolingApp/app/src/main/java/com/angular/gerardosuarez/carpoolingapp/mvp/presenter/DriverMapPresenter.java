@@ -5,11 +5,11 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
-import com.angular.gerardosuarez.carpoolingapp.activity.MainActivity;
 import com.angular.gerardosuarez.carpoolingapp.fragment.DriverMapFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.DriverMapView;
 import com.google.android.gms.common.ConnectionResult;
@@ -42,10 +42,15 @@ public class DriverMapPresenter implements GoogleMap.OnMarkerClickListener {
         requestPermissions(activity);
     }
 
+    private void setLocationManager() {
+        view.setLocationManager();
+    }
+
     private void requestPermissions(Activity activity) {
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             view.getMap().setMyLocationEnabled(true);
+            setLocationManager();
         } else {
             ActivityCompat.requestPermissions(activity,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
@@ -100,6 +105,7 @@ public class DriverMapPresenter implements GoogleMap.OnMarkerClickListener {
                 grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 view.getMap().setMyLocationEnabled(true);
+                setLocationManager();
             }
         } else {
             view.showToast(R.string.permission_denied);
@@ -143,6 +149,12 @@ public class DriverMapPresenter implements GoogleMap.OnMarkerClickListener {
         String placeName = place.getName().toString();
         view.animateCamera(placeLocation);
         view.setMarker(placeLocation, placeName);
+    }
+
+    public void onLocationChanged(Location location) {
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        view.goToCurrentLocation(latLng);
+
     }
 }
 

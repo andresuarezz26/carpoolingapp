@@ -34,12 +34,12 @@ public class AuthPresenter {
             return;
         }
 
-        if (!Validator.getInstance().stringNotNull(username)) {
+        if (!Validator.stringNotNull(username)) {
             view.showErrorMessage(R.string.error_username_empry);
             return;
         }
 
-        if (!Validator.getInstance().stringNotNull(password)) {
+        if (!Validator.stringNotNull(password)) {
             view.showErrorMessage(R.string.error_password_empry);
             return;
         }

@@ -1,10 +1,11 @@
 package com.angular.gerardosuarez.carpoolingapp.fragment;
 
 import android.app.Fragment;
+import android.location.Location;
+import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-public class DriverMapFragment extends Fragment implements OnMapReadyCallback {
+public class DriverMapFragment extends Fragment implements OnMapReadyCallback, LocationListener {
 
     public static final String TAG = "driver_map";
     public static final int PERMISSION_REQUEST_FINE_LOCATION = 1;
@@ -87,5 +88,25 @@ public class DriverMapFragment extends Fragment implements OnMapReadyCallback {
         presenter.setMap(googleMap);
         presenter.init();
         presenter.addMockMarkers();
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        presenter.onLocationChanged(location);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 }

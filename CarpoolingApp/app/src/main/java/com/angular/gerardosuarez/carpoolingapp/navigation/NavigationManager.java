@@ -85,5 +85,4 @@ public class NavigationManager {
         navigationManager = null;
     }
 
-
 }

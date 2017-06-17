@@ -1,21 +1,30 @@
 package com.angular.gerardosuarez.carpoolingapp.mvp.view;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.location.LocationManager;
 import android.widget.Toast;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.fragment.DriverMapFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.base.FragmentView;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import timber.log.Timber;
+
 public class DriverMapView extends FragmentView<DriverMapFragment, Void> {
 
+    public static final int DEFAULT_ZOOM = 13;
     private GoogleMap map;
+    private LocationManager locationManager;
+    private static final long MIN_TIME = 400;
+    private static final float MIN_DISTANCE = 1000;
 
     public DriverMapView(DriverMapFragment fragment) {
         super(fragment);
@@ -62,5 +71,20 @@ public class DriverMapView extends FragmentView<DriverMapFragment, Void> {
 
     public void animateCamera(LatLng position) {
         map.animateCamera(CameraUpdateFactory.newLatLng(position));
+    }
+
+    public void setLocationManager() {
+        try {
+            locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, getFragment());
+        } catch (SecurityException e) {
+            Timber.e(e);
+        }
+    }
+
+    public void goToCurrentLocation(LatLng latLng) {
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM);
+        map.animateCamera(cameraUpdate);
+        locationManager.removeUpdates(getFragment());
     }
 }
