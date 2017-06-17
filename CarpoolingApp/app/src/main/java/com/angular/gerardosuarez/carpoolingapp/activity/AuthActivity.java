@@ -10,7 +10,6 @@ import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.AuthPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.AuthView;
 import com.angular.gerardosuarez.carpoolingapp.service.AuthUserService;
-import com.angular.gerardosuarez.carpoolingapp.service.UserService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -35,13 +34,12 @@ public class AuthActivity extends BaseActivity implements OnCompleteListener<Aut
         final Activity activity = this;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         if (presenter == null) {
             firebaseAuth = FirebaseAuth.getInstance();
             presenter = new AuthPresenter(
                     new AuthUserService(firebaseAuth),
-                    new AuthView(this),
-                    new UserService());
+                    new AuthView(this)
+            );
         }
         presenter.init();
 

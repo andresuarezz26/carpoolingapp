@@ -12,4 +12,5 @@
     <string name="text_menu_my_quota">Mis Cupos</string>
     <string name="text_menu_map">Mapa</string>
     <string name="text_start_travel">Iniciar Recorrido</string>
+    <string name="my_profile_driver">Conductor</string>
 </resources>
