@@ -11,19 +11,27 @@ import android.support.v4.content.ContextCompat;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.DriverMapView;
+import com.angular.gerardosuarez.carpoolingapp.service.DriverMapService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 
 public class DriverMapPresenter implements GoogleMap.OnMarkerClickListener {
 
     private DriverMapView view;
+    private DriverMapService service;
 
-    public DriverMapPresenter(DriverMapView view) {
+    private ChildEventListener chatsListRef;
+
+    public DriverMapPresenter(DriverMapView view, DriverMapService service) {
         this.view = view;
+        this.service = service;
     }
 
     public void init() {
@@ -41,6 +49,36 @@ public class DriverMapPresenter implements GoogleMap.OnMarkerClickListener {
         requestPermissions(activity);
     }
 
+    public void getQuotas(String comunity, String origin, String date, String hour) {
+        chatsListRef = service.getQuotasPerCommunityOriginDateAndHour(comunity, origin, date, hour)
+                .addChildEventListener(
+                        new ChildEventListener() {
+                            @Override
+                            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                            }
+
+                            @Override
+                            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                            }
+
+                            @Override
+                            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                            }
+
+                            @Override
+                            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+    }
+
     private void setLocationManager() {
         view.setLocationManager();
     }
@@ -52,7 +90,6 @@ public class DriverMapPresenter implements GoogleMap.OnMarkerClickListener {
             setLocationManager();
         } else {
             view.requestPermissionsActivity();
-
         }
     }
 

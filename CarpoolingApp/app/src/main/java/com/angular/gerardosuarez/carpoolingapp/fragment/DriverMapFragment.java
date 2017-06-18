@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.DriverMapPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.DriverMapView;
+import com.angular.gerardosuarez.carpoolingapp.service.DriverMapService;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
@@ -47,7 +48,9 @@ public class DriverMapFragment extends Fragment implements OnMapReadyCallback, L
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter = new DriverMapPresenter(new DriverMapView(this));
+        presenter = new DriverMapPresenter(
+                new DriverMapView(this),
+                new DriverMapService());
         if (presenter.googleServicesAvailable()) {
             presenter.initMap();
         }
