@@ -10,7 +10,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
-import com.angular.gerardosuarez.carpoolingapp.fragment.DriverMapFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.DriverMapView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -52,9 +51,8 @@ public class DriverMapPresenter implements GoogleMap.OnMarkerClickListener {
             view.getMap().setMyLocationEnabled(true);
             setLocationManager();
         } else {
-            ActivityCompat.requestPermissions(activity,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    DriverMapFragment.PERMISSION_REQUEST_FINE_LOCATION);
+            view.requestPermissionsActivity();
+
         }
     }
 

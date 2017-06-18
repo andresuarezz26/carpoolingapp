@@ -25,6 +25,10 @@ public class NavigationManager {
         this.fragmentManager = fragmentManager;
     }
 
+    public DriverMapFragment getDriverMapFragment() {
+        return (DriverMapFragment) fragmentManager.findFragmentByTag(DriverMapFragment.TAG);
+    }
+
     public void goToMyProfileFragment() {
         popEveryFragment();
         hideMapFragment();

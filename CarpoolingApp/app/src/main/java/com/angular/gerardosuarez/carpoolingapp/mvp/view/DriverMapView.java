@@ -1,8 +1,10 @@
 package com.angular.gerardosuarez.carpoolingapp.mvp.view;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
 import android.location.LocationManager;
+import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
@@ -86,5 +88,11 @@ public class DriverMapView extends FragmentView<DriverMapFragment, Void> {
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM);
         map.animateCamera(cameraUpdate);
         locationManager.removeUpdates(getFragment());
+    }
+
+    public void requestPermissionsActivity() {
+        ActivityCompat.requestPermissions(getActivity(),
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                DriverMapFragment.PERMISSION_REQUEST_FINE_LOCATION);
     }
 }
