@@ -22,7 +22,7 @@ import timber.log.Timber;
 
 public class DriverMapView extends FragmentView<DriverMapFragment, Void> {
 
-    public static final int DEFAULT_ZOOM = 13;
+    public static final int DEFAULT_ZOOM = 16;
     private GoogleMap map;
     private LocationManager locationManager;
     private static final long MIN_TIME = 400;

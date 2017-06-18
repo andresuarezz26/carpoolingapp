@@ -10,29 +10,34 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <!-- <LinearLayout
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:layout_margin="5dp"
-         android:orientation="horizontal">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
 
-         <EditText
-             android:id="@+id/edit_location"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_weight="4"
-             android:hint="Search Location Here" />
+        <Switch
+            android:id="@+id/toggleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
+        <TextView
+            android:id="@+id/edit_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:gravity="center"
+            android:text="@string/text_community" />
 
-         <Button
-             android:id="@+id/btn_search"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_weight="0.5"
-             android:text="Search" />
+        <Button
+            android:id="@+id/btn_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Time" />
 
-     </LinearLayout>
- -->
+    </LinearLayout>
+
     <fragment
         android:id="@+id/map_fragment"
         android:name="com.google.android.gms.maps.MapFragment"
