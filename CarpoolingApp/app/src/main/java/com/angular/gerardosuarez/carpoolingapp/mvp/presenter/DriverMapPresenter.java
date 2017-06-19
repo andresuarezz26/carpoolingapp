@@ -46,6 +46,7 @@ public class DriverMapPresenter implements GoogleMap.OnMarkerClickListener {
             return;
         }
         view.getMap().setOnMarkerClickListener(this);
+        view.setListeners();
         requestPermissions(activity);
     }
 
@@ -193,11 +194,10 @@ public class DriverMapPresenter implements GoogleMap.OnMarkerClickListener {
     public void onLocationChanged(Location location) {
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         view.goToCurrentLocation(latLng);
-
     }
 
-    public String getCurrentLocationPlace() {
-        return "Current coordinates" + view.getCenterScreenCoordinates();
+    public void setAutocompleteFragmentText() {
+        view.setTextAutocompleteFragmentWithCurrentCoord();
     }
 }
 

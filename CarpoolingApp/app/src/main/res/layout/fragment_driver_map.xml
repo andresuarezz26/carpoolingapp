@@ -20,7 +20,7 @@
         android:orientation="horizontal">
 
         <Switch
-            android:id="@+id/toggleButton"
+            android:id="@+id/switch_from_to"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
@@ -31,7 +31,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="4"
             android:gravity="center"
-            android:text="@string/text_community" />
+            android:text="@string/text_community"
+            android:textSize="@dimen/big_min_text_size" />
 
         <Button
             android:id="@+id/btn_search"

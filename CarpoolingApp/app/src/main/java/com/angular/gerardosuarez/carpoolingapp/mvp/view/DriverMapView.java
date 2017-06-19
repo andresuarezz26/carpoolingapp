@@ -3,6 +3,8 @@ package com.angular.gerardosuarez.carpoolingapp.mvp.view;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
@@ -20,6 +22,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 import timber.log.Timber;
 
 public class DriverMapView extends FragmentView<DriverMapFragment, Void> {
@@ -30,10 +36,12 @@ public class DriverMapView extends FragmentView<DriverMapFragment, Void> {
     private static final long MIN_TIME = 400;
     private static final float MIN_DISTANCE = 1000;
 
-    public static final double LATITUDE_CALI_FIRST = 3.5408;
-    public static final double LONGITUDE_CALI_FIRST = -76.5367;
-    public static final double LATITUDE_CALI_SECOND = 3.2872;
-    public static final double LONGITUDE_CALI_SECOND = -76.4872;
+    private static final double LATITUDE_CALI_FIRST = 3.5408;
+    private static final double LONGITUDE_CALI_FIRST = -76.5367;
+    private static final double LATITUDE_CALI_SECOND = 3.2872;
+    private static final double LONGITUDE_CALI_SECOND = -76.4872;
+
+    private PlaceAutocompleteFragment autocompleteFragment;
 
     public DriverMapView(DriverMapFragment fragment) {
         super(fragment);
@@ -44,7 +52,7 @@ public class DriverMapView extends FragmentView<DriverMapFragment, Void> {
     }
 
     public void setAutocompleteFragment() {
-        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment) getFragment().
+        autocompleteFragment = (PlaceAutocompleteFragment) getFragment().
                 getChildFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
         autocompleteFragment.setBoundsBias(new LatLngBounds(
                 new LatLng(LATITUDE_CALI_SECOND, LONGITUDE_CALI_SECOND),
@@ -52,6 +60,14 @@ public class DriverMapView extends FragmentView<DriverMapFragment, Void> {
         ));
 
         autocompleteFragment.setOnPlaceSelectedListener(getFragment());
+    }
+
+    private void setTextAutocompleteFragmentWithText(String text) {
+        autocompleteFragment.setText(text);
+    }
+
+    public void setTextAutocompleteFragmentWithCurrentCoord() {
+        autocompleteFragment.setText(getCurrentAddressCalculatingCurrentLocation());
     }
 
     public void initMap() {
@@ -106,6 +122,7 @@ public class DriverMapView extends FragmentView<DriverMapFragment, Void> {
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM);
         map.animateCamera(cameraUpdate);
         locationManager.removeUpdates(getFragment());
+        setTextAutocompleteFragmentWithText(getCurrentAddress(latLng));
     }
 
     public void requestPermissionsActivity() {
@@ -114,7 +131,44 @@ public class DriverMapView extends FragmentView<DriverMapFragment, Void> {
                 DriverMapFragment.PERMISSION_REQUEST_FINE_LOCATION);
     }
 
-    public LatLng getCenterScreenCoordinates() {
-        return map.getCameraPosition().target;
+    private String getCurrentAddress(LatLng currentCoordinates) {
+        String address = "";
+        try {
+            Geocoder geocoder;
+            List<Address> addresses;
+            geocoder = new Geocoder(getActivity(), Locale.getDefault());
+            addresses = geocoder.getFromLocation(currentCoordinates.latitude, currentCoordinates.longitude, 1);
+            if (!addresses.isEmpty()) {
+                address = addresses.get(0).getAddressLine(0);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return address;
+    }
+
+    private String getCurrentAddressCalculatingCurrentLocation() {
+        String address = "";
+        try {
+            LatLng currentCoordinates = map.getCameraPosition().target;
+            Geocoder geocoder;
+            List<Address> addresses;
+            geocoder = new Geocoder(getActivity(), Locale.getDefault());
+            addresses = geocoder.getFromLocation(currentCoordinates.latitude, currentCoordinates.longitude, 1);
+            if (!addresses.isEmpty()) {
+                address = addresses.get(0).getAddressLine(0);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return address;
+    }
+
+    public void setListeners() {
+        map.setOnCameraMoveListener(getFragment());
+        map.setOnCameraMoveStartedListener(getFragment());
+        map.setOnCameraIdleListener(getFragment());
     }
 }
