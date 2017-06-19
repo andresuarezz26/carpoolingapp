@@ -10,6 +10,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
+import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerQuota;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.DriverMapView;
 import com.angular.gerardosuarez.carpoolingapp.service.DriverMapService;
 import com.google.android.gms.common.ConnectionResult;
@@ -21,6 +22,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class DriverMapPresenter implements GoogleMap.OnMarkerClickListener {
 
@@ -28,10 +31,12 @@ public class DriverMapPresenter implements GoogleMap.OnMarkerClickListener {
     private DriverMapService service;
 
     private ChildEventListener chatsListRef;
+    private DatabaseReference databaseRef;
 
     public DriverMapPresenter(DriverMapView view, DriverMapService service) {
         this.view = view;
         this.service = service;
+        this.databaseRef = FirebaseDatabase.getInstance().getReference();
     }
 
     public void init() {
@@ -50,12 +55,26 @@ public class DriverMapPresenter implements GoogleMap.OnMarkerClickListener {
         requestPermissions(activity);
     }
 
+    public void unsubscribe() {
+        if (chatsListRef != null) {
+            databaseRef.removeEventListener(chatsListRef);
+        }
+    }
+
+    public void subscribe() {
+        getQuotas("icesi", "from", "18062017", "1600");
+    }
+
+    //Services
     public void getQuotas(String comunity, String origin, String date, String hour) {
         chatsListRef = service.getQuotasPerCommunityOriginDateAndHour(comunity, origin, date, hour)
                 .addChildEventListener(
                         new ChildEventListener() {
                             @Override
                             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                PassengerQuota chat = dataSnapshot.getValue(PassengerQuota.class);
+                                chat.getClass();
+                                chat.toString();
                             }
 
                             @Override

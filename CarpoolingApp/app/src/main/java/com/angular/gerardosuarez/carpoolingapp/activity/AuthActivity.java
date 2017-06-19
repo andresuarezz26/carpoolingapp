@@ -57,13 +57,13 @@ public class AuthActivity extends BaseActivity implements OnCompleteListener<Aut
 
     @OnClick(R.id.button_login)
     void onLoginCLick() {
-        String username = editUsername.getText().toString();
-        String password = editPassword.getText().toString();
+        final String username = editUsername.getText().toString();
+        final String password = editPassword.getText().toString();
         presenter.loginUser(username, password);
     }
 
     @Override
-    public void onComplete(@NonNull Task<AuthResult> task) {
+    public void onComplete(@NonNull final Task<AuthResult> task) {
         presenter.onCompleteLogin(task);
     }
 
