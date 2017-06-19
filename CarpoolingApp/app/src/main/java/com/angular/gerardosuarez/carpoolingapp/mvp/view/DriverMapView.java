@@ -11,11 +11,13 @@ import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.fragment.DriverMapFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.base.FragmentView;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import timber.log.Timber;
@@ -28,12 +30,28 @@ public class DriverMapView extends FragmentView<DriverMapFragment, Void> {
     private static final long MIN_TIME = 400;
     private static final float MIN_DISTANCE = 1000;
 
+    public static final double LATITUDE_CALI_FIRST = 3.5408;
+    public static final double LONGITUDE_CALI_FIRST = -76.5367;
+    public static final double LATITUDE_CALI_SECOND = 3.2872;
+    public static final double LONGITUDE_CALI_SECOND = -76.4872;
+
     public DriverMapView(DriverMapFragment fragment) {
         super(fragment);
     }
 
     public GoogleMap getMap() {
         return map;
+    }
+
+    public void setAutocompleteFragment() {
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment) getFragment().
+                getChildFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        autocompleteFragment.setBoundsBias(new LatLngBounds(
+                new LatLng(LATITUDE_CALI_SECOND, LONGITUDE_CALI_SECOND),
+                new LatLng(LATITUDE_CALI_FIRST, LONGITUDE_CALI_FIRST)
+        ));
+
+        autocompleteFragment.setOnPlaceSelectedListener(getFragment());
     }
 
     public void initMap() {
@@ -94,5 +112,9 @@ public class DriverMapView extends FragmentView<DriverMapFragment, Void> {
         ActivityCompat.requestPermissions(getActivity(),
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                 DriverMapFragment.PERMISSION_REQUEST_FINE_LOCATION);
+    }
+
+    public LatLng getCenterScreenCoordinates() {
+        return map.getCameraPosition().target;
     }
 }

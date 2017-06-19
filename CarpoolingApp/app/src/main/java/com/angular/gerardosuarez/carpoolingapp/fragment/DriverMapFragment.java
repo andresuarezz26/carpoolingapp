@@ -26,7 +26,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-public class DriverMapFragment extends Fragment implements OnMapReadyCallback, LocationListener {
+public class DriverMapFragment extends Fragment implements OnMapReadyCallback, LocationListener, PlaceSelectionListener {
 
     public static final String TAG = "driver_map";
     public static final int PERMISSION_REQUEST_FINE_LOCATION = 1;
@@ -54,28 +54,7 @@ public class DriverMapFragment extends Fragment implements OnMapReadyCallback, L
         if (presenter.googleServicesAvailable()) {
             presenter.initMap();
         }
-        setAutocompleteFragment();
-    }
-
-    private void setAutocompleteFragment() {
-        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
-                getChildFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-        autocompleteFragment.setBoundsBias(new LatLngBounds(
-                new LatLng(LATITUDE_CALI_SECOND, LONGITUDE_CALI_SECOND),
-                new LatLng(LATITUDE_CALI_FIRST, LONGITUDE_CALI_FIRST)
-        ));
-
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                presenter.searchPlace(place);
-            }
-
-            @Override
-            public void onError(Status status) {
-                Timber.e(status.toString());
-            }
-        });
+        presenter.setAutocompleteFragment();
     }
 
     @Override
@@ -86,6 +65,7 @@ public class DriverMapFragment extends Fragment implements OnMapReadyCallback, L
         }
     }
 
+    //OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         presenter.setMap(googleMap);
@@ -93,6 +73,7 @@ public class DriverMapFragment extends Fragment implements OnMapReadyCallback, L
         presenter.addMockMarkers();
     }
 
+    //LocationListener callbacks
     @Override
     public void onLocationChanged(Location location) {
         presenter.onLocationChanged(location);
@@ -111,5 +92,16 @@ public class DriverMapFragment extends Fragment implements OnMapReadyCallback, L
     @Override
     public void onProviderDisabled(String provider) {
 
+    }
+
+    //Autocomplete Fragment callbacks
+    @Override
+    public void onPlaceSelected(Place place) {
+        presenter.searchPlace(place);
+    }
+
+    @Override
+    public void onError(Status status) {
+        Timber.e(status.toString());
     }
 }

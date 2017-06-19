@@ -79,6 +79,10 @@ public class DriverMapPresenter implements GoogleMap.OnMarkerClickListener {
                         });
     }
 
+    public void setAutocompleteFragment() {
+        view.setAutocompleteFragment();
+    }
+
     private void setLocationManager() {
         view.setLocationManager();
     }
@@ -183,13 +187,17 @@ public class DriverMapPresenter implements GoogleMap.OnMarkerClickListener {
         LatLng placeLocation = place.getLatLng();
         String placeName = place.getName().toString();
         view.animateCamera(placeLocation);
-        view.setMarker(placeLocation, placeName);
+        //view.setMarker(placeLocation, placeName);
     }
 
     public void onLocationChanged(Location location) {
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         view.goToCurrentLocation(latLng);
 
+    }
+
+    public String getCurrentLocationPlace() {
+        return "Current coordinates" + view.getCenterScreenCoordinates();
     }
 }
 
