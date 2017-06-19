@@ -46,6 +46,8 @@ public class DriverMapFragment extends Fragment
     public static final String TAG = "driver_map";
     public static final int PERMISSION_REQUEST_FINE_LOCATION = 1;
     private boolean mapWasTouched = false;
+    private boolean wasDateSelected = false;
+    private boolean wasTimeSelected = false;
 
     private DriverMapPresenter presenter;
 
@@ -103,7 +105,12 @@ public class DriverMapFragment extends Fragment
 
         @Override
         public void onNext(Integer integer) {
-            btnHour.setText("" + integer);
+            wasTimeSelected = true;
+            btnHour.setText("Listo");
+            btnHour.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+            if (wasDateSelected) {
+                presenter.subscribe();
+            }
         }
 
         @Override
@@ -132,7 +139,12 @@ public class DriverMapFragment extends Fragment
 
         @Override
         public void onNext(Integer integer) {
-            btnDate.setText("" + integer);
+            wasDateSelected = true;
+            btnDate.setText("Listo");
+            btnDate.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+            if (wasTimeSelected) {
+                presenter.subscribe();
+            }
         }
 
         @Override
@@ -149,7 +161,6 @@ public class DriverMapFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        presenter.subscribe();
     }
 
     @Override
