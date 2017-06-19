@@ -1,5 +1,6 @@
 package com.angular.gerardosuarez.carpoolingapp.fragment;
 
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.location.Location;
 import android.location.LocationListener;
@@ -9,11 +10,14 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
+import com.angular.gerardosuarez.carpoolingapp.dialogfragment.DatePickerFragment;
+import com.angular.gerardosuarez.carpoolingapp.dialogfragment.TimePickerFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.DriverMapPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.DriverMapView;
 import com.angular.gerardosuarez.carpoolingapp.service.DriverMapService;
@@ -25,6 +29,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 import timber.log.Timber;
 
 public class DriverMapFragment extends Fragment
@@ -44,6 +51,10 @@ public class DriverMapFragment extends Fragment
 
     @BindView(R.id.switch_from_to) Switch switchFromTo;
     @BindView(R.id.edit_location) TextView textLocation;
+
+
+    @BindView(R.id.btn_hour) Button btnHour;
+    @BindView(R.id.btn_date) Button btnDate;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,6 +86,64 @@ public class DriverMapFragment extends Fragment
                 }
             }
         });
+    }
+
+    @OnClick(R.id.btn_hour)
+    void onTimeClick() {
+        DialogFragment newFragment = new TimePickerFragment(new OnTimeSelectedObserver());
+        newFragment.show(getFragmentManager(), "timePicker");
+    }
+
+    private class OnTimeSelectedObserver implements Observer<Integer> {
+
+        @Override
+        public void onSubscribe(Disposable d) {
+
+        }
+
+        @Override
+        public void onNext(Integer integer) {
+            btnHour.setText("" + integer);
+        }
+
+        @Override
+        public void onError(Throwable e) {
+
+        }
+
+        @Override
+        public void onComplete() {
+
+        }
+    }
+
+    @OnClick(R.id.btn_date)
+    void onDateClick() {
+        DialogFragment newFragment = new DatePickerFragment(new OnDateSelectedObserver());
+        newFragment.show(getFragmentManager(), "datePicker");
+    }
+
+    private class OnDateSelectedObserver implements Observer<Integer> {
+
+        @Override
+        public void onSubscribe(Disposable d) {
+
+        }
+
+        @Override
+        public void onNext(Integer integer) {
+            btnDate.setText("" + integer);
+        }
+
+        @Override
+        public void onError(Throwable e) {
+
+        }
+
+        @Override
+        public void onComplete() {
+
+        }
     }
 
     @Override

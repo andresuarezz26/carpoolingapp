@@ -15,6 +15,6 @@ public class DriverMapService {
     public DatabaseReference getQuotasPerCommunityOriginDateAndHour(@NonNull String comunity, @NonNull String origin, @NonNull String date, @NonNull String hour) {
         String rootCommunity = origin + "-" + comunity;
         String route = rootCommunity + date + hour + "diegobarbosa180620171600";
-        return databaseRef.child("from-icesi").child("18062017").child("1600").child("diegobarbosa180620171600");
+        return databaseRef.child("from-icesi").child("18062017").child("1600");
     }
 }

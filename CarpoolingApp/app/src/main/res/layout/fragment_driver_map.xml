@@ -35,10 +35,16 @@
             android:textSize="@dimen/big_min_text_size" />
 
         <Button
-            android:id="@+id/btn_search"
+            android:id="@+id/btn_hour"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Time" />
+            android:text="Hora" />
+
+        <Button
+            android:id="@+id/btn_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fecha" />
 
     </LinearLayout>
 

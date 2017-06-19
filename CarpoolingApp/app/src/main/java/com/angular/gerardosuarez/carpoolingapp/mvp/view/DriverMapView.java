@@ -11,7 +11,8 @@ import android.widget.Toast;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.fragment.DriverMapFragment;
-import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.base.FragmentView;
+import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerQuota;
+import com.angular.gerardosuarez.carpoolingapp.mvp.base.FragmentView;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.maps.CameraUpdate;
@@ -99,7 +100,7 @@ public class DriverMapView extends FragmentView<DriverMapFragment, Void> {
                 .setTag(id);
     }
 
-    public void setMarker(LatLng latLng, String title) {
+    private void setMarker(LatLng latLng, String title) {
         map.addMarker(new MarkerOptions()
                 .position(latLng)
                 .title(title));
@@ -170,5 +171,9 @@ public class DriverMapView extends FragmentView<DriverMapFragment, Void> {
         map.setOnCameraMoveListener(getFragment());
         map.setOnCameraMoveStartedListener(getFragment());
         map.setOnCameraIdleListener(getFragment());
+    }
+
+    public void addPassengerQuotaMarker(PassengerQuota passengerQuota) {
+        setMarker(new LatLng(passengerQuota.latitude, passengerQuota.longitude), passengerQuota.description);
     }
 }

@@ -1,4 +1,4 @@
-package com.angular.gerardosuarez.carpoolingapp.mvp.presenter.base;
+package com.angular.gerardosuarez.carpoolingapp.mvp.base;
 
 import android.app.ProgressDialog;
 import android.content.Context;

@@ -5,7 +5,7 @@ import android.view.View;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyProfileFragment;
-import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.base.FragmentView;
+import com.angular.gerardosuarez.carpoolingapp.mvp.base.FragmentView;
 
 import butterknife.ButterKnife;
 

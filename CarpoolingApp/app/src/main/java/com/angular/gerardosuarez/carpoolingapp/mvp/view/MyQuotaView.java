@@ -8,7 +8,7 @@ import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.adapter.MyQuotaAdapter;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyQuotaFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.Passenger;
-import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.base.FragmentView;
+import com.angular.gerardosuarez.carpoolingapp.mvp.base.FragmentView;
 
 import java.util.List;
 

@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerQuota;
+import com.angular.gerardosuarez.carpoolingapp.mvp.base.BaseMapPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.DriverMapView;
 import com.angular.gerardosuarez.carpoolingapp.service.DriverMapService;
 import com.google.android.gms.common.ConnectionResult;
@@ -19,24 +20,23 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-public class DriverMapPresenter implements GoogleMap.OnMarkerClickListener {
+import timber.log.Timber;
+
+public class DriverMapPresenter extends BaseMapPresenter implements GoogleMap.OnMarkerClickListener {
 
     private DriverMapView view;
     private DriverMapService service;
 
-    private ChildEventListener chatsListRef;
-    private DatabaseReference databaseRef;
+    private ValueEventListener quotaPassengerListener;
 
     public DriverMapPresenter(DriverMapView view, DriverMapService service) {
+        super();
         this.view = view;
         this.service = service;
-        this.databaseRef = FirebaseDatabase.getInstance().getReference();
     }
 
     public void init() {
@@ -55,48 +55,34 @@ public class DriverMapPresenter implements GoogleMap.OnMarkerClickListener {
         requestPermissions(activity);
     }
 
+    @Override
     public void unsubscribe() {
-        if (chatsListRef != null) {
-            databaseRef.removeEventListener(chatsListRef);
+        if (quotaPassengerListener != null) {
+            databaseRef.removeEventListener(quotaPassengerListener);
         }
     }
 
+    @Override
     public void subscribe() {
         getQuotas("icesi", "from", "18062017", "1600");
     }
 
     //Services
-    public void getQuotas(String comunity, String origin, String date, String hour) {
-        chatsListRef = service.getQuotasPerCommunityOriginDateAndHour(comunity, origin, date, hour)
-                .addChildEventListener(
-                        new ChildEventListener() {
-                            @Override
-                            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                                PassengerQuota chat = dataSnapshot.getValue(PassengerQuota.class);
-                                chat.getClass();
-                                chat.toString();
-                            }
+    private void getQuotas(String comunity, String origin, String date, String hour) {
+        quotaPassengerListener = service.getQuotasPerCommunityOriginDateAndHour(comunity, origin, date, hour).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    PassengerQuota passengerQuota = snapshot.getValue(PassengerQuota.class);
+                    view.addPassengerQuotaMarker(passengerQuota);
+                }
+            }
 
-                            @Override
-                            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                            }
-
-                            @Override
-                            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                            }
-
-                            @Override
-                            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Timber.e(databaseError.toString());
+            }
+        });
     }
 
     public void setAutocompleteFragment() {
@@ -182,12 +168,6 @@ public class DriverMapPresenter implements GoogleMap.OnMarkerClickListener {
     }
 
     public void addMockMarkers() {
-        view.setMarker(new LatLng(3.4, -76.5), "Cupo 1", 1);
-        view.setMarker(new LatLng(3.49, -76.54), "Cupo 2", 2);
-        view.setMarker(new LatLng(3.50, -76.52), "Cupo 3", 3);
-        view.setMarker(new LatLng(3.51, -76.5), "Cupo 4", 4);
-        view.setMarker(new LatLng(3.52, -76.5), "Cupo 5", 5);
-        view.setMarker(new LatLng(3.53, -76.523), "Cupo 6", 6);
     }
 
     @Override
