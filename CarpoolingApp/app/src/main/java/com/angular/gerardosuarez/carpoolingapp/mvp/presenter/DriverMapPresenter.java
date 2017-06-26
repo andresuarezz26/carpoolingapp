@@ -5,13 +5,15 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
-import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerQuota;
 import com.angular.gerardosuarez.carpoolingapp.mvp.base.BaseMapPresenter;
+import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerQuota;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.DriverMapView;
 import com.angular.gerardosuarez.carpoolingapp.service.DriverMapService;
 import com.google.android.gms.common.ConnectionResult;
@@ -24,13 +26,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 import timber.log.Timber;
 
-public class DriverMapPresenter extends BaseMapPresenter implements GoogleMap.OnMarkerClickListener {
+public class DriverMapPresenter extends BaseMapPresenter {
 
     private DriverMapView view;
     private DriverMapService service;
-
     private ValueEventListener quotaPassengerListener;
 
     public DriverMapPresenter(DriverMapView view, DriverMapService service) {
@@ -50,7 +55,6 @@ public class DriverMapPresenter extends BaseMapPresenter implements GoogleMap.On
         if (view.getMap() == null) {
             return;
         }
-        view.getMap().setOnMarkerClickListener(this);
         view.setListeners();
         requestPermissions(activity);
     }
@@ -60,6 +64,7 @@ public class DriverMapPresenter extends BaseMapPresenter implements GoogleMap.On
         if (quotaPassengerListener != null) {
             databaseRef.removeEventListener(quotaPassengerListener);
         }
+        view.removeListeners();
     }
 
     @Override
@@ -170,7 +175,6 @@ public class DriverMapPresenter extends BaseMapPresenter implements GoogleMap.On
     public void addMockMarkers() {
     }
 
-    @Override
     public boolean onMarkerClick(Marker marker) {
         if (marker == null) {
             return false;
@@ -192,11 +196,36 @@ public class DriverMapPresenter extends BaseMapPresenter implements GoogleMap.On
 
     public void onLocationChanged(Location location) {
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        view.goToCurrentLocation(latLng);
+        view.goToCurrentLocation(latLng, getCurrentAddressFromLatLng(latLng));
     }
 
     public void setAutocompleteFragmentText() {
-        view.setTextAutocompleteFragmentWithCurrentCoord();
+        view.setTextAutocompleteFragmentWithCurrentCoord(getCurrentAddressFromCamera());
+    }
+
+    private String getCurrentAddressFromLatLng(LatLng coordinates) {
+        return calculateAddress(coordinates);
+    }
+
+    private String getCurrentAddressFromCamera() {
+        LatLng currentCoordinates = view.getCurrentCoordinatesFromCamera();
+        return calculateAddress(currentCoordinates);
+    }
+
+    private String calculateAddress(LatLng currentCoordinates) {
+        String address = "";
+        try {
+            Geocoder geocoder;
+            List<Address> addresses;
+            geocoder = new Geocoder(view.getActivity(), Locale.getDefault());
+            addresses = geocoder.getFromLocation(currentCoordinates.latitude, currentCoordinates.longitude, 1);
+            if (!addresses.isEmpty()) {
+                address = addresses.get(0).getAddressLine(0);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return address;
     }
 }
 

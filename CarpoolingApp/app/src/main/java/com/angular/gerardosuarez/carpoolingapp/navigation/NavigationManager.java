@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.RolePreference;
 import com.angular.gerardosuarez.carpoolingapp.fragment.DriverMapFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyProfileFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyQuotaFragment;
@@ -13,16 +14,18 @@ public class NavigationManager {
 
     private static NavigationManager navigationManager;
     private FragmentManager fragmentManager;
+    private RolePreference preference;
 
-    public static NavigationManager getInstance(FragmentManager fragmentManager) {
+    public static NavigationManager getInstance(FragmentManager fragmentManager, RolePreference preference) {
         if (navigationManager == null) {
-            navigationManager = new NavigationManager(fragmentManager);
+            navigationManager = new NavigationManager(fragmentManager, preference);
         }
         return navigationManager;
     }
 
-    private NavigationManager(FragmentManager fragmentManager) {
+    private NavigationManager(FragmentManager fragmentManager, RolePreference preference) {
         this.fragmentManager = fragmentManager;
+        this.preference = preference;
     }
 
     public DriverMapFragment getDriverMapFragment() {

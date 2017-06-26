@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.widget.TimePicker;
 
+import com.angular.gerardosuarez.carpoolingapp.customviews.dialog.CustomTimePickerDialog;
 import com.angular.gerardosuarez.carpoolingapp.dialogfragment.base.BaseDialogFragment;
 
 import java.util.Calendar;
@@ -28,7 +29,7 @@ public class TimePickerFragment extends BaseDialogFragment<Integer>
         int minute = c.get(Calendar.MINUTE);
 
         // Create a new instance of TimePickerDialog and return it
-        return new TimePickerDialog(getActivity(), this, hour, minute,
+        return new CustomTimePickerDialog(getActivity(), this, hour, minute,
                 DateFormat.is24HourFormat(getActivity()));
     }
 

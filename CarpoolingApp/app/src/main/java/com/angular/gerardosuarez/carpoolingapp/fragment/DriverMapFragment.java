@@ -26,6 +26,7 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.Marker;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,7 +42,8 @@ public class DriverMapFragment extends Fragment
         PlaceSelectionListener,
         GoogleMap.OnCameraMoveListener,
         GoogleMap.OnCameraMoveStartedListener,
-        GoogleMap.OnCameraIdleListener {
+        GoogleMap.OnCameraIdleListener,
+        GoogleMap.OnMarkerClickListener {
 
     public static final String TAG = "driver_map";
     public static final int PERMISSION_REQUEST_FINE_LOCATION = 1;
@@ -96,6 +98,11 @@ public class DriverMapFragment extends Fragment
         newFragment.show(getFragmentManager(), "timePicker");
     }
 
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        return presenter.onMarkerClick(marker);
+    }
+
     private class OnTimeSelectedObserver implements Observer<Integer> {
 
         @Override
@@ -122,6 +129,13 @@ public class DriverMapFragment extends Fragment
         public void onComplete() {
 
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.unsubscribe();
+
     }
 
     @OnClick(R.id.btn_date)

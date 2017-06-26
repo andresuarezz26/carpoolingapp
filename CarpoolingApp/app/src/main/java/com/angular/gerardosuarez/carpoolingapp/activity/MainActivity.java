@@ -6,6 +6,8 @@ import android.support.design.widget.BottomNavigationView;
 import android.view.MenuItem;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.RolePreference;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.RolePreferenceImpl;
 import com.angular.gerardosuarez.carpoolingapp.fragment.DriverMapFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MainPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MainView;
@@ -27,7 +29,8 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
         presenter = new MainPresenter(new MainView(this));
         presenter.init();
-        navigationManager = NavigationManager.getInstance(getFragmentManager());
+        final RolePreference preference = new RolePreferenceImpl(this, RolePreferenceImpl.NAME);
+        navigationManager = NavigationManager.getInstance(getFragmentManager(), preference);
         navigationManager.goToMyProfileFragment();
 
         bottomMenu.setOnNavigationItemSelectedListener(
@@ -63,5 +66,9 @@ public class MainActivity extends BaseActivity {
         if (fragment != null) {
             fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+    }
+
+    public NavigationManager getNavigationManager() {
+        return navigationManager;
     }
 }

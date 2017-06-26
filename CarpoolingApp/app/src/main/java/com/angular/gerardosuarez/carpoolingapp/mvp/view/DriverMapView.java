@@ -3,16 +3,14 @@ package com.angular.gerardosuarez.carpoolingapp.mvp.view;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.fragment.DriverMapFragment;
-import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerQuota;
 import com.angular.gerardosuarez.carpoolingapp.mvp.base.FragmentView;
+import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerQuota;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.maps.CameraUpdate;
@@ -22,10 +20,6 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
 
 import timber.log.Timber;
 
@@ -67,8 +61,8 @@ public class DriverMapView extends FragmentView<DriverMapFragment, Void> {
         autocompleteFragment.setText(text);
     }
 
-    public void setTextAutocompleteFragmentWithCurrentCoord() {
-        autocompleteFragment.setText(getCurrentAddressCalculatingCurrentLocation());
+    public void setTextAutocompleteFragmentWithCurrentCoord(String currentLocation) {
+        autocompleteFragment.setText(currentLocation);
     }
 
     public void initMap() {
@@ -119,11 +113,11 @@ public class DriverMapView extends FragmentView<DriverMapFragment, Void> {
         }
     }
 
-    public void goToCurrentLocation(LatLng latLng) {
+    public void goToCurrentLocation(LatLng latLng, String currentAddress) {
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM);
         map.animateCamera(cameraUpdate);
         locationManager.removeUpdates(getFragment());
-        setTextAutocompleteFragmentWithText(getCurrentAddress(latLng));
+        setTextAutocompleteFragmentWithText(currentAddress);
     }
 
     public void requestPermissionsActivity() {
@@ -132,48 +126,26 @@ public class DriverMapView extends FragmentView<DriverMapFragment, Void> {
                 DriverMapFragment.PERMISSION_REQUEST_FINE_LOCATION);
     }
 
-    private String getCurrentAddress(LatLng currentCoordinates) {
-        String address = "";
-        try {
-            Geocoder geocoder;
-            List<Address> addresses;
-            geocoder = new Geocoder(getActivity(), Locale.getDefault());
-            addresses = geocoder.getFromLocation(currentCoordinates.latitude, currentCoordinates.longitude, 1);
-            if (!addresses.isEmpty()) {
-                address = addresses.get(0).getAddressLine(0);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return address;
+    public LatLng getCurrentCoordinatesFromCamera() {
+        return map.getCameraPosition().target;
     }
 
-    private String getCurrentAddressCalculatingCurrentLocation() {
-        String address = "";
-        try {
-            LatLng currentCoordinates = map.getCameraPosition().target;
-            Geocoder geocoder;
-            List<Address> addresses;
-            geocoder = new Geocoder(getActivity(), Locale.getDefault());
-            addresses = geocoder.getFromLocation(currentCoordinates.latitude, currentCoordinates.longitude, 1);
-            if (!addresses.isEmpty()) {
-                address = addresses.get(0).getAddressLine(0);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return address;
+    public void addPassengerQuotaMarker(PassengerQuota passengerQuota) {
+        setMarker(new LatLng(passengerQuota.latitude, passengerQuota.longitude), passengerQuota.description);
     }
 
     public void setListeners() {
         map.setOnCameraMoveListener(getFragment());
         map.setOnCameraMoveStartedListener(getFragment());
         map.setOnCameraIdleListener(getFragment());
+        map.setOnMarkerClickListener(getFragment());
     }
 
-    public void addPassengerQuotaMarker(PassengerQuota passengerQuota) {
-        setMarker(new LatLng(passengerQuota.latitude, passengerQuota.longitude), passengerQuota.description);
+    public void removeListeners() {
+        locationManager.removeUpdates(getFragment());
+        map.setOnCameraMoveListener(null);
+        map.setOnCameraMoveStartedListener(null);
+        map.setOnCameraIdleListener(null);
+        map.setOnMarkerClickListener(null);
     }
 }
