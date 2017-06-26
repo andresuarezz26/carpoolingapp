@@ -8,7 +8,7 @@ import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
-import com.angular.gerardosuarez.carpoolingapp.fragment.DriverMapFragment;
+import com.angular.gerardosuarez.carpoolingapp.fragment.MyMapFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.base.FragmentView;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerQuota;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -23,7 +23,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import timber.log.Timber;
 
-public class DriverMapView extends FragmentView<DriverMapFragment, Void> {
+public class MyMapView extends FragmentView<MyMapFragment, Void> {
 
     public static final int DEFAULT_ZOOM = 16;
     private GoogleMap map;
@@ -38,7 +38,7 @@ public class DriverMapView extends FragmentView<DriverMapFragment, Void> {
 
     private PlaceAutocompleteFragment autocompleteFragment;
 
-    public DriverMapView(DriverMapFragment fragment) {
+    public MyMapView(MyMapFragment fragment) {
         super(fragment);
     }
 
@@ -123,7 +123,7 @@ public class DriverMapView extends FragmentView<DriverMapFragment, Void> {
     public void requestPermissionsActivity() {
         ActivityCompat.requestPermissions(getActivity(),
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                DriverMapFragment.PERMISSION_REQUEST_FINE_LOCATION);
+                MyMapFragment.PERMISSION_REQUEST_FINE_LOCATION);
     }
 
     public LatLng getCurrentCoordinatesFromCamera() {
@@ -135,6 +135,13 @@ public class DriverMapView extends FragmentView<DriverMapFragment, Void> {
     }
 
     public void setListeners() {
+        MyMapFragment fragment = getFragment();
+        if (fragment == null) {
+            return;
+        }
+        if (map == null) {
+            return;
+        }
         map.setOnCameraMoveListener(getFragment());
         map.setOnCameraMoveStartedListener(getFragment());
         map.setOnCameraIdleListener(getFragment());
@@ -142,7 +149,14 @@ public class DriverMapView extends FragmentView<DriverMapFragment, Void> {
     }
 
     public void removeListeners() {
-        locationManager.removeUpdates(getFragment());
+        MyMapFragment fragment = getFragment();
+        if (fragment == null) {
+            return;
+        }
+        if (map == null) {
+            return;
+        }
+        locationManager.removeUpdates(fragment);
         map.setOnCameraMoveListener(null);
         map.setOnCameraMoveStartedListener(null);
         map.setOnCameraIdleListener(null);

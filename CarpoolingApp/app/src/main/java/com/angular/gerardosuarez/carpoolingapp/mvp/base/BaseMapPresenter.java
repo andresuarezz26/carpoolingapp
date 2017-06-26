@@ -9,10 +9,4 @@ public class BaseMapPresenter {
     protected BaseMapPresenter() {
         this.databaseRef = FirebaseDatabase.getInstance().getReference();
     }
-
-    public void unsubscribe() {
-    }
-
-    public void subscribe() {
-    }
 }

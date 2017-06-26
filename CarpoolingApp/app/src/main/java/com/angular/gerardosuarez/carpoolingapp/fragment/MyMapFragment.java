@@ -18,9 +18,10 @@ import android.widget.TextView;
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.dialogfragment.DatePickerFragment;
 import com.angular.gerardosuarez.carpoolingapp.dialogfragment.TimePickerFragment;
-import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.DriverMapPresenter;
-import com.angular.gerardosuarez.carpoolingapp.mvp.view.DriverMapView;
+import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MyMapPresenter;
+import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyMapView;
 import com.angular.gerardosuarez.carpoolingapp.service.DriverMapService;
+import com.angular.gerardosuarez.carpoolingapp.utils.NetworkUtils;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
@@ -35,7 +36,7 @@ import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import timber.log.Timber;
 
-public class DriverMapFragment extends Fragment
+public class MyMapFragment extends Fragment
         implements
         OnMapReadyCallback,
         LocationListener,
@@ -50,13 +51,16 @@ public class DriverMapFragment extends Fragment
     private boolean mapWasTouched = false;
     private boolean wasDateSelected = false;
     private boolean wasTimeSelected = false;
+    private String currentRole = "";
 
-    private DriverMapPresenter presenter;
+    private MyMapPresenter presenter;
+
+    public MyMapFragment(String currentRole) {
+        this.currentRole = currentRole;
+    }
 
     @BindView(R.id.switch_from_to) Switch switchFromTo;
     @BindView(R.id.edit_location) TextView textLocation;
-
-
     @BindView(R.id.btn_hour) Button btnHour;
     @BindView(R.id.btn_date) Button btnDate;
 
@@ -71,8 +75,8 @@ public class DriverMapFragment extends Fragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter = new DriverMapPresenter(
-                new DriverMapView(this),
+        presenter = new MyMapPresenter(
+                new MyMapView(this),
                 new DriverMapService());
         if (presenter.googleServicesAvailable()) {
             presenter.initMap();
@@ -98,11 +102,6 @@ public class DriverMapFragment extends Fragment
         newFragment.show(getFragmentManager(), "timePicker");
     }
 
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        return presenter.onMarkerClick(marker);
-    }
-
     private class OnTimeSelectedObserver implements Observer<Integer> {
 
         @Override
@@ -116,7 +115,7 @@ public class DriverMapFragment extends Fragment
             btnHour.setText("Listo");
             btnHour.setBackgroundColor(getResources().getColor(R.color.colorAccent));
             if (wasDateSelected) {
-                presenter.subscribe();
+                presenter.getQuotas();
             }
         }
 
@@ -134,8 +133,7 @@ public class DriverMapFragment extends Fragment
     @Override
     public void onDestroy() {
         super.onDestroy();
-        presenter.unsubscribe();
-
+        presenter.unsubscribeFirebaseListener();
     }
 
     @OnClick(R.id.btn_date)
@@ -157,7 +155,7 @@ public class DriverMapFragment extends Fragment
             btnDate.setText("Listo");
             btnDate.setBackgroundColor(getResources().getColor(R.color.colorAccent));
             if (wasTimeSelected) {
-                presenter.subscribe();
+                presenter.getQuotas();
             }
         }
 
@@ -175,12 +173,13 @@ public class DriverMapFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
+        presenter.setListeners();
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        presenter.unsubscribe();
+    public void onPause() {
+        super.onPause();
+        presenter.removeListeners();
     }
 
     @Override
@@ -191,7 +190,7 @@ public class DriverMapFragment extends Fragment
         }
     }
 
-    //OnMapReadyCallback
+    //OnMapReady Callback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         presenter.setMap(googleMap);
@@ -247,8 +246,16 @@ public class DriverMapFragment extends Fragment
 
     @Override
     public void onCameraIdle() {
-        if (mapWasTouched) {
-            presenter.setAutocompleteFragmentText();
+        if (NetworkUtils.isNetworkAvailable(getActivity())) {
+            if (mapWasTouched) {
+                presenter.setAutocompleteFragmentText();
+            }
         }
+    }
+
+    //GoogleMap.OnMarkerClickListener callback
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        return presenter.onMarkerClick(marker);
     }
 }

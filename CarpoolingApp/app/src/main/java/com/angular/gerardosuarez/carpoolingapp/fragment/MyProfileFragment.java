@@ -11,7 +11,6 @@ import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.activity.MainActivity;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MyProfilePresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyProfileView;
-import com.angular.gerardosuarez.carpoolingapp.navigation.NavigationManager;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -43,11 +42,18 @@ public class MyProfileFragment extends Fragment {
             return;
         }
         presenter.showMenu();
-        activity.getNavigationManager().goToDriverMapFragment();
+        activity.getNavigationManager().setToDriverRole();
+        activity.getNavigationManager().goToMapFragment();
     }
 
     @OnClick(R.id.btn_passenger)
     void onPassengerClick() {
-
+        MainActivity activity = (MainActivity) getActivity();
+        if (activity == null) {
+            return;
+        }
+        presenter.showMenu();
+        activity.getNavigationManager().setToPassengerRole();
+        activity.getNavigationManager().goToMapFragment();
     }
 }

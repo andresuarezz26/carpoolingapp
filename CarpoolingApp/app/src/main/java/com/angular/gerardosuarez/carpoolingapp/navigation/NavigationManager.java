@@ -6,15 +6,19 @@ import android.app.FragmentTransaction;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.RolePreference;
-import com.angular.gerardosuarez.carpoolingapp.fragment.DriverMapFragment;
+import com.angular.gerardosuarez.carpoolingapp.fragment.MyMapFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyProfileFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyQuotaFragment;
+import com.angular.gerardosuarez.carpoolingapp.utils.StringUtils;
 
 public class NavigationManager {
 
     private static NavigationManager navigationManager;
     private FragmentManager fragmentManager;
     private RolePreference preference;
+
+    private final static String ROLE_DRIVER = "driver";
+    private final static String ROLE_PASSEGNER = "passenger";
 
     public static NavigationManager getInstance(FragmentManager fragmentManager, RolePreference preference) {
         if (navigationManager == null) {
@@ -28,8 +32,8 @@ public class NavigationManager {
         this.preference = preference;
     }
 
-    public DriverMapFragment getDriverMapFragment() {
-        return (DriverMapFragment) fragmentManager.findFragmentByTag(DriverMapFragment.TAG);
+    public MyMapFragment getDriverMapFragment() {
+        return (MyMapFragment) fragmentManager.findFragmentByTag(MyMapFragment.TAG);
     }
 
     public void goToMyProfileFragment() {
@@ -38,9 +42,13 @@ public class NavigationManager {
         open(new MyProfileFragment(), MyProfileFragment.TAG);
     }
 
-    public void goToDriverMapFragment() {
+    public void goToMapFragment() {
         popEveryFragment();
-        setMapFragment(new DriverMapFragment(), DriverMapFragment.TAG);
+        String role = preference.getCurrentRole();
+        if (StringUtils.isEmpty(role)) {
+            return;
+        }
+        setMapFragment(new MyMapFragment(preference.getCurrentRole()), MyMapFragment.TAG);
     }
 
     public void goToMyQuotaFragment() {
@@ -51,7 +59,7 @@ public class NavigationManager {
 
     private void setMapFragment(Fragment fragment, String tag) {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        DriverMapFragment mapFragment = (DriverMapFragment) fragmentManager.findFragmentByTag(DriverMapFragment.TAG);
+        MyMapFragment mapFragment = (MyMapFragment) fragmentManager.findFragmentByTag(MyMapFragment.TAG);
         if (mapFragment != null) {
             transaction.show(mapFragment);
         } else {
@@ -71,7 +79,7 @@ public class NavigationManager {
 
     private void hideMapFragment() {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        DriverMapFragment mapFragment = (DriverMapFragment) fragmentManager.findFragmentByTag(DriverMapFragment.TAG);
+        MyMapFragment mapFragment = (MyMapFragment) fragmentManager.findFragmentByTag(MyMapFragment.TAG);
         if (mapFragment != null) {
             transaction.hide(mapFragment);
         }
@@ -82,10 +90,18 @@ public class NavigationManager {
         int backStackCount = fragmentManager.getBackStackEntryCount();
         for (int i = 0; i < backStackCount; i++) {
             String backStackId = fragmentManager.getBackStackEntryAt(i).getName();
-            if (!DriverMapFragment.TAG.equals(backStackId)) {
+            if (!MyMapFragment.TAG.equals(backStackId)) {
                 fragmentManager.popBackStack(backStackId, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
         }
+    }
+
+    public void setToPassengerRole() {
+        preference.putCurrentRole(ROLE_PASSEGNER);
+    }
+
+    public void setToDriverRole() {
+        preference.putCurrentRole(ROLE_DRIVER);
     }
 
     public void destroyNavigation() {

@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.RolePreference;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.RolePreferenceImpl;
-import com.angular.gerardosuarez.carpoolingapp.fragment.DriverMapFragment;
+import com.angular.gerardosuarez.carpoolingapp.fragment.MyMapFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MainPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MainView;
 import com.angular.gerardosuarez.carpoolingapp.navigation.NavigationManager;
@@ -45,7 +45,7 @@ public class MainActivity extends BaseActivity {
                                 navigationManager.goToMyQuotaFragment();
                                 break;
                             case R.id.action_map:
-                                navigationManager.goToDriverMapFragment();
+                                navigationManager.goToMapFragment();
                                 break;
                         }
                         return true;
@@ -62,7 +62,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        DriverMapFragment fragment = navigationManager.getDriverMapFragment();
+        MyMapFragment fragment = navigationManager.getDriverMapFragment();
         if (fragment != null) {
             fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }

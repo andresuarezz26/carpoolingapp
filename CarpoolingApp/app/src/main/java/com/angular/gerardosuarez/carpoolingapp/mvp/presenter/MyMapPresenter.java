@@ -14,7 +14,7 @@ import android.support.v4.content.ContextCompat;
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.mvp.base.BaseMapPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerQuota;
-import com.angular.gerardosuarez.carpoolingapp.mvp.view.DriverMapView;
+import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyMapView;
 import com.angular.gerardosuarez.carpoolingapp.service.DriverMapService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -32,13 +32,13 @@ import java.util.Locale;
 
 import timber.log.Timber;
 
-public class DriverMapPresenter extends BaseMapPresenter {
+public class MyMapPresenter extends BaseMapPresenter {
 
-    private DriverMapView view;
+    private MyMapView view;
     private DriverMapService service;
     private ValueEventListener quotaPassengerListener;
 
-    public DriverMapPresenter(DriverMapView view, DriverMapService service) {
+    public MyMapPresenter(MyMapView view, DriverMapService service) {
         super();
         this.view = view;
         this.service = service;
@@ -55,20 +55,27 @@ public class DriverMapPresenter extends BaseMapPresenter {
         if (view.getMap() == null) {
             return;
         }
-        view.setListeners();
         requestPermissions(activity);
+        setListeners();
     }
 
-    @Override
-    public void unsubscribe() {
-        if (quotaPassengerListener != null) {
-            databaseRef.removeEventListener(quotaPassengerListener);
-        }
+    public void setListeners() {
+        view.setListeners();
+        view.setLocationManager();
+    }
+
+    public void removeListeners() {
         view.removeListeners();
     }
 
-    @Override
-    public void subscribe() {
+
+    public void unsubscribeFirebaseListener() {
+        if (quotaPassengerListener != null) {
+            databaseRef.removeEventListener(quotaPassengerListener);
+        }
+    }
+
+    public void getQuotas() {
         getQuotas("icesi", "from", "18062017", "1600");
     }
 
@@ -95,14 +102,14 @@ public class DriverMapPresenter extends BaseMapPresenter {
     }
 
     private void setLocationManager() {
-        view.setLocationManager();
+
     }
 
     private void requestPermissions(Activity activity) {
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             view.getMap().setMyLocationEnabled(true);
-            setLocationManager();
+            view.setLocationManager();
         } else {
             view.requestPermissionsActivity();
         }
@@ -155,7 +162,7 @@ public class DriverMapPresenter extends BaseMapPresenter {
                 grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 view.getMap().setMyLocationEnabled(true);
-                setLocationManager();
+                view.setLocationManager();
             }
         } else {
             view.showToast(R.string.permission_denied);
