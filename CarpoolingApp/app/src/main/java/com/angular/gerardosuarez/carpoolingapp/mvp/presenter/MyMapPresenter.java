@@ -12,6 +12,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreference;
 import com.angular.gerardosuarez.carpoolingapp.mvp.base.BaseMapPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerQuota;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyMapView;
@@ -37,6 +39,9 @@ public class MyMapPresenter extends BaseMapPresenter {
 
     private MyMapView view;
     private DriverMapService service;
+    private RolePreference rolePreference;
+    private MapPreference mapPreference;
+
     private ValueEventListener quotaPassengerListener;
     private String currentRole;
 
@@ -44,10 +49,12 @@ public class MyMapPresenter extends BaseMapPresenter {
     private boolean wasDateSelected = false;
     private boolean wasTimeSelected = false;
 
-    public MyMapPresenter(MyMapView view, DriverMapService service) {
+    public MyMapPresenter(MyMapView view, DriverMapService service, RolePreference rolePreference, MapPreference mapPreference) {
         super();
         this.view = view;
         this.service = service;
+        this.rolePreference = rolePreference;
+        this.mapPreference = mapPreference;
     }
 
     public void init() {
@@ -244,6 +251,7 @@ public class MyMapPresenter extends BaseMapPresenter {
     public void onTimeSelected(Integer integer) {
         wasTimeSelected = true;
         view.setButtonHour();
+        mapPreference.putTime("1600");
         if (wasDateSelected) {
             getQuotas();
         }
@@ -252,6 +260,7 @@ public class MyMapPresenter extends BaseMapPresenter {
     public void onDateSelected(Integer integer) {
         wasDateSelected = true;
         view.setButtonDate();
+        mapPreference.putDate("18062017");
         if (wasTimeSelected) {
             getQuotas();
         }
@@ -281,6 +290,14 @@ public class MyMapPresenter extends BaseMapPresenter {
 
     public void initView() {
         view.initViews();
+    }
+
+    public void onSwitchChanged(boolean isChecked) {
+        if (isChecked) {
+            view.setTextLocationText("DESTINO: ICESI");
+        } else {
+            view.setTextLocationText("ORIGEN: ICESI");
+        }
     }
 }
 

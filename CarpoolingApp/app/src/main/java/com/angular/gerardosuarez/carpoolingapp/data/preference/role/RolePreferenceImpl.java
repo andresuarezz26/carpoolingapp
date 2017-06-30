@@ -1,6 +1,8 @@
-package com.angular.gerardosuarez.carpoolingapp.data.preference;
+package com.angular.gerardosuarez.carpoolingapp.data.preference.role;
 
 import android.content.Context;
+
+import com.angular.gerardosuarez.carpoolingapp.data.preference.BasePreferenceImpl;
 
 public class RolePreferenceImpl extends BasePreferenceImpl implements RolePreference {
 

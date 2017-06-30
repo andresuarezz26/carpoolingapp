@@ -6,8 +6,8 @@ import android.support.design.widget.BottomNavigationView;
 import android.view.MenuItem;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
-import com.angular.gerardosuarez.carpoolingapp.data.preference.RolePreference;
-import com.angular.gerardosuarez.carpoolingapp.data.preference.RolePreferenceImpl;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreference;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreferenceImpl;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyMapFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MainPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MainView;

@@ -1,4 +1,4 @@
-package com.angular.gerardosuarez.carpoolingapp.data.preference;
+package com.angular.gerardosuarez.carpoolingapp.data.preference.role;
 
 public interface RolePreference {
 

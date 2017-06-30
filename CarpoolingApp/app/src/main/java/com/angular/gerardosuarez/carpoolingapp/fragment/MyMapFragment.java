@@ -10,18 +10,18 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.Switch;
-import android.widget.TextView;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreferenceImpl;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreference;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreferenceImpl;
 import com.angular.gerardosuarez.carpoolingapp.dialogfragment.DatePickerFragment;
 import com.angular.gerardosuarez.carpoolingapp.dialogfragment.TimePickerFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MyMapPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyMapView;
 import com.angular.gerardosuarez.carpoolingapp.service.DriverMapService;
-import com.angular.gerardosuarez.carpoolingapp.utils.NetworkUtils;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
@@ -29,7 +29,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.Marker;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observer;
@@ -44,7 +43,8 @@ public class MyMapFragment extends Fragment
         GoogleMap.OnCameraMoveListener,
         GoogleMap.OnCameraMoveStartedListener,
         GoogleMap.OnCameraIdleListener,
-        GoogleMap.OnMarkerClickListener {
+        GoogleMap.OnMarkerClickListener,
+        CompoundButton.OnCheckedChangeListener{
 
     public static final String TAG = "driver_map";
     public static final int PERMISSION_REQUEST_FINE_LOCATION = 1;
@@ -62,9 +62,13 @@ public class MyMapFragment extends Fragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        MapPreference mapPreference = new MapPreferenceImpl(getActivity(), MapPreferenceImpl.NAME);
+        RolePreference rolePreference = new RolePreferenceImpl(getActivity(), RolePreferenceImpl.NAME);
         presenter = new MyMapPresenter(
                 new MyMapView(this),
-                new DriverMapService());
+                new DriverMapService(),
+                rolePreference,
+                mapPreference);
         if (presenter.googleServicesAvailable()) {
             presenter.initMap();
         }
@@ -76,6 +80,12 @@ public class MyMapFragment extends Fragment
     void onTimeClick() {
         DialogFragment timePickerFragment = new TimePickerFragment(new OnTimeSelectedObserver());
         timePickerFragment.show(getFragmentManager(), "timePicker");
+    }
+
+    //On switch changed
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        presenter.onSwitchChanged(isChecked);
     }
 
     private class OnTimeSelectedObserver implements Observer<Integer> {

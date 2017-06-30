@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
-
 import com.angular.gerardosuarez.carpoolingapp.utils.Preconditions;
 import com.angular.gerardosuarez.carpoolingapp.utils.StringUtils;
 
@@ -24,7 +23,6 @@ public class BasePreferenceImpl {
     public BasePreferenceImpl(final Context context, final String name) {
         Preconditions.notNull(context);
         this.preferences = context.getApplicationContext().getSharedPreferences(name, MODE_PRIVATE);
-
     }
 
     protected void put(@NonNull String key, String value) {

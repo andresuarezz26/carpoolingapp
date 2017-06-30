@@ -5,7 +5,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
-import com.angular.gerardosuarez.carpoolingapp.data.preference.RolePreference;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreference;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyMapFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyProfileFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyQuotaFragment;

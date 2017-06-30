@@ -86,16 +86,11 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
 
     public void initViews() {
         textLocation.setText("ORIGEN: ICESI");
-        switchFromTo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    textLocation.setText("DESTINO: ICESI");
-                } else {
-                    textLocation.setText("ORIGEN: ICESI");
-                }
-            }
-        });
+        switchFromTo.setOnCheckedChangeListener(getFragment());
+    }
+
+    public void setTextLocationText(String text) {
+        textLocation.setText(text);
     }
 
     public void showErrorDialog(GoogleApiAvailability api, int availableId) {
