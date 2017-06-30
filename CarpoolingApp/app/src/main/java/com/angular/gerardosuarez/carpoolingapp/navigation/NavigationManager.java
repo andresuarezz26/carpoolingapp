@@ -48,7 +48,7 @@ public class NavigationManager {
         if (StringUtils.isEmpty(role)) {
             return;
         }
-        setMapFragment(new MyMapFragment(preference.getCurrentRole()), MyMapFragment.TAG);
+        openMapFragment(new MyMapFragment(), MyMapFragment.TAG);
     }
 
     public void goToMyQuotaFragment() {
@@ -57,7 +57,7 @@ public class NavigationManager {
         open(new MyQuotaFragment(), MyQuotaFragment.TAG);
     }
 
-    private void setMapFragment(Fragment fragment, String tag) {
+    private void openMapFragment(Fragment fragment, String tag) {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         MyMapFragment mapFragment = (MyMapFragment) fragmentManager.findFragmentByTag(MyMapFragment.TAG);
         if (mapFragment != null) {

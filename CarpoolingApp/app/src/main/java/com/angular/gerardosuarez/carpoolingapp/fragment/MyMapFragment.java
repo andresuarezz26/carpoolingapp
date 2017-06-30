@@ -48,21 +48,8 @@ public class MyMapFragment extends Fragment
 
     public static final String TAG = "driver_map";
     public static final int PERMISSION_REQUEST_FINE_LOCATION = 1;
-    private boolean mapWasTouched = false;
-    private boolean wasDateSelected = false;
-    private boolean wasTimeSelected = false;
-    private String currentRole = "";
 
     private MyMapPresenter presenter;
-
-    public MyMapFragment(String currentRole) {
-        this.currentRole = currentRole;
-    }
-
-    @BindView(R.id.switch_from_to) Switch switchFromTo;
-    @BindView(R.id.edit_location) TextView textLocation;
-    @BindView(R.id.btn_hour) Button btnHour;
-    @BindView(R.id.btn_date) Button btnDate;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,24 +69,13 @@ public class MyMapFragment extends Fragment
             presenter.initMap();
         }
         presenter.setAutocompleteFragment();
-
-        textLocation.setText("ORIGEN: ICESI");
-        switchFromTo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    textLocation.setText("DESTINO: ICESI");
-                } else {
-                    textLocation.setText("ORIGEN: ICESI");
-                }
-            }
-        });
+        presenter.initView();
     }
 
     @OnClick(R.id.btn_hour)
     void onTimeClick() {
-        DialogFragment newFragment = new TimePickerFragment(new OnTimeSelectedObserver());
-        newFragment.show(getFragmentManager(), "timePicker");
+        DialogFragment timePickerFragment = new TimePickerFragment(new OnTimeSelectedObserver());
+        timePickerFragment.show(getFragmentManager(), "timePicker");
     }
 
     private class OnTimeSelectedObserver implements Observer<Integer> {
@@ -111,12 +87,7 @@ public class MyMapFragment extends Fragment
 
         @Override
         public void onNext(Integer integer) {
-            wasTimeSelected = true;
-            btnHour.setText("Listo");
-            btnHour.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-            if (wasDateSelected) {
-                presenter.getQuotas();
-            }
+            presenter.onTimeSelected(integer);
         }
 
         @Override
@@ -151,12 +122,7 @@ public class MyMapFragment extends Fragment
 
         @Override
         public void onNext(Integer integer) {
-            wasDateSelected = true;
-            btnDate.setText("Listo");
-            btnDate.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-            if (wasTimeSelected) {
-                presenter.getQuotas();
-            }
+            presenter.onDateSelected(integer);
         }
 
         @Override
@@ -174,6 +140,7 @@ public class MyMapFragment extends Fragment
     public void onResume() {
         super.onResume();
         presenter.setListeners();
+        presenter.getRole();
     }
 
     @Override
@@ -233,9 +200,7 @@ public class MyMapFragment extends Fragment
     //OnCameraMoveStartedListener callbacks
     @Override
     public void onCameraMoveStarted(int reason) {
-        if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
-            mapWasTouched = true;
-        }
+        presenter.onCameraMoveStarted(reason);
     }
 
     //OnCameraMoveStartedListener callbacks
@@ -246,11 +211,7 @@ public class MyMapFragment extends Fragment
 
     @Override
     public void onCameraIdle() {
-        if (NetworkUtils.isNetworkAvailable(getActivity())) {
-            if (mapWasTouched) {
-                presenter.setAutocompleteFragmentText();
-            }
-        }
+        presenter.onCameraIdle();
     }
 
     //GoogleMap.OnMarkerClickListener callback

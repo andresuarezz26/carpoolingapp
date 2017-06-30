@@ -16,6 +16,7 @@ import com.angular.gerardosuarez.carpoolingapp.mvp.base.BaseMapPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerQuota;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyMapView;
 import com.angular.gerardosuarez.carpoolingapp.service.DriverMapService;
+import com.angular.gerardosuarez.carpoolingapp.utils.NetworkUtils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.places.Place;
@@ -37,6 +38,11 @@ public class MyMapPresenter extends BaseMapPresenter {
     private MyMapView view;
     private DriverMapService service;
     private ValueEventListener quotaPassengerListener;
+    private String currentRole;
+
+    private boolean mapWasTouched = false;
+    private boolean wasDateSelected = false;
+    private boolean wasTimeSelected = false;
 
     public MyMapPresenter(MyMapView view, DriverMapService service) {
         super();
@@ -75,7 +81,7 @@ public class MyMapPresenter extends BaseMapPresenter {
         }
     }
 
-    public void getQuotas() {
+    private void getQuotas() {
         getQuotas("icesi", "from", "18062017", "1600");
     }
 
@@ -92,7 +98,7 @@ public class MyMapPresenter extends BaseMapPresenter {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Timber.e(databaseError.toString());
+                Timber.e(databaseError.toString(), databaseError);
             }
         });
     }
@@ -233,6 +239,48 @@ public class MyMapPresenter extends BaseMapPresenter {
             e.printStackTrace();
         }
         return address;
+    }
+
+    public void onTimeSelected(Integer integer) {
+        wasTimeSelected = true;
+        view.setButtonHour();
+        if (wasDateSelected) {
+            getQuotas();
+        }
+    }
+
+    public void onDateSelected(Integer integer) {
+        wasDateSelected = true;
+        view.setButtonDate();
+        if (wasTimeSelected) {
+            getQuotas();
+        }
+    }
+
+    public void getRole() {
+
+    }
+
+    public void onCameraMoveStarted(int reason) {
+        if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+            mapWasTouched = true;
+        }
+    }
+
+    public void onCameraIdle() {
+        Activity activity = view.getActivity();
+        if (activity == null) {
+            return;
+        }
+        if (NetworkUtils.isNetworkAvailable(activity)) {
+            if (mapWasTouched) {
+                setAutocompleteFragmentText();
+            }
+        }
+    }
+
+    public void initView() {
+        view.initViews();
     }
 }
 

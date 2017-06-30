@@ -5,6 +5,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
@@ -21,6 +25,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import timber.log.Timber;
 
 public class MyMapView extends FragmentView<MyMapFragment, Void> {
@@ -36,10 +42,18 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
     private static final double LATITUDE_CALI_SECOND = 3.2872;
     private static final double LONGITUDE_CALI_SECOND = -76.4872;
 
+    @BindView(R.id.switch_from_to) Switch switchFromTo;
+    @BindView(R.id.edit_location) TextView textLocation;
+    @BindView(R.id.btn_hour) Button btnHour;
+    @BindView(R.id.btn_date) Button btnDate;
+
     private PlaceAutocompleteFragment autocompleteFragment;
 
     public MyMapView(MyMapFragment fragment) {
         super(fragment);
+        if (fragment.getView() != null) {
+            ButterKnife.bind(this, fragment.getView());
+        }
     }
 
     public GoogleMap getMap() {
@@ -68,6 +82,20 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
     public void initMap() {
         MapFragment mapFragment = (MapFragment) getFragment().getChildFragmentManager().findFragmentById(R.id.map_fragment);
         mapFragment.getMapAsync(getFragment());
+    }
+
+    public void initViews() {
+        textLocation.setText("ORIGEN: ICESI");
+        switchFromTo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    textLocation.setText("DESTINO: ICESI");
+                } else {
+                    textLocation.setText("ORIGEN: ICESI");
+                }
+            }
+        });
     }
 
     public void showErrorDialog(GoogleApiAvailability api, int availableId) {
@@ -161,5 +189,15 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
         map.setOnCameraMoveStartedListener(null);
         map.setOnCameraIdleListener(null);
         map.setOnMarkerClickListener(null);
+    }
+
+    public void setButtonHour() {
+        btnHour.setText("Listo");
+        //btnHour.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+    }
+
+    public void setButtonDate() {
+        btnDate.setText("Listo");
+        //btnDate.setBackgroundColor(getResources().getColor(R.color.colorAccent));
     }
 }
