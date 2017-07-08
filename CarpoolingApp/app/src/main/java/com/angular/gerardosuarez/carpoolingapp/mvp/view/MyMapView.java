@@ -1,10 +1,12 @@
 package com.angular.gerardosuarez.carpoolingapp.mvp.view;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
-import android.location.LocationManager;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -15,6 +17,9 @@ import com.angular.gerardosuarez.carpoolingapp.fragment.MyMapFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.base.FragmentView;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerQuota;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -32,7 +37,9 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
 
     public static final int DEFAULT_ZOOM = 16;
     private GoogleMap map;
-    private LocationManager locationManager;
+    LocationRequest mLocationRequest;
+    GoogleApiClient mGoogleApiClient;
+    Location mLastLocation;
     private static final long MIN_TIME = 400;
     private static final float MIN_DISTANCE = 1000;
 
@@ -87,6 +94,23 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
         mapFragment.getMapAsync(getFragment());
     }
 
+    public synchronized void buildGoogleApiClient() {
+        Activity activity = getActivity();
+        if (activity == null) {
+            return;
+        }
+        MyMapFragment fragment = getFragment();
+        if (fragment == null) {
+            return;
+        }
+        mGoogleApiClient = new GoogleApiClient.Builder(activity)
+                .addConnectionCallbacks(fragment)
+                .addOnConnectionFailedListener(fragment)
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
+    }
+
     public void initViews() {
         textLocation.setText("ORIGEN: ICESI");
         switchFromTo.setOnCheckedChangeListener(getFragment());
@@ -136,19 +160,22 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
         map.animateCamera(CameraUpdateFactory.newLatLng(position));
     }
 
-    public void setLocationManager() {
-        try {
-            locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, getFragment());
-        } catch (SecurityException e) {
-            Timber.e(e);
+    public void setLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(1000);
+        mLocationRequest.setFastestInterval(1000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, getFragment());
         }
     }
 
     public void goToCurrentLocation(LatLng latLng, String currentAddress) {
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM);
         map.animateCamera(cameraUpdate);
-        locationManager.removeUpdates(getFragment());
+        removeLocationUpdates();
         setTextAutocompleteFragmentWithText(currentAddress);
     }
 
@@ -188,11 +215,25 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
         if (map == null) {
             return;
         }
-        locationManager.removeUpdates(fragment);
+        removeLocationUpdates();
         map.setOnCameraMoveListener(null);
         map.setOnCameraMoveStartedListener(null);
         map.setOnCameraIdleListener(null);
         map.setOnMarkerClickListener(null);
+    }
+
+    private void removeLocationUpdates() {
+        if (mGoogleApiClient != null && getFragment() != null) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, getFragment());
+        }
+    }
+
+    public void setMyLocationEnabled() {
+        try {
+            map.setMyLocationEnabled(true);
+        } catch (SecurityException e) {
+            Timber.e(e.getMessage(), e);
+        }
     }
 
     public void setButtonHour() {
@@ -205,7 +246,7 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
         //btnDate.setBackgroundColor(getResources().getColor(R.color.colorAccent));
     }
 
-    public void clearMap(){
+    public void clearMap() {
         map.clear();
     }
 }
