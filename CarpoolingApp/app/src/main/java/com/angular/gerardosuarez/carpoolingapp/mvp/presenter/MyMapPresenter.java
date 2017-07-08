@@ -18,6 +18,7 @@ import com.angular.gerardosuarez.carpoolingapp.mvp.base.BaseMapPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerQuota;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyMapView;
 import com.angular.gerardosuarez.carpoolingapp.service.DriverMapService;
+import com.angular.gerardosuarez.carpoolingapp.service.PassengerMapService;
 import com.angular.gerardosuarez.carpoolingapp.utils.NetworkUtils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -34,13 +35,18 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 import timber.log.Timber;
 
 public class MyMapPresenter extends BaseMapPresenter {
 
+    private final static String ROLE_DRIVER = "driver";
+    private final static String ROLE_PASSEGNER = "passenger";
+
     private MyMapView view;
-    private DriverMapService service;
+    private DriverMapService driverMapService;
+    private PassengerMapService passengerMapService;
     private RolePreference rolePreference;
     private MapPreference mapPreference;
 
@@ -53,10 +59,15 @@ public class MyMapPresenter extends BaseMapPresenter {
 
     private LinkedHashMap<String, PassengerQuota> passengerQuotasMap = new LinkedHashMap<>();
 
-    public MyMapPresenter(MyMapView view, DriverMapService service, RolePreference rolePreference, MapPreference mapPreference) {
+    public MyMapPresenter(MyMapView view,
+                          DriverMapService driverMapService,
+                          PassengerMapService passengerMapService,
+                          RolePreference rolePreference,
+                          MapPreference mapPreference) {
         super();
         this.view = view;
-        this.service = service;
+        this.driverMapService = driverMapService;
+        this.passengerMapService = passengerMapService;
         this.rolePreference = rolePreference;
         this.mapPreference = mapPreference;
     }
@@ -94,7 +105,7 @@ public class MyMapPresenter extends BaseMapPresenter {
     }
 
     private void getQuotas(String comunity, String origin, String date, String hour) {
-        quotaPassengerListener = service.getQuotasPerCommunityOriginDateAndHour(comunity, origin, date, hour).addValueEventListener(new ValueEventListener() {
+        quotaPassengerListener = driverMapService.getQuotasPerCommunityOriginDateAndHour(comunity, origin, date, hour).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -110,6 +121,17 @@ public class MyMapPresenter extends BaseMapPresenter {
                 Timber.e(databaseError.toString(), databaseError);
             }
         });
+    }
+
+    //Passenger Services
+    private void putQuota() {
+        PassengerQuota passengerQuota = new PassengerQuota();
+        Random number = new Random();
+        passengerQuota.userId = "gerard" + number.nextInt(1000);
+        passengerQuota.description = "Calle 3a 34-3";
+        passengerQuota.latitude = 3.4380741597868383;
+        passengerQuota.longitude = -76.54428374022400;
+        passengerMapService.putQuotaPerCommunityOriginDate(passengerQuota);
     }
 
     public void setAutocompleteFragment() {
@@ -243,7 +265,12 @@ public class MyMapPresenter extends BaseMapPresenter {
         view.setButtonHour();
         mapPreference.putTime("1600");
         if (wasDateSelected) {
-            getQuotas();
+            if (rolePreference.getCurrentRole().equalsIgnoreCase(ROLE_DRIVER)) {
+                getQuotas();
+            } else {
+                putQuota();
+            }
+            wasDateSelected = false;
         }
     }
 
@@ -252,12 +279,34 @@ public class MyMapPresenter extends BaseMapPresenter {
         view.setButtonDate();
         mapPreference.putDate("18062017");
         if (wasTimeSelected) {
-            getQuotas();
+            if (rolePreference.getCurrentRole().equalsIgnoreCase(ROLE_DRIVER)) {
+                getQuotas();
+            } else {
+                view.clearMap();
+                putQuota();
+            }
+            wasTimeSelected = false;
         }
     }
 
     public void getRole() {
+        /*String role = rolePreference.getCurrentRole();
+        if (role.equalsIgnoreCase(ROLE_PASSEGNER)) {
+            if (passengerQuotasMap.size() > 0) {
+                wasDateSelected = false;
+                view.clearMap();
+            }
+        }*/
+    }
 
+    public void onRoleChanged() {
+        String role = rolePreference.getCurrentRole();
+        if (role.equalsIgnoreCase(ROLE_PASSEGNER)) {
+            if (passengerQuotasMap.size() > 0) {
+                wasDateSelected = false;
+                view.clearMap();
+            }
+        }
     }
 
     public void onCameraMoveStarted(int reason) {

@@ -21,6 +21,7 @@ import com.angular.gerardosuarez.carpoolingapp.dialogfragment.TimePickerFragment
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MyMapPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyMapView;
 import com.angular.gerardosuarez.carpoolingapp.service.DriverMapService;
+import com.angular.gerardosuarez.carpoolingapp.service.PassengerMapService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
@@ -71,6 +72,7 @@ public class MyMapFragment extends Fragment
         presenter = new MyMapPresenter(
                 new MyMapView(this),
                 new DriverMapService(),
+                new PassengerMapService(),
                 rolePreference,
                 mapPreference);
         if (presenter.googleServicesAvailable()) {
@@ -155,6 +157,10 @@ public class MyMapFragment extends Fragment
         super.onResume();
         presenter.setListeners();
         presenter.getRole();
+    }
+
+    public void onRoleChanged(){
+        presenter.onRoleChanged();
     }
 
     @Override

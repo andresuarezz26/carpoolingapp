@@ -98,10 +98,18 @@ public class NavigationManager {
 
     public void setToPassengerRole() {
         preference.putCurrentRole(ROLE_PASSEGNER);
+        MyMapFragment fragment = getDriverMapFragment();
+        if (fragment != null) {
+            fragment.onRoleChanged();
+        }
     }
 
     public void setToDriverRole() {
         preference.putCurrentRole(ROLE_DRIVER);
+        MyMapFragment fragment = getDriverMapFragment();
+        if (fragment != null) {
+            fragment.onRoleChanged();
+        }
     }
 
     public void destroyNavigation() {

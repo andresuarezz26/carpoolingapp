@@ -252,6 +252,7 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
     }
 
     public void clearMap() {
+        if (map == null) return;
         map.clear();
     }
 }
