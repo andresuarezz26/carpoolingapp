@@ -6,7 +6,6 @@ import android.content.Context;
 import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,10 +41,14 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
     private static final double LATITUDE_CALI_SECOND = 3.2872;
     private static final double LONGITUDE_CALI_SECOND = -76.4872;
 
-    @BindView(R.id.switch_from_to) Switch switchFromTo;
-    @BindView(R.id.edit_location) TextView textLocation;
-    @BindView(R.id.btn_hour) Button btnHour;
-    @BindView(R.id.btn_date) Button btnDate;
+    @BindView(R.id.switch_from_to)
+    Switch switchFromTo;
+    @BindView(R.id.edit_location)
+    TextView textLocation;
+    @BindView(R.id.btn_hour)
+    Button btnHour;
+    @BindView(R.id.btn_date)
+    Button btnDate;
 
     private PlaceAutocompleteFragment autocompleteFragment;
 
@@ -123,6 +126,12 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
                 .title(title));
     }
 
+    private void setMarkerWithTitleAndSnippet(LatLng latLng, String title) {
+        map.addMarker(new MarkerOptions()
+                .position(latLng)
+                .title(title));
+    }
+
     public void animateCamera(LatLng position) {
         map.animateCamera(CameraUpdateFactory.newLatLng(position));
     }
@@ -153,8 +162,8 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
         return map.getCameraPosition().target;
     }
 
-    public void addPassengerQuotaMarker(PassengerQuota passengerQuota) {
-        setMarker(new LatLng(passengerQuota.latitude, passengerQuota.longitude), passengerQuota.description);
+    public void addPassengerQuotaMarker(PassengerQuota passengerQuota, int id) {
+        setMarker(new LatLng(passengerQuota.latitude, passengerQuota.longitude), passengerQuota.userId, id);
     }
 
     public void setListeners() {

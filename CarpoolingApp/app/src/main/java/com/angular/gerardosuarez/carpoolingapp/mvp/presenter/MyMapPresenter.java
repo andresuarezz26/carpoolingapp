@@ -30,6 +30,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -48,6 +50,8 @@ public class MyMapPresenter extends BaseMapPresenter {
     private boolean mapWasTouched = false;
     private boolean wasDateSelected = false;
     private boolean wasTimeSelected = false;
+
+    private LinkedHashMap<String, PassengerQuota> passengerQuotasMap = new LinkedHashMap<>();
 
     public MyMapPresenter(MyMapView view, DriverMapService service, RolePreference rolePreference, MapPreference mapPreference) {
         super();
@@ -88,18 +92,20 @@ public class MyMapPresenter extends BaseMapPresenter {
         }
     }
 
+    //Driver Services
     private void getQuotas() {
         getQuotas("icesi", "from", "18062017", "1600");
     }
 
-    //Services
     private void getQuotas(String comunity, String origin, String date, String hour) {
         quotaPassengerListener = service.getQuotasPerCommunityOriginDateAndHour(comunity, origin, date, hour).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     PassengerQuota passengerQuota = snapshot.getValue(PassengerQuota.class);
-                    view.addPassengerQuotaMarker(passengerQuota);
+                    passengerQuotasMap.put(passengerQuota.userId, passengerQuota);
+                    int position = new ArrayList<>(passengerQuotasMap.keySet()).indexOf(passengerQuota.userId);
+                    view.addPassengerQuotaMarker(passengerQuota, position);
                 }
             }
 
@@ -182,16 +188,6 @@ public class MyMapPresenter extends BaseMapPresenter {
         }
     }
 
-    private void onLocaltionButtonListener() {
-        view.getMap().setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
-            @Override
-            public boolean onMyLocationButtonClick() {
-                view.showToast(R.string.app_name);
-                return true;
-            }
-        });
-    }
-
     public void addMockMarkers() {
     }
 
@@ -199,7 +195,8 @@ public class MyMapPresenter extends BaseMapPresenter {
         if (marker == null) {
             return false;
         }
-        view.showToast(marker.getTitle() + " id: " + marker.getTag());
+        PassengerQuota passengerQuota = passengerQuotasMap.get(marker.getTitle());
+        view.showToast(passengerQuota.description + passengerQuota.userId);
         return true;
     }
 
