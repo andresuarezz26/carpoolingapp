@@ -35,7 +35,8 @@ import timber.log.Timber;
 
 public class MyMapView extends FragmentView<MyMapFragment, Void> {
 
-    public static final int DEFAULT_ZOOM = 16;
+    private static final int DEFAULT_ZOOM = 16;
+    private static final int INITIAL_ZOOM = 11;
     private GoogleMap map;
     LocationRequest mLocationRequest;
     GoogleApiClient mGoogleApiClient;
@@ -47,6 +48,9 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
     private static final double LONGITUDE_CALI_FIRST = -76.5367;
     private static final double LATITUDE_CALI_SECOND = 3.2872;
     private static final double LONGITUDE_CALI_SECOND = -76.4872;
+    private static final double LONGITUDE_INITIAL = -76.54428374022244;
+    private static final double LATITUDE_INITIAL = 3.4380741597868383;
+
 
     @BindView(R.id.switch_from_to)
     Switch switchFromTo;
@@ -64,10 +68,6 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
         if (fragment.getView() != null) {
             ButterKnife.bind(this, fragment.getView());
         }
-    }
-
-    public GoogleMap getMap() {
-        return map;
     }
 
     public void setAutocompleteFragment() {
@@ -135,6 +135,11 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
 
     public void setMap(GoogleMap map) {
         this.map = map;
+        moveCamera(LATITUDE_INITIAL, LONGITUDE_INITIAL);
+    }
+
+    private void moveCamera(double latitude, double longitude) {
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), INITIAL_ZOOM));
     }
 
     public void setMarker(LatLng latLng, String title, int id) {

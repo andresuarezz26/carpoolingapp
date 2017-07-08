@@ -69,9 +69,6 @@ public class MyMapPresenter extends BaseMapPresenter {
         if (activity.getFragmentManager() == null) {
             return;
         }
-        if (view.getMap() == null) {
-            return;
-        }
         requestPermissions(activity);
         setListeners();
     }

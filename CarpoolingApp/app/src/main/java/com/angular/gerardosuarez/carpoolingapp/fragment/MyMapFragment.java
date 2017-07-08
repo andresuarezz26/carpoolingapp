@@ -228,11 +228,11 @@ public class MyMapFragment extends Fragment
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        Timber.i("suspended");
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        Timber.i("failed");
     }
 }
