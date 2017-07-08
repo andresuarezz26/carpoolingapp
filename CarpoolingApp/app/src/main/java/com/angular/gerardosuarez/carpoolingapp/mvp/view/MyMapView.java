@@ -204,4 +204,8 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
         btnDate.setText("Listo");
         //btnDate.setBackgroundColor(getResources().getColor(R.color.colorAccent));
     }
+
+    public void clearMap(){
+        map.clear();
+    }
 }
