@@ -69,16 +69,12 @@ public class MyMapPresenter extends BaseMapPresenter {
         if (activity.getFragmentManager() == null) {
             return;
         }
-        if (view.getMap() == null) {
-            return;
-        }
         requestPermissions(activity);
         setListeners();
     }
 
     public void setListeners() {
         view.setListeners();
-        view.setLocationManager();
     }
 
     public void removeListeners() {
@@ -120,15 +116,12 @@ public class MyMapPresenter extends BaseMapPresenter {
         view.setAutocompleteFragment();
     }
 
-    private void setLocationManager() {
-
-    }
 
     private void requestPermissions(Activity activity) {
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            view.getMap().setMyLocationEnabled(true);
-            view.setLocationManager();
+            view.buildGoogleApiClient();
+            view.setMyLocationEnabled();
         } else {
             view.requestPermissionsActivity();
         }
@@ -180,8 +173,8 @@ public class MyMapPresenter extends BaseMapPresenter {
                 permissions[0].equalsIgnoreCase(Manifest.permission.ACCESS_FINE_LOCATION) &&
                 grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                view.getMap().setMyLocationEnabled(true);
-                view.setLocationManager();
+                view.buildGoogleApiClient();
+                view.setMyLocationEnabled();
             }
         } else {
             view.showToast(R.string.permission_denied);
@@ -295,6 +288,10 @@ public class MyMapPresenter extends BaseMapPresenter {
         } else {
             view.setTextLocationText("ORIGEN: ICESI");
         }
+    }
+
+    public void setLocationRequest() {
+        view.setLocationRequest();
     }
 }
 

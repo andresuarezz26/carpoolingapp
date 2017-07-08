@@ -3,7 +3,6 @@ package com.angular.gerardosuarez.carpoolingapp.fragment;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.location.Location;
-import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,7 +21,10 @@ import com.angular.gerardosuarez.carpoolingapp.dialogfragment.TimePickerFragment
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MyMapPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyMapView;
 import com.angular.gerardosuarez.carpoolingapp.service.DriverMapService;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.GoogleMap;
@@ -44,7 +46,9 @@ public class MyMapFragment extends Fragment
         GoogleMap.OnCameraMoveStartedListener,
         GoogleMap.OnCameraIdleListener,
         GoogleMap.OnMarkerClickListener,
-        CompoundButton.OnCheckedChangeListener{
+        CompoundButton.OnCheckedChangeListener,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     public static final String TAG = "driver_map";
     public static final int PERMISSION_REQUEST_FINE_LOCATION = 1;
@@ -181,21 +185,6 @@ public class MyMapFragment extends Fragment
         presenter.onLocationChanged(location);
     }
 
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
-    }
-
     //Autocomplete Fragment callbacks
     @Override
     public void onPlaceSelected(Place place) {
@@ -228,5 +217,22 @@ public class MyMapFragment extends Fragment
     @Override
     public boolean onMarkerClick(Marker marker) {
         return presenter.onMarkerClick(marker);
+    }
+
+    //GoogleApiClient.ConnectionCallbacks,
+    //GoogleApiClient.OnConnectionFailedListener
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        presenter.setLocationRequest();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Timber.i("suspended");
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Timber.i("failed");
     }
 }
