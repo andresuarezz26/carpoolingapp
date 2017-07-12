@@ -11,15 +11,8 @@ import com.angular.gerardosuarez.carpoolingapp.dialogfragment.base.BaseDialogFra
 
 import java.util.Calendar;
 
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-
 public class TimePickerFragment extends BaseDialogFragment<Integer>
         implements TimePickerDialog.OnTimeSetListener {
-
-    public TimePickerFragment(Observer<Integer> observer) {
-        super(observer);
-    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -34,8 +27,7 @@ public class TimePickerFragment extends BaseDialogFragment<Integer>
     }
 
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        if (getObserver() != null) {
-            Observable.just(hourOfDay).subscribe(getObserver());
-        }
+        publishSubject.onNext(hourOfDay + "" + minute);
+        unsubscribeToDialogFragment();
     }
 }

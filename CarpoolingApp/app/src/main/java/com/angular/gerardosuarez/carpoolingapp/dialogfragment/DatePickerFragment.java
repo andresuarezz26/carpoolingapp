@@ -9,16 +9,8 @@ import com.angular.gerardosuarez.carpoolingapp.dialogfragment.base.BaseDialogFra
 
 import java.util.Calendar;
 
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-
 public class DatePickerFragment extends BaseDialogFragment<Integer>
         implements DatePickerDialog.OnDateSetListener {
-
-
-    public DatePickerFragment(Observer<Integer> observer) {
-        super(observer);
-    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -34,8 +26,7 @@ public class DatePickerFragment extends BaseDialogFragment<Integer>
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        if (getObserver() != null) {
-            Observable.just(month).subscribe(getObserver());
-        }
+        publishSubject.onNext(month + "" + dayOfMonth);
+        unsubscribeToDialogFragment();
     }
 }
