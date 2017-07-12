@@ -40,7 +40,7 @@ public class DialogPassengerQuota extends Dialog implements
         TextView textName = (TextView) findViewById(R.id.txt_name);
         textName.setText(name);
         TextView textDescription = (TextView) findViewById(R.id.txt_description);
-        textDescription.setText(name);
+        textDescription.setText(description);
 
         buttonAccept.setOnClickListener(this);
         buttonCancel.setOnClickListener(this);
