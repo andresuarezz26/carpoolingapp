@@ -16,4 +16,6 @@
     <string name="text_community">Destino:Universidad Icesi</string>
     <string name="accept_quota">Aceptar Cupo</string>
     <string name="cancel_quota">No, Gracias</string>
+    <string name="hour_map">"Hora \n Llegada"</string>
+    <string name="date_map">"Dia \n Viaje"</string>
 </resources>
