@@ -35,8 +35,8 @@ public class DialogPassengerQuota extends Dialog implements
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.quota_dialog);
-        Button buttonAccept = (Button) findViewById(R.id.btn_yes);
-        Button buttonCancel = (Button) findViewById(R.id.btn_no);
+        Button buttonAccept = (Button) findViewById(R.id.btn_accept_quota);
+        Button buttonCancel = (Button) findViewById(R.id.btn_cancel_quota);
         TextView textName = (TextView) findViewById(R.id.txt_name);
         textName.setText(name);
         TextView textDescription = (TextView) findViewById(R.id.txt_description);
@@ -49,11 +49,11 @@ public class DialogPassengerQuota extends Dialog implements
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_yes:
+            case R.id.btn_accept_quota:
                 publishSubject.onNext(true);
                 dismiss();
                 break;
-            case R.id.btn_no:
+            case R.id.btn_cancel_quota:
                 publishSubject.onNext(false);
                 dismiss();
                 break;

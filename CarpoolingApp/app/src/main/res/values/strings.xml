@@ -14,4 +14,6 @@
     <string name="text_start_travel">Iniciar Recorrido</string>
     <string name="my_profile_driver">Conductor</string>
     <string name="text_community">Destino:Universidad Icesi</string>
+    <string name="accept_quota">Aceptar Cupo</string>
+    <string name="cancel_quota">No, Gracias</string>
 </resources>
