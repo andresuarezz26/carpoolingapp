@@ -15,6 +15,7 @@ import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreference;
 import com.angular.gerardosuarez.carpoolingapp.mvp.base.BaseMapPresenter;
+import com.angular.gerardosuarez.carpoolingapp.mvp.model.DriverRequest;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerQuota;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyMapView;
 import com.angular.gerardosuarez.carpoolingapp.service.DriverMapService;
@@ -129,9 +130,25 @@ public class MyMapPresenter extends BaseMapPresenter {
         });
     }
 
+    public void onDialogResponse(boolean wantSendRequest) {
+        if (wantSendRequest) putRequestToPassenger();
+    }
+
+    private void putRequestToPassenger() {
+        DriverRequest driverRequest = new DriverRequest();
+        //FIXME: remove this
+        Random number = new Random();
+        driverRequest.userId = "gerard" + number.nextInt(1000);
+        driverRequest.name = "Gerardo Suarez";
+        driverRequest.status = "waiting";
+        driverRequest.phoneNumber = "3013041454";
+        driverMapService.putDriverRequestToPassenger(driverRequest);
+    }
+
     //Passenger Services
     private void putQuota() {
         PassengerQuota passengerQuota = new PassengerQuota();
+        //FIXME: remove this
         Random number = new Random();
         passengerQuota.userId = "gerard" + number.nextInt(1000);
         passengerQuota.description = "Calle 3a 34-3";
@@ -341,6 +358,18 @@ public class MyMapPresenter extends BaseMapPresenter {
 
     public void showDialog(DisposableObserver<Boolean> observer, Marker marker) {
         view.showDialogQuota(observer, marker.getTitle(), marker.getTitle());
+    }
+
+    public void showTimePickerFragment(DisposableObserver<String> observer) {
+        view.showTimePickerFragment(observer);
+    }
+
+    public void unsubscribeObservers() {
+        view.unsubscribeObservers();
+    }
+
+    public void showDatePickerFragment(DisposableObserver<String> observer) {
+        view.showDatePickerFragment(observer);
     }
 }
 

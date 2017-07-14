@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.customviews.dialog.DialogPassengerQuota;
+import com.angular.gerardosuarez.carpoolingapp.dialogfragment.DatePickerFragment;
+import com.angular.gerardosuarez.carpoolingapp.dialogfragment.TimePickerFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyMapFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.base.FragmentView;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerQuota;
@@ -39,6 +41,8 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
 
     private static final int DEFAULT_ZOOM = 16;
     private static final int INITIAL_ZOOM = 11;
+    public static final String DATE_PICKER = "datePicker";
+    public static final String TIME_PICKER = "timePicker";
     private GoogleMap map;
     LocationRequest mLocationRequest;
     GoogleApiClient mGoogleApiClient;
@@ -54,6 +58,8 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
     private static final double LATITUDE_INITIAL = 3.4380741597868383;
 
     private DialogPassengerQuota dialogQuota;
+    private TimePickerFragment timePickerFragment;
+    private DatePickerFragment datePickerFragment;
 
     @BindView(R.id.switch_from_to)
     Switch switchFromTo;
@@ -265,4 +271,31 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
         if (map == null) return;
         map.clear();
     }
+
+    public void showTimePickerFragment(DisposableObserver<String> observer) {
+        if (getFragment() == null) return;
+        if (getFragment().getFragmentManager() == null) return;
+        timePickerFragment = new TimePickerFragment();
+        timePickerFragment.subscribeToDialogFragment(observer);
+        timePickerFragment.show(getFragment().getFragmentManager(), TIME_PICKER);
+    }
+
+    public void showDatePickerFragment(DisposableObserver<String> observer) {
+        if (getFragment() == null) return;
+        if (getFragment().getFragmentManager() == null) return;
+        DatePickerFragment datePickerFragment = new DatePickerFragment();
+        datePickerFragment.subscribeToDialogFragment(observer);
+        datePickerFragment.show(getFragment().getFragmentManager(), DATE_PICKER);
+    }
+
+    public void unsubscribeObservers() {
+        timePickerFragment.unsubscribeToDialogFragment();
+        dialogQuota.unsubscribeToDialogEvent();
+        datePickerFragment.unsubscribeToDialogFragment();
+        timePickerFragment.dismiss();
+        dialogQuota.dismiss();
+        datePickerFragment.dismiss();
+    }
+
+
 }

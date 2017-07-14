@@ -14,6 +14,6 @@ public class PassengerMapService extends BaseFirebaseService {
     }
 
     public void putQuotaPerCommunityOriginDate(PassengerQuota passengerQuota) {
-        databaseReference.child("from-icesi").child("18062017").child("1600").child(passengerQuota.userId + "180620171600").setValue(passengerQuota);
+        databaseReference.child("from-icesi").child("18062017").child("1600").child(passengerQuota.userId).setValue(passengerQuota);
     }
 }

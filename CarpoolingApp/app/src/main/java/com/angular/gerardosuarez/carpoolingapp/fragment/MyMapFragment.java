@@ -15,8 +15,6 @@ import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference
 import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreferenceImpl;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreference;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreferenceImpl;
-import com.angular.gerardosuarez.carpoolingapp.dialogfragment.DatePickerFragment;
-import com.angular.gerardosuarez.carpoolingapp.dialogfragment.TimePickerFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MyMapPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyMapView;
 import com.angular.gerardosuarez.carpoolingapp.service.DriverMapService;
@@ -82,9 +80,7 @@ public class MyMapFragment extends Fragment
 
     @OnClick(R.id.btn_hour)
     void onTimeClick() {
-        TimePickerFragment timePickerFragment = new TimePickerFragment();
-        timePickerFragment.subscribeToDialogFragment(new OnTimeSelectedObserver());
-        timePickerFragment.show(getFragmentManager(), "timePicker");
+        presenter.showTimePickerFragment(new OnTimeSelectedObserver());
     }
 
     //On switch changed
@@ -114,13 +110,12 @@ public class MyMapFragment extends Fragment
     public void onDestroy() {
         super.onDestroy();
         presenter.unsubscribeFirebaseListener();
+        presenter.unsubscribeObservers();
     }
 
     @OnClick(R.id.btn_date)
     void onDateClick() {
-        DatePickerFragment newFragment = new DatePickerFragment();
-        newFragment.subscribeToDialogFragment(new OnDateSelectedObserver());
-        newFragment.show(getFragmentManager(), "datePicker");
+        presenter.showDatePickerFragment(new OnDateSelectedObserver());
     }
 
     private class OnDateSelectedObserver extends DisposableObserver<String> {
@@ -220,6 +215,7 @@ public class MyMapFragment extends Fragment
         @Override
         public void onNext(Boolean isAccepted) {
             //Query firebasedatebase
+            presenter.onDialogResponse(isAccepted);
         }
 
         @Override
