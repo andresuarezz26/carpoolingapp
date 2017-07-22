@@ -138,11 +138,12 @@ public class MyMapPresenter extends BaseMapPresenter {
         DriverRequest driverRequest = new DriverRequest();
         //FIXME: remove this
         Random number = new Random();
-        driverRequest.userId = "gerard" + number.nextInt(1000);
+        driverRequest.userId = "yo";
         driverRequest.name = "Gerardo Suarez";
         driverRequest.status = "waiting";
         driverRequest.phoneNumber = "3013041454";
-        driverMapService.putDriverRequestToPassenger(driverRequest);
+        String passengerMock = "passengerMock";
+        driverMapService.putDriverRequestToPassenger(driverRequest, passengerMock);
     }
 
     //Passenger Services
@@ -150,7 +151,7 @@ public class MyMapPresenter extends BaseMapPresenter {
         PassengerQuota passengerQuota = new PassengerQuota();
         //FIXME: remove this
         Random number = new Random();
-        passengerQuota.userId = "gerard" + number.nextInt(1000);
+        passengerQuota.userId = "yo";
         passengerQuota.description = "Calle 3a 34-3";
         passengerQuota.latitude = 3.4380741597868383;
         passengerQuota.longitude = -76.54428374022400;

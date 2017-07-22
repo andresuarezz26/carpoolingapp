@@ -22,13 +22,14 @@ public class DriverMapService extends BaseFirebaseService {
         return databaseReference.child("from-icesi").child("18062017").child("1600");
     }
 
-    public void putDriverRequestToPassenger(DriverRequest request) {
-        String key = databaseReference.child(REQUEST_TO_PASSENGERS).child("from-icesi").child("18062017").child("1600").child(request.userId).push().getKey();
+    public void putDriverRequestToPassenger(DriverRequest request, String passengerUid) {
+        //String key = databaseReference.child(REQUEST_TO_PASSENGERS).child("from-icesi").child("18062017").child("1600").child(request.userId).push().getKey();
         Map<String, Object> postValues = request.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/peticiones-a-pasajeros/from-icesi/18062017/1600/" + request.userId + "/" + key, postValues);
-        //childUpdates.put("/user-posts/" + userId + "/" + key, postValues);
+        childUpdates.put("/peticiones-a-pasajeros/from-icesi/18062017/1600/" + passengerUid + "/" + request.userId, postValues);
+        childUpdates.put("/solicitudes-enviadas-conductor/from-icesi/18062017/1600/" + request.userId + "/" + passengerUid, postValues);
         //FIXME : change the query
-        databaseReference.child(REQUEST_TO_PASSENGERS).child("from-icesi").child("18062017").child("1600").child(request.userId).setValue(request);
+        databaseReference.updateChildren(childUpdates);
+        //databaseReference.child(REQUEST_TO_PASSENGERS).child("from-icesi").child("18062017").child("1600").child(passengerUid).child(request.userId).setValue(request);
     }
 }
