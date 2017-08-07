@@ -2,7 +2,8 @@ package com.angular.gerardosuarez.carpoolingapp.service;
 
 import android.support.annotation.NonNull;
 
-import com.angular.gerardosuarez.carpoolingapp.mvp.model.DriverRequest;
+import com.angular.gerardosuarez.carpoolingapp.mvp.model.DriverInfoRequest;
+import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerInfoRequest;
 import com.angular.gerardosuarez.carpoolingapp.service.base.BaseFirebaseService;
 import com.google.firebase.database.DatabaseReference;
 
@@ -22,12 +23,13 @@ public class DriverMapService extends BaseFirebaseService {
         return databaseReference.child("from-icesi").child("18062017").child("1600");
     }
 
-    public void putDriverRequestToPassenger(DriverRequest request, String passengerUid) {
+    public void putInfoRequestToPassengerAndDriver(PassengerInfoRequest passengerInfoRequest, DriverInfoRequest driverInfoRequest) {
         //String key = databaseReference.child(REQUEST_TO_PASSENGERS).child("from-icesi").child("18062017").child("1600").child(request.userId).push().getKey();
-        Map<String, Object> postValues = request.toMap();
+        Map<String, Object> postValuesPassenger = passengerInfoRequest.toMap();
+        Map<String, Object> postValuesDriver = driverInfoRequest.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/peticiones-a-pasajeros/from-icesi/18062017/1600/" + passengerUid + "/" + request.userId, postValues);
-        childUpdates.put("/solicitudes-enviadas-conductor/from-icesi/18062017/1600/" + request.userId + "/" + passengerUid, postValues);
+        childUpdates.put("/peticiones-a-pasajeros/from-icesi/18062017/1600/" + passengerInfoRequest.getKey() + "/" + driverInfoRequest.getKey(), postValuesPassenger);
+        childUpdates.put("/solicitudes-enviadas-conductor/from-icesi/18062017/1600/" + driverInfoRequest.getKey() + "/" + passengerInfoRequest, postValuesDriver);
         //FIXME : change the query
         databaseReference.updateChildren(childUpdates);
         //databaseReference.child(REQUEST_TO_PASSENGERS).child("from-icesi").child("18062017").child("1600").child(passengerUid).child(request.userId).setValue(request);

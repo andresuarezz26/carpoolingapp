@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.adapter.base.BaseAdapter;
-import com.angular.gerardosuarez.carpoolingapp.mvp.model.Passenger;
+import com.angular.gerardosuarez.carpoolingapp.mvp.model.DriverInfoRequest;
 
 import java.lang.ref.WeakReference;
 
@@ -19,23 +19,22 @@ import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 
-public class MyQuotaAdapter extends BaseAdapter<Passenger, Integer, MyQuotaAdapter.MyQuotaViewHolder> {
+public class DriverInfoRequestAdapter extends BaseAdapter<DriverInfoRequest, Integer, DriverInfoRequestAdapter.DriverInfoRequestViewHolder> {
 
-    public MyQuotaAdapter(Observer<Integer> observer) {
+    public DriverInfoRequestAdapter(Observer<Integer> observer) {
         super(observer);
     }
 
     @Override
-    public void onBindViewHolder(MyQuotaViewHolder holder, int position) {
-        holder.passenger = items.get(position);
-        holder.position = position;
-        String name = holder.passenger.getName();
+    public void onBindViewHolder(DriverInfoRequestViewHolder holder, int position) {
+        holder.driverInfoRequest = items.get(holder.getAdapterPosition());
+        String name = holder.driverInfoRequest.getDriverName();
         if (!TextUtils.isEmpty(name)) {
             holder.textName.setText(name);
         }
-        String address = holder.passenger.getAddress();
+        String address = holder.driverInfoRequest.address;
         if (!TextUtils.isEmpty(address)) {
-            holder.textAddress.setText(name);
+            holder.textAddress.setText(address);
         }
         if (hasObserver()) {
             holder.observerRef = new WeakReference<>(getObserver());
@@ -49,21 +48,23 @@ public class MyQuotaAdapter extends BaseAdapter<Passenger, Integer, MyQuotaAdapt
 
     @NonNull
     @Override
-    protected MyQuotaViewHolder getViewHolder(View view) {
-        return new MyQuotaViewHolder(view);
+    protected DriverInfoRequestViewHolder getViewHolder(View view) {
+        return new DriverInfoRequestViewHolder(view);
     }
 
-    class MyQuotaViewHolder extends RecyclerView.ViewHolder {
+    class DriverInfoRequestViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.text_my_quota_name) TextView textName;
-        @BindView(R.id.text_my_quota_address) TextView textAddress;
-        @BindView(R.id.btn_my_quota_remove) ImageButton removeButton;
-        private Passenger passenger;
+        @BindView(R.id.text_my_quota_name)
+        TextView textName;
+        @BindView(R.id.text_my_quota_address)
+        TextView textAddress;
+        @BindView(R.id.btn_my_quota_remove)
+        ImageButton removeButton;
+        private DriverInfoRequest driverInfoRequest;
         private WeakReference<Observer<Integer>> observerRef;
-        private int position;
 
 
-        MyQuotaViewHolder(View itemView) {
+        DriverInfoRequestViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
@@ -73,7 +74,7 @@ public class MyQuotaAdapter extends BaseAdapter<Passenger, Integer, MyQuotaAdapt
             if (observerRef == null) {
                 return;
             }
-            Observable.just(position).subscribe(observerRef.get());
+            Observable.just(getAdapterPosition()).subscribe(observerRef.get());
         }
     }
 }

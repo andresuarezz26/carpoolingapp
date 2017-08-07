@@ -14,9 +14,10 @@ import android.support.v4.content.ContextCompat;
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreference;
-import com.angular.gerardosuarez.carpoolingapp.mvp.base.BaseMapPresenter;
-import com.angular.gerardosuarez.carpoolingapp.mvp.model.DriverRequest;
-import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerQuota;
+import com.angular.gerardosuarez.carpoolingapp.mvp.base.BasePresenter;
+import com.angular.gerardosuarez.carpoolingapp.mvp.model.DriverInfoRequest;
+import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerInfoRequest;
+import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerBooking;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyMapView;
 import com.angular.gerardosuarez.carpoolingapp.service.DriverMapService;
 import com.angular.gerardosuarez.carpoolingapp.service.PassengerMapService;
@@ -42,7 +43,7 @@ import java.util.Random;
 import io.reactivex.observers.DisposableObserver;
 import timber.log.Timber;
 
-public class MyMapPresenter extends BaseMapPresenter {
+public class MyMapPresenter extends BasePresenter {
 
     private final static String ROLE_DRIVER = "driver";
     private final static String ROLE_PASSEGNER = "passenger";
@@ -60,7 +61,7 @@ public class MyMapPresenter extends BaseMapPresenter {
     private boolean wasDateSelected = false;
     private boolean wasTimeSelected = false;
 
-    private LinkedHashMap<String, PassengerQuota> passengerQuotasMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, PassengerBooking> passengerQuotasMap = new LinkedHashMap<>();
 
     public MyMapPresenter(MyMapView view,
                           DriverMapService driverMapService,
@@ -108,26 +109,28 @@ public class MyMapPresenter extends BaseMapPresenter {
     }
 
     private void getQuotas(String comunity, String origin, String date, String hour) {
-        quotaPassengerListener = driverMapService.getQuotasPerCommunityOriginDateAndHour(comunity, origin, date, hour).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    try {
-                        PassengerQuota passengerQuota = snapshot.getValue(PassengerQuota.class);
-                        passengerQuotasMap.put(passengerQuota.userId, passengerQuota);
-                        int position = new ArrayList<>(passengerQuotasMap.keySet()).indexOf(passengerQuota.userId);
-                        view.addPassengerQuotaMarker(passengerQuota, position);
-                    } catch (DatabaseException e) {
-                        Timber.e(e.getMessage(), e);
+        quotaPassengerListener = driverMapService.getQuotasPerCommunityOriginDateAndHour(comunity, origin, date, hour).
+                addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            snapshot.getKey();
+                            try {
+                                PassengerBooking passengerBooking = snapshot.getValue(PassengerBooking.class);
+                                passengerQuotasMap.put(passengerBooking.userId, passengerBooking);
+                                int position = new ArrayList<>(passengerQuotasMap.keySet()).indexOf(passengerBooking.userId);
+                                view.addPassengerQuotaMarker(passengerBooking, position);
+                            } catch (DatabaseException e) {
+                                Timber.e(e.getMessage(), e);
+                            }
+                        }
                     }
-                }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Timber.e(databaseError.toString(), databaseError);
-            }
-        });
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Timber.e(databaseError.toString(), databaseError);
+                    }
+                });
     }
 
     public void onDialogResponse(boolean wantSendRequest) {
@@ -135,27 +138,31 @@ public class MyMapPresenter extends BaseMapPresenter {
     }
 
     private void putRequestToPassenger() {
-        DriverRequest driverRequest = new DriverRequest();
+        PassengerInfoRequest passengerInfoRequest = new PassengerInfoRequest();
         //FIXME: remove this
         Random number = new Random();
-        driverRequest.userId = "yo";
-        driverRequest.name = "Gerardo Suarez";
-        driverRequest.status = "waiting";
-        driverRequest.phoneNumber = "3013041454";
-        String passengerMock = "passengerMock";
-        driverMapService.putDriverRequestToPassenger(driverRequest, passengerMock);
+        passengerInfoRequest.driverUid = "yo";
+        passengerInfoRequest.address = "Gerardo Suarez";
+        passengerInfoRequest.status = "waiting";
+        passengerInfoRequest.setKey("passengerMock");
+        DriverInfoRequest driverInfoRequest = new DriverInfoRequest();
+        driverInfoRequest.status = "waiting";
+        driverInfoRequest.address = "calle 4a # 3-84";
+        driverInfoRequest.passengerUid = "passengerMock";
+        driverInfoRequest.setKey("yo");
+        driverMapService.putInfoRequestToPassengerAndDriver(passengerInfoRequest, driverInfoRequest);
     }
 
     //Passenger Services
     private void putQuota() {
-        PassengerQuota passengerQuota = new PassengerQuota();
+        PassengerBooking passengerBooking = new PassengerBooking();
         //FIXME: remove this
         Random number = new Random();
-        passengerQuota.userId = "yo";
-        passengerQuota.description = "Calle 3a 34-3";
-        passengerQuota.latitude = 3.4380741597868383;
-        passengerQuota.longitude = -76.54428374022400;
-        passengerMapService.putQuotaPerCommunityOriginDate(passengerQuota);
+        passengerBooking.userId = "yo";
+        passengerBooking.description = "Calle 3a 34-3";
+        passengerBooking.latitude = 3.4380741597868383;
+        passengerBooking.longitude = -76.54428374022400;
+        passengerMapService.putQuotaPerCommunityOriginDate(passengerBooking);
     }
 
     public void setAutocompleteFragment() {
@@ -234,8 +241,8 @@ public class MyMapPresenter extends BaseMapPresenter {
         if (marker == null) {
             return false;
         }
-        PassengerQuota passengerQuota = passengerQuotasMap.get(marker.getTitle());
-        view.showToast(passengerQuota.description + passengerQuota.userId);
+        PassengerBooking passengerBooking = passengerQuotasMap.get(marker.getTitle());
+        view.showToast(passengerBooking.description + passengerBooking.userId);
         return true;
     }
 

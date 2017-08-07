@@ -6,9 +6,10 @@ import android.app.FragmentTransaction;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreference;
+import com.angular.gerardosuarez.carpoolingapp.fragment.MyBookingPassengerFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyMapFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyProfileFragment;
-import com.angular.gerardosuarez.carpoolingapp.fragment.MyQuotaFragment;
+import com.angular.gerardosuarez.carpoolingapp.fragment.MyBookingDriverFragment;
 import com.angular.gerardosuarez.carpoolingapp.utils.StringUtils;
 
 public class NavigationManager {
@@ -51,10 +52,18 @@ public class NavigationManager {
         openMapFragment(new MyMapFragment(), MyMapFragment.TAG);
     }
 
-    public void goToMyQuotaFragment() {
+    public void goToMyBookingsFragment() {
         popEveryFragment();
         hideMapFragment();
-        open(new MyQuotaFragment(), MyQuotaFragment.TAG);
+        String role = preference.getCurrentRole();
+        if (StringUtils.isEmpty(role)) {
+            return;
+        }
+        if (ROLE_DRIVER.equalsIgnoreCase(role)) {
+            open(new MyBookingDriverFragment(), MyBookingDriverFragment.TAG);
+        } else {
+            open(new MyBookingPassengerFragment(), MyBookingPassengerFragment.TAG);
+        }
     }
 
     private void openMapFragment(Fragment fragment, String tag) {

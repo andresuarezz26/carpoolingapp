@@ -1,6 +1,6 @@
 package com.angular.gerardosuarez.carpoolingapp.service;
 
-import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerQuota;
+import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerBooking;
 import com.angular.gerardosuarez.carpoolingapp.service.base.BaseFirebaseService;
 
 /**
@@ -13,7 +13,7 @@ public class PassengerMapService extends BaseFirebaseService {
         super();
     }
 
-    public void putQuotaPerCommunityOriginDate(PassengerQuota passengerQuota) {
-        databaseReference.child("from-icesi").child("18062017").child("1600").child(passengerQuota.userId).setValue(passengerQuota);
+    public void putQuotaPerCommunityOriginDate(PassengerBooking passengerBooking) {
+        databaseReference.child("from-icesi").child("18062017").child("1600").child(passengerBooking.userId).setValue(passengerBooking);
     }
 }

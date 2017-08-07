@@ -18,7 +18,7 @@ import com.angular.gerardosuarez.carpoolingapp.dialogfragment.DatePickerFragment
 import com.angular.gerardosuarez.carpoolingapp.dialogfragment.TimePickerFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyMapFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.base.FragmentView;
-import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerQuota;
+import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerBooking;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
@@ -203,8 +203,8 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
         return map.getCameraPosition().target;
     }
 
-    public void addPassengerQuotaMarker(PassengerQuota passengerQuota, int id) {
-        setMarker(new LatLng(passengerQuota.latitude, passengerQuota.longitude), passengerQuota.userId, id);
+    public void addPassengerQuotaMarker(PassengerBooking passengerBooking, int id) {
+        setMarker(new LatLng(passengerBooking.latitude, passengerBooking.longitude), passengerBooking.userId, id);
     }
 
     public void showDialogQuota(DisposableObserver<Boolean> observer, String passengerName, String address) {

@@ -42,7 +42,7 @@ public class MainActivity extends BaseActivity {
                                 navigationManager.goToMyProfileFragment();
                                 break;
                             case R.id.action_my_quota:
-                                navigationManager.goToMyQuotaFragment();
+                                navigationManager.goToMyBookingsFragment();
                                 break;
                             case R.id.action_map:
                                 navigationManager.goToMapFragment();
