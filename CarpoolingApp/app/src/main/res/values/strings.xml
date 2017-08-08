@@ -18,4 +18,7 @@
     <string name="cancel_quota">No, Gracias</string>
     <string name="hour_map">"Hora \n Llegada"</string>
     <string name="date_map">"Dia \n Viaje"</string>
+    <string name="choose_community">Elige tu comunidad</string>
+    <string name="txt_icesi">Icesi</string>
+    <string name="txt_javeriana">javeriana</string>
 </resources>
