@@ -56,4 +56,13 @@ public class MyProfileFragment extends Fragment {
         activity.getNavigationManager().setToPassengerRole();
         activity.getNavigationManager().goToMapFragment();
     }
+
+    @OnClick(R.id.btn_community)
+    void onCommunityChooserClick() {
+        MainActivity activity = (MainActivity) getActivity();
+        if (activity == null) {
+            return;
+        }
+        activity.getNavigationManager().goToCommunityChooserFragment();
+    }
 }

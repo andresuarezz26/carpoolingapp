@@ -7,5 +7,6 @@
     <dimen name="my_profile_button_dimen">100dp</dimen>
     <dimen name="big_text_size">25sp</dimen>
     <dimen name="big_min_text_size">22sp</dimen>
+    <dimen name="community_chooser_side">110dp</dimen>
 
 </resources>

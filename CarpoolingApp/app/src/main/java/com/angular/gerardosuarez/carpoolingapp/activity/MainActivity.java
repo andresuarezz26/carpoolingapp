@@ -6,6 +6,8 @@ import android.support.design.widget.BottomNavigationView;
 import android.view.MenuItem;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreferenceImpl;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreference;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreferenceImpl;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyMapFragment;
@@ -18,7 +20,8 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity {
 
-    @BindView(R.id.bottom_navigation) BottomNavigationView bottomMenu;
+    @BindView(R.id.bottom_navigation)
+    BottomNavigationView bottomMenu;
     MainPresenter presenter;
     private NavigationManager navigationManager;
 
@@ -30,8 +33,9 @@ public class MainActivity extends BaseActivity {
         presenter = new MainPresenter(new MainView(this));
         presenter.init();
         final RolePreference preference = new RolePreferenceImpl(this, RolePreferenceImpl.NAME);
-        navigationManager = NavigationManager.getInstance(getFragmentManager(), preference);
-        navigationManager.goToMyProfileFragment();
+        final MapPreference mapPreference = new MapPreferenceImpl(this, MapPreferenceImpl.NAME);
+        navigationManager = NavigationManager.getInstance(getFragmentManager(), preference, mapPreference);
+        navigationManager.chooseInitialScreen();
 
         bottomMenu.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
