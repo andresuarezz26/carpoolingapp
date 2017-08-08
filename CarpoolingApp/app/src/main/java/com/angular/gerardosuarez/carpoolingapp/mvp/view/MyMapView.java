@@ -289,12 +289,18 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
     }
 
     public void unsubscribeObservers() {
-        timePickerFragment.unsubscribeToDialogFragment();
-        dialogQuota.unsubscribeToDialogEvent();
-        datePickerFragment.unsubscribeToDialogFragment();
-        timePickerFragment.dismiss();
-        dialogQuota.dismiss();
-        datePickerFragment.dismiss();
+        if (timePickerFragment != null) {
+            timePickerFragment.unsubscribeToDialogFragment();
+            timePickerFragment.dismiss();
+        }
+        if (dialogQuota != null) {
+            dialogQuota.unsubscribeToDialogEvent();
+            dialogQuota.dismiss();
+        }
+        if (datePickerFragment != null) {
+            datePickerFragment.unsubscribeToDialogFragment();
+            datePickerFragment.dismiss();
+        }
     }
 
 

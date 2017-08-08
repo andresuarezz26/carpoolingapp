@@ -21,4 +21,9 @@
     <string name="choose_community">Elige tu comunidad</string>
     <string name="txt_icesi">Icesi</string>
     <string name="txt_javeriana">javeriana</string>
+    <string name="register">Regístrate</string>
+    <string name="register_name">Nombre y Apellido</string>
+    <string name="register_email">Correo Electrónico</string>
+    <string name="register_phone">Número de Celular</string>
+    <string name="register_btn">Continúa</string>
 </resources>
