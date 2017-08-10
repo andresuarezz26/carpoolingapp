@@ -15,10 +15,12 @@ import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference
 import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreferenceImpl;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreference;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreferenceImpl;
+import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerBooking;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MyMapPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyMapView;
 import com.angular.gerardosuarez.carpoolingapp.service.DriverMapService;
 import com.angular.gerardosuarez.carpoolingapp.service.PassengerMapService;
+import com.angular.gerardosuarez.carpoolingapp.service.UserService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
@@ -70,7 +72,8 @@ public class MyMapFragment extends Fragment
                 new DriverMapService(),
                 new PassengerMapService(),
                 rolePreference,
-                mapPreference);
+                mapPreference,
+                new UserService());
         if (presenter.googleServicesAvailable()) {
             presenter.initMap();
         }
@@ -210,12 +213,12 @@ public class MyMapFragment extends Fragment
         return true;
     }
 
-    private class OnDialogResponseObserver extends DisposableObserver<Boolean> {
+    private class OnDialogResponseObserver extends DisposableObserver<PassengerBooking> {
 
         @Override
-        public void onNext(Boolean isAccepted) {
-            //Query firebasedatebase
-            presenter.onDialogResponse(isAccepted);
+        public void onNext(PassengerBooking passengerBooking) {
+
+            presenter.onDialogResponse(passengerBooking);
         }
 
         @Override

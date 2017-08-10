@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.DatePicker;
 
 import com.angular.gerardosuarez.carpoolingapp.dialogfragment.base.BaseDialogFragment;
+import com.angular.gerardosuarez.carpoolingapp.utils.StringUtils;
 
 import java.util.Calendar;
 
@@ -26,7 +27,7 @@ public class DatePickerFragment extends BaseDialogFragment<Integer>
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        publishSubject.onNext(month + "" + dayOfMonth);
+        publishSubject.onNext(StringUtils.addZeroToStart(dayOfMonth) + "" + StringUtils.addZeroToStart(month) + "" + year);
         unsubscribeToDialogFragment();
     }
 }

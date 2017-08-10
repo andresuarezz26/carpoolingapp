@@ -13,7 +13,7 @@ public class PassengerMapService extends BaseFirebaseService {
         super();
     }
 
-    public void putQuotaPerCommunityOriginDate(PassengerBooking passengerBooking) {
-        databaseReference.child("from-icesi").child("18062017").child("1600").child(passengerBooking.userId).setValue(passengerBooking);
+    public void putPassengerBookingPerCommunityOriginDate(PassengerBooking passengerBooking, String communityNodeName, String date, String hour) {
+        databaseReference.child(communityNodeName).child(date).child(hour).child(passengerBooking.getKey()).setValue(passengerBooking);
     }
 }

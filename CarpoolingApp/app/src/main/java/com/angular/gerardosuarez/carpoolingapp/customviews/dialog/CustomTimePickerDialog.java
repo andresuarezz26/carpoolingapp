@@ -6,7 +6,7 @@ import android.widget.TimePicker;
 
 public class CustomTimePickerDialog extends TimePickerDialog {
 
-    public static final int TIME_PICKER_INTERVAL = 10;
+    public static final int TIME_PICKER_INTERVAL = 30;
     private boolean mIgnoreEvent = false;
 
     public CustomTimePickerDialog(Context context, TimePickerDialog.OnTimeSetListener callBack, int hourOfDay, int minute,
@@ -35,6 +35,16 @@ public class CustomTimePickerDialog extends TimePickerDialog {
         if (minute % TIME_PICKER_INTERVAL != 0) {
             int minuteFloor = minute - (minute % TIME_PICKER_INTERVAL);
             minute = minuteFloor + (minute == minuteFloor + 1 ? TIME_PICKER_INTERVAL : 0);
+            if (minute == 60) minute = 0;
+        }
+
+        return minute;
+    }
+
+    public static int getRoundedMinute(int minute, int timePickerInterval) {
+        if (minute % timePickerInterval != 0) {
+            int minuteFloor = minute - (minute % timePickerInterval);
+            minute = minuteFloor + (minute == minuteFloor + 1 ? timePickerInterval : 0);
             if (minute == 60) minute = 0;
         }
 

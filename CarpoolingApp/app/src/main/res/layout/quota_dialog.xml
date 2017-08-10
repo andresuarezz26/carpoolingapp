@@ -10,6 +10,14 @@
     android:paddingStart="40dp"
     android:paddingTop="50dp">
 
+    <ImageView
+        android:id="@+id/image_facebook"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/white"
+        android:scaleType="fitXY" />
+
     <TextView
         android:id="@+id/txt_name"
         android:layout_width="wrap_content"

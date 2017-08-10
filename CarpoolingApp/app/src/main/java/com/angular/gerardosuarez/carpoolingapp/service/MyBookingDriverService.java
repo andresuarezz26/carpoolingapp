@@ -13,9 +13,9 @@ public class MyBookingDriverService extends BaseFirebaseService {
 
     private static final String MY_BOOKING_DRIVER = "solicitudes-enviadas-conductor";
 
-    public DatabaseReference getRequestOfTheDriver(@NonNull String comunity, @NonNull String origin, @NonNull String date, @NonNull String hour) {
+    public DatabaseReference getRequestOfTheDriver(@NonNull String comunity, @NonNull String origin, @NonNull String date, @NonNull String hour, @NonNull String driverId) {
         // FIXME : change the query
-        return databaseReference.child(MY_BOOKING_DRIVER).child("from-icesi").child("18062017").child("1600").child("yo");
+        return databaseReference.child(MY_BOOKING_DRIVER).child(origin+"-"+comunity).child(date).child(hour).child(driverId);
     }
 
     public void cancelRequest() {

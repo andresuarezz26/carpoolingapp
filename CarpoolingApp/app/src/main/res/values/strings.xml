@@ -26,4 +26,9 @@
     <string name="register_email">Correo Electrónico</string>
     <string name="register_phone">Número de Celular</string>
     <string name="register_btn">Continúa</string>
+    <string name="error_empty_date">Debe escoger una fecha</string>
+    <string name="error_empty_hour">Debe escoger una hora</string>
+    <string name="error_empty_community">Debe escoger una comunidad</string>
+    <string name="error_empty_coordinates">Posición actual no detectada.Intente más tarde.</string>
+    <string name="error_empty_from_or_to">Debes escoger lugar de partida y destino</string>
 </resources>

@@ -3,31 +3,33 @@ package com.angular.gerardosuarez.carpoolingapp.customviews.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
+import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerBooking;
+import com.squareup.picasso.Picasso;
 
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.subjects.PublishSubject;
 
 
-public class DialogPassengerQuota extends Dialog implements
+public class DialogAcceptPassengerBooking extends Dialog implements
         android.view.View.OnClickListener {
 
     public Context context;
-    private String name;
-    private String description;
-    private PublishSubject<Boolean> publishSubject = PublishSubject.create();
+    private PassengerBooking passengerBooking;
+    private PublishSubject<PassengerBooking> publishSubject = PublishSubject.create();
 
 
-    public DialogPassengerQuota(Context context, String name, String description) {
+    public DialogAcceptPassengerBooking(Context context, PassengerBooking passengerBooking) {
         super(context);
         this.context = context;
-        this.name = name;
-        this.description = description;
+        this.passengerBooking = passengerBooking;
     }
 
     @Override
@@ -35,13 +37,22 @@ public class DialogPassengerQuota extends Dialog implements
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.quota_dialog);
+        ImageView imageFacebook = (ImageView) findViewById(R.id.image_facebook);
         Button buttonAccept = (Button) findViewById(R.id.btn_accept_quota);
         Button buttonCancel = (Button) findViewById(R.id.btn_cancel_quota);
         TextView textName = (TextView) findViewById(R.id.txt_name);
-        textName.setText(name);
-        TextView textDescription = (TextView) findViewById(R.id.txt_description);
-        textDescription.setText(description);
-
+        if (passengerBooking != null) {
+            if (passengerBooking.getName() != null) {
+                textName.setText(passengerBooking.getName());
+            }
+            TextView textDescription = (TextView) findViewById(R.id.txt_description);
+            if (passengerBooking.address != null) {
+                textDescription.setText(passengerBooking.address);
+            }
+            if (!TextUtils.isEmpty(passengerBooking.getPhotoUri())) {
+                Picasso.with(imageFacebook.getContext()).load(passengerBooking.getPhotoUri()).into(imageFacebook);
+            }
+        }
         buttonAccept.setOnClickListener(this);
         buttonCancel.setOnClickListener(this);
     }
@@ -50,11 +61,11 @@ public class DialogPassengerQuota extends Dialog implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_accept_quota:
-                publishSubject.onNext(true);
+                publishSubject.onNext(passengerBooking);
                 dismiss();
                 break;
             case R.id.btn_cancel_quota:
-                publishSubject.onNext(false);
+                publishSubject.onNext(null);
                 dismiss();
                 break;
             default:
@@ -63,7 +74,7 @@ public class DialogPassengerQuota extends Dialog implements
         dismiss();
     }
 
-    public void subscribeToDialogEvent(DisposableObserver<Boolean> observer) {
+    public void subscribeToDialogEvent(DisposableObserver<PassengerBooking> observer) {
         publishSubject.subscribe(observer);
     }
 

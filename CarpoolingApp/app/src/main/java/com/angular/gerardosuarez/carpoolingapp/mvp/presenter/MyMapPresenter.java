@@ -8,20 +8,26 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreference;
 import com.angular.gerardosuarez.carpoolingapp.mvp.base.BasePresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.DriverInfoRequest;
-import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerInfoRequest;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerBooking;
+import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerInfoRequest;
+import com.angular.gerardosuarez.carpoolingapp.mvp.model.User;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyMapView;
 import com.angular.gerardosuarez.carpoolingapp.service.DriverMapService;
 import com.angular.gerardosuarez.carpoolingapp.service.PassengerMapService;
+import com.angular.gerardosuarez.carpoolingapp.service.UserService;
 import com.angular.gerardosuarez.carpoolingapp.utils.NetworkUtils;
+import com.angular.gerardosuarez.carpoolingapp.utils.StringUtils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.places.Place;
@@ -38,7 +44,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
 import io.reactivex.observers.DisposableObserver;
 import timber.log.Timber;
@@ -47,12 +52,14 @@ public class MyMapPresenter extends BasePresenter {
 
     private final static String ROLE_DRIVER = "driver";
     private final static String ROLE_PASSEGNER = "passenger";
+    private static final int FIRST_POSITION = 0;
 
     private MyMapView view;
     private DriverMapService driverMapService;
     private PassengerMapService passengerMapService;
     private RolePreference rolePreference;
     private MapPreference mapPreference;
+    private UserService userService;
 
     private ValueEventListener quotaPassengerListener;
     private String currentRole;
@@ -60,20 +67,28 @@ public class MyMapPresenter extends BasePresenter {
     private boolean mapWasTouched = false;
     private boolean wasDateSelected = false;
     private boolean wasTimeSelected = false;
+    private String currentAddress;
+    private LatLng currentCoordinates;
+    private String community;
+    private String fromOrTo;
+    private String date;
+    private String hour;
 
-    private LinkedHashMap<String, PassengerBooking> passengerQuotasMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, PassengerBooking> passengerBookingMap = new LinkedHashMap<>();
 
     public MyMapPresenter(MyMapView view,
                           DriverMapService driverMapService,
                           PassengerMapService passengerMapService,
                           RolePreference rolePreference,
-                          MapPreference mapPreference) {
+                          MapPreference mapPreference,
+                          UserService userService) {
         super();
         this.view = view;
         this.driverMapService = driverMapService;
         this.passengerMapService = passengerMapService;
         this.rolePreference = rolePreference;
         this.mapPreference = mapPreference;
+        this.userService = userService;
     }
 
     public void init() {
@@ -86,6 +101,7 @@ public class MyMapPresenter extends BasePresenter {
         }
         requestPermissions(activity);
         setListeners();
+
     }
 
     public void setListeners() {
@@ -103,12 +119,38 @@ public class MyMapPresenter extends BasePresenter {
         }
     }
 
-    //Driver Services
-    private void getQuotas() {
-        getQuotas("icesi", "from", "18062017", "1600");
+    private boolean getMapPreferences() {
+        community = mapPreference.getCommunity();
+        if (TextUtils.isEmpty(community)) {
+            view.showToast(R.string.error_empty_community);
+            return false;
+        }
+        fromOrTo = mapPreference.getFromOrTo();
+        if (TextUtils.isEmpty(fromOrTo)) {
+            view.showToast(R.string.error_empty_from_or_to);
+            return false;
+        }
+        date = mapPreference.getDate();
+        if (TextUtils.isEmpty(date)) {
+            view.showToast(R.string.error_empty_date);
+            return false;
+        }
+        hour = mapPreference.getTime();
+        if (TextUtils.isEmpty(hour)) {
+            view.showToast(R.string.error_empty_hour);
+            return false;
+        }
+        return true;
     }
 
-    private void getQuotas(String comunity, String origin, String date, String hour) {
+    //Driver Services
+    private void getQuotas() {
+        if (getMapPreferences()) {
+            getQuotas(community, fromOrTo, date, hour);
+        }
+    }
+
+    private void getQuotas(@NonNull String comunity, @NonNull String origin, @NonNull String date, @NonNull String hour) {
         quotaPassengerListener = driverMapService.getQuotasPerCommunityOriginDateAndHour(comunity, origin, date, hour).
                 addValueEventListener(new ValueEventListener() {
                     @Override
@@ -116,10 +158,12 @@ public class MyMapPresenter extends BasePresenter {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             snapshot.getKey();
                             try {
+                                view.clearMap();
                                 PassengerBooking passengerBooking = snapshot.getValue(PassengerBooking.class);
-                                passengerQuotasMap.put(passengerBooking.userId, passengerBooking);
-                                int position = new ArrayList<>(passengerQuotasMap.keySet()).indexOf(passengerBooking.userId);
-                                view.addPassengerQuotaMarker(passengerBooking, position);
+                                if (!PassengerInfoRequest.STATUS_ACCEPTED.equalsIgnoreCase(passengerBooking.status)) {
+                                    setPassengerBookingAditionalInfo(snapshot.getKey(), passengerBooking);
+                                }
+
                             } catch (DatabaseException e) {
                                 Timber.e(e.getMessage(), e);
                             }
@@ -133,36 +177,81 @@ public class MyMapPresenter extends BasePresenter {
                 });
     }
 
-    public void onDialogResponse(boolean wantSendRequest) {
-        if (wantSendRequest) putRequestToPassenger();
+    private void setPassengerBookingAditionalInfo(@NonNull final String uid, @NonNull final PassengerBooking passengerBooking) {
+        userService.getUserByUid(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                try {
+                    User user = dataSnapshot.getValue(User.class);
+                    if (user != null) {
+                        passengerBooking.setPhone(user.phone);
+                        passengerBooking.setEmail(user.email);
+                        passengerBooking.setName(user.name);
+                        passengerBooking.setPhotoUri(user.photo_uri);
+                        passengerBooking.setKey(uid);
+
+                        passengerBookingMap.put(passengerBooking.getKey(), passengerBooking);
+                        int position = new ArrayList<>(passengerBookingMap.keySet()).indexOf(passengerBooking.getKey());
+                        view.addPassengerQuotaMarker(passengerBooking, position);
+                    }
+                } catch (DatabaseException e) {
+                    Timber.e(e.getMessage(), e);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Timber.e(databaseError.getMessage(), databaseError);
+            }
+        });
     }
 
-    private void putRequestToPassenger() {
+    public void onDialogResponse(@Nullable PassengerBooking passengerBooking) {
+        if (passengerBooking != null) assignBookingToDriverAndPassenger(passengerBooking);
+    }
+
+    private void assignBookingToDriverAndPassenger(@NonNull PassengerBooking passengerBooking) {
         PassengerInfoRequest passengerInfoRequest = new PassengerInfoRequest();
-        //FIXME: remove this
-        Random number = new Random();
-        passengerInfoRequest.driverUid = "yo";
-        passengerInfoRequest.address = "Gerardo Suarez";
-        passengerInfoRequest.status = "waiting";
-        passengerInfoRequest.setKey("passengerMock");
+        passengerInfoRequest.driverUid = "user1";
+        if (!TextUtils.isEmpty(currentAddress)) {
+            passengerInfoRequest.address = currentAddress;
+        }
+        passengerInfoRequest.status = PassengerInfoRequest.STATUS_ACCEPTED;
+        passengerInfoRequest.setKey(passengerBooking.getKey());
         DriverInfoRequest driverInfoRequest = new DriverInfoRequest();
-        driverInfoRequest.status = "waiting";
-        driverInfoRequest.address = "calle 4a # 3-84";
-        driverInfoRequest.passengerUid = "passengerMock";
-        driverInfoRequest.setKey("yo");
-        driverMapService.putInfoRequestToPassengerAndDriver(passengerInfoRequest, driverInfoRequest);
+        driverInfoRequest.status = PassengerInfoRequest.STATUS_ACCEPTED;
+        driverInfoRequest.address = passengerBooking.address;
+        driverInfoRequest.passengerUid = passengerBooking.getKey();
+        driverInfoRequest.setKey("user1");
+        if (getMapPreferences()) {
+
+            driverMapService.assignBookingToDriverAndPassenger(
+                    passengerInfoRequest,
+                    driverInfoRequest,
+                    StringUtils.buildRoute(community, fromOrTo, date, hour));
+        }
     }
 
     //Passenger Services
-    private void putQuota() {
+    private void putBooking() {
         PassengerBooking passengerBooking = new PassengerBooking();
-        //FIXME: remove this
-        Random number = new Random();
-        passengerBooking.userId = "yo";
-        passengerBooking.description = "Calle 3a 34-3";
-        passengerBooking.latitude = 3.4380741597868383;
-        passengerBooking.longitude = -76.54428374022400;
-        passengerMapService.putQuotaPerCommunityOriginDate(passengerBooking);
+        //FIXME: change by curent user
+        passengerBooking.setKey("user1");
+
+        if (currentCoordinates == null) {
+            view.showToast(R.string.error_empty_coordinates);
+            return;
+        }
+        if (TextUtils.isEmpty(currentAddress)) {
+            currentAddress = getCurrentAddressFromCamera();
+        }
+        passengerBooking.address = currentAddress;
+        passengerBooking.latitude = currentCoordinates.latitude;
+        passengerBooking.longitude = currentCoordinates.longitude;
+        passengerBooking.status = PassengerInfoRequest.STATUS_WAITING;
+        if (getMapPreferences()) {
+            passengerMapService.putPassengerBookingPerCommunityOriginDate(passengerBooking, fromOrTo + "-" + community, date, hour);
+        }
     }
 
     public void setAutocompleteFragment() {
@@ -175,6 +264,7 @@ public class MyMapPresenter extends BasePresenter {
                 == PackageManager.PERMISSION_GRANTED) {
             view.buildGoogleApiClient();
             view.setMyLocationEnabled();
+            currentCoordinates = view.getCurrentCoordinatesFromCamera();
         } else {
             view.requestPermissionsActivity();
         }
@@ -228,6 +318,7 @@ public class MyMapPresenter extends BasePresenter {
             if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 view.buildGoogleApiClient();
                 view.setMyLocationEnabled();
+                currentCoordinates = view.getCurrentCoordinatesFromCamera();
             }
         } else {
             view.showToast(R.string.permission_denied);
@@ -235,15 +326,6 @@ public class MyMapPresenter extends BasePresenter {
     }
 
     public void addMockMarkers() {
-    }
-
-    public boolean onMarkerClick(Marker marker) {
-        if (marker == null) {
-            return false;
-        }
-        PassengerBooking passengerBooking = passengerQuotasMap.get(marker.getTitle());
-        view.showToast(passengerBooking.description + passengerBooking.userId);
-        return true;
     }
 
     public void searchPlace(Place place) {
@@ -263,7 +345,8 @@ public class MyMapPresenter extends BasePresenter {
     }
 
     public void setAutocompleteFragmentText() {
-        view.setTextAutocompleteFragmentWithCurrentCoord(getCurrentAddressFromCamera());
+        currentAddress = getCurrentAddressFromCamera();
+        view.setTextAutocompleteFragmentWithCurrentCoord(currentAddress);
     }
 
     private String getCurrentAddressFromLatLng(LatLng coordinates) {
@@ -271,19 +354,23 @@ public class MyMapPresenter extends BasePresenter {
     }
 
     private String getCurrentAddressFromCamera() {
-        LatLng currentCoordinates = view.getCurrentCoordinatesFromCamera();
-        return calculateAddress(currentCoordinates);
+        currentCoordinates = view.getCurrentCoordinatesFromCamera();
+        if (currentCoordinates != null) {
+            return calculateAddress(currentCoordinates);
+        }
+        return StringUtils.EMPTY_STRING;
+
     }
 
     private String calculateAddress(LatLng currentCoordinates) {
-        String address = "";
+        String address = StringUtils.EMPTY_STRING;
         try {
             Geocoder geocoder;
             List<Address> addresses;
             geocoder = new Geocoder(view.getActivity(), Locale.getDefault());
             addresses = geocoder.getFromLocation(currentCoordinates.latitude, currentCoordinates.longitude, 1);
             if (!addresses.isEmpty()) {
-                address = addresses.get(0).getAddressLine(0);
+                address = addresses.get(FIRST_POSITION).getAddressLine(FIRST_POSITION);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -294,12 +381,12 @@ public class MyMapPresenter extends BasePresenter {
     public void onTimeSelected(String time) {
         wasTimeSelected = true;
         view.setButtonHour();
-        mapPreference.putTime("1600");
+        mapPreference.putTime(time);
         if (wasDateSelected) {
             if (rolePreference.getCurrentRole().equalsIgnoreCase(ROLE_DRIVER)) {
                 getQuotas();
             } else {
-                putQuota();
+                putBooking();
             }
             wasDateSelected = false;
         }
@@ -308,13 +395,13 @@ public class MyMapPresenter extends BasePresenter {
     public void onDateSelected(String date) {
         wasDateSelected = true;
         view.setButtonDate();
-        mapPreference.putDate("18062017");
+        mapPreference.putDate(date);
         if (wasTimeSelected) {
             if (rolePreference.getCurrentRole().equalsIgnoreCase(ROLE_DRIVER)) {
                 getQuotas();
             } else {
                 view.clearMap();
-                putQuota();
+                putBooking();
             }
             wasTimeSelected = false;
         }
@@ -323,7 +410,7 @@ public class MyMapPresenter extends BasePresenter {
     public void onRoleChanged() {
         String role = rolePreference.getCurrentRole();
         if (role.equalsIgnoreCase(ROLE_PASSEGNER)) {
-            if (passengerQuotasMap.size() > 0) {
+            if (passengerBookingMap.size() > 0) {
                 wasDateSelected = false;
                 view.clearMap();
             }
@@ -349,14 +436,18 @@ public class MyMapPresenter extends BasePresenter {
     }
 
     public void initView() {
-        view.initViews();
+        mapPreference.putFromOrTo(MapPreference.FROM);
+        String community = mapPreference.getCommunity();
+        view.initViews(MapPreference.FROM, community != null ? community : StringUtils.EMPTY_STRING);
     }
 
     public void onSwitchChanged(boolean isChecked) {
         if (isChecked) {
             view.setTextLocationText("DESTINO: ICESI");
+            mapPreference.putFromOrTo(MapPreference.TO);
         } else {
             view.setTextLocationText("ORIGEN: ICESI");
+            mapPreference.putFromOrTo(MapPreference.FROM);
         }
     }
 
@@ -364,8 +455,8 @@ public class MyMapPresenter extends BasePresenter {
         view.setLocationRequest();
     }
 
-    public void showDialog(DisposableObserver<Boolean> observer, Marker marker) {
-        view.showDialogQuota(observer, marker.getTitle(), marker.getTitle());
+    public void showDialog(DisposableObserver<PassengerBooking> observer, Marker marker) {
+        view.showDialogQuota(observer, passengerBookingMap.get(marker.getTitle()));
     }
 
     public void showTimePickerFragment(DisposableObserver<String> observer) {

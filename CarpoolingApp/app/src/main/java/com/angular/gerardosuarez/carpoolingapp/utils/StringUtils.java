@@ -7,7 +7,6 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.Base64;
 
-import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,6 +30,7 @@ public final class StringUtils {
     public static final String DOUBLE_BREAK = "\n\n";
     public static final String COLON = ",";
     public static final String DOUBLE_POINT = ":";
+    public static final String ZERO_STRING = "0";
 
     private StringUtils() {
 
@@ -55,14 +55,18 @@ public final class StringUtils {
         }
     }
 
-    public static String getPriceFormatted(float price) {
-        DecimalFormat decimalFormat;
-        if (price - (int) price > 0) {
-            decimalFormat = new DecimalFormat(DECIMAL_FORMAT_WITH_CENTS);
-            return decimalFormat.format((double) price);
+    public static String buildRoute(String community, String fromOrTo, String date, String hour) {
+        return fromOrTo + "-" + community + "/" + date + "/" + hour + "/";
+    }
+
+    public static String addZeroToStart(int number) {
+        String formatNumber;
+        if (number < 10) {
+            formatNumber = ZERO_STRING + number;
+        } else {
+            formatNumber = number + EMPTY_STRING;
         }
-        decimalFormat = new DecimalFormat(DECIMAL_FORMAT_WITHOUT_CENTS);
-        return decimalFormat.format((int) price);
+        return formatNumber;
     }
 
     public static boolean isValidEmail(String email) {

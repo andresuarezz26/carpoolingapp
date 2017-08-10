@@ -13,7 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
-import com.angular.gerardosuarez.carpoolingapp.customviews.dialog.DialogPassengerQuota;
+import com.angular.gerardosuarez.carpoolingapp.customviews.dialog.DialogAcceptPassengerBooking;
 import com.angular.gerardosuarez.carpoolingapp.dialogfragment.DatePickerFragment;
 import com.angular.gerardosuarez.carpoolingapp.dialogfragment.TimePickerFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyMapFragment;
@@ -41,8 +41,8 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
 
     private static final int DEFAULT_ZOOM = 16;
     private static final int INITIAL_ZOOM = 11;
-    public static final String DATE_PICKER = "datePicker";
-    public static final String TIME_PICKER = "timePicker";
+    private static final String DATE_PICKER = "datePicker";
+    private static final String TIME_PICKER = "timePicker";
     private GoogleMap map;
     LocationRequest mLocationRequest;
     GoogleApiClient mGoogleApiClient;
@@ -57,7 +57,7 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
     private static final double LONGITUDE_INITIAL = -76.54428374022244;
     private static final double LATITUDE_INITIAL = 3.4380741597868383;
 
-    private DialogPassengerQuota dialogQuota;
+    private DialogAcceptPassengerBooking dialogQuota;
     private TimePickerFragment timePickerFragment;
     private DatePickerFragment datePickerFragment;
 
@@ -120,8 +120,8 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
         mGoogleApiClient.connect();
     }
 
-    public void initViews() {
-        textLocation.setText("ORIGEN: ICESI");
+    public void initViews(String fromOrTo, String community) {
+        textLocation.setText(fromOrTo + community);
         switchFromTo.setOnCheckedChangeListener(getFragment());
     }
 
@@ -204,12 +204,12 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
     }
 
     public void addPassengerQuotaMarker(PassengerBooking passengerBooking, int id) {
-        setMarker(new LatLng(passengerBooking.latitude, passengerBooking.longitude), passengerBooking.userId, id);
+        setMarker(new LatLng(passengerBooking.latitude, passengerBooking.longitude), passengerBooking.getKey(), id);
     }
 
-    public void showDialogQuota(DisposableObserver<Boolean> observer, String passengerName, String address) {
+    public void showDialogQuota(DisposableObserver<PassengerBooking> observer, PassengerBooking passengerBooking) {
         if (getActivity() == null) return;
-        dialogQuota = new DialogPassengerQuota(getActivity(), passengerName, address);
+        dialogQuota = new DialogAcceptPassengerBooking(getActivity(), passengerBooking);
         dialogQuota.subscribeToDialogEvent(observer);
         dialogQuota.show();
     }

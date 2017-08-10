@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreferenceImpl;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MyBookingDriverPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyBookingDriverView;
 import com.angular.gerardosuarez.carpoolingapp.service.MyBookingDriverService;
@@ -34,7 +35,8 @@ public class MyBookingDriverFragment extends Fragment {
         presenter = new MyBookingDriverPresenter(
                 new MyBookingDriverView(this),
                 new MyBookingDriverService(),
-                new UserService());
+                new UserService(),
+                new MapPreferenceImpl(getActivity(), MapPreferenceImpl.NAME));
         presenter.init();
     }
 
