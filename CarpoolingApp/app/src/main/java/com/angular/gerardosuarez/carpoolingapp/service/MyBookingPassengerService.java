@@ -15,8 +15,8 @@ public class MyBookingPassengerService extends BaseFirebaseService {
 
     private static final String MY_BOOKING_PASSENGER = "peticiones-a-pasajeros";
 
-    public DatabaseReference getPassengerBookings() {
-        return databaseReference.child(MY_BOOKING_PASSENGER).child("from-icesi").child("18062017").child("1600").child("passengerMock");
+    public DatabaseReference getPassengerBookings(String community, String fromOrTo, String date, String hour) {
+        return databaseReference.child(MY_BOOKING_PASSENGER).child(fromOrTo + "-" + community).child(date).child(hour).child("user1");
     }
 
     public void refuseDriverRequest() {

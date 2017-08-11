@@ -25,4 +25,12 @@
         <item name="android:layout_marginEnd">@dimen/margin_register</item>
     </style>
 
+    <style name="RoundedButton">
+        <item name="android:textColor">@color/cupos_blue</item>
+        <item name="android:paddingStart">@dimen/margin_normal</item>
+        <item name="android:paddingEnd">@dimen/margin_normal</item>
+        <item name="android:background">@drawable/rounded_button_background</item>
+    </style>
+
+
 </resources>

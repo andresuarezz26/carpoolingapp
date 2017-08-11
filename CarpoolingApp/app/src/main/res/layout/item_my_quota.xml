@@ -1,24 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/image_photo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="19dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/text_my_quota_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="51dp"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintLeft_toRightOf="@+id/image_photo"
+        android:layout_marginLeft="34dp" />
 
     <TextView
         android:id="@+id/text_my_quota_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="51dp"
-        android:layout_marginTop="7dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="11dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_my_quota_name" />
 
@@ -26,8 +39,8 @@
         android:id="@+id/text_my_quota_sector"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="51dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="-1dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_my_quota_address" />
 

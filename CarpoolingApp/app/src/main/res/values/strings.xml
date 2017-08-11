@@ -31,4 +31,7 @@
     <string name="error_empty_community">Debe escoger una comunidad</string>
     <string name="error_empty_coordinates">Posición actual no detectada.Intente más tarde.</string>
     <string name="error_empty_from_or_to">Debes escoger lugar de partida y destino</string>
+    <string name="text_cancel_booking">Cancelar Cupo</string>
+    <string name="my_booking_passenger_searching">Buscando..</string>
+    <string name="my_booking_passenger_description">Espera un poco, un cupo perfecto \n para ti  está a punto de llegar</string>
 </resources>
