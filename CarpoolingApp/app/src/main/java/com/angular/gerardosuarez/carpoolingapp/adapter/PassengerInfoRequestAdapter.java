@@ -1,6 +1,7 @@
 package com.angular.gerardosuarez.carpoolingapp.adapter;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
@@ -21,16 +22,15 @@ import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 
-public class PassengerInfoRequestAdapter extends BaseAdapter<PassengerInfoRequest, Integer, PassengerInfoRequestAdapter.MyQuotaViewHolder> {
+public class PassengerInfoRequestAdapter extends BaseAdapter<PassengerInfoRequest, Pair<PassengerInfoRequest, Integer>, PassengerInfoRequestAdapter.MyQuotaViewHolder> {
 
-    public PassengerInfoRequestAdapter(Observer<Integer> observer) {
+    public PassengerInfoRequestAdapter(Observer<Pair<PassengerInfoRequest, Integer>> observer) {
         super(observer);
     }
 
     @Override
     public void onBindViewHolder(MyQuotaViewHolder holder, int position) {
         holder.passengerInfoRequest = items.get(position);
-        holder.position = position;
         String imageUrl = holder.passengerInfoRequest.getPassengerPhotoUri();
         if (!TextUtils.isEmpty(imageUrl)) {
             Picasso.with(holder.imagePhoto.getContext()).load(imageUrl).into(holder.imagePhoto);
@@ -70,9 +70,7 @@ public class PassengerInfoRequestAdapter extends BaseAdapter<PassengerInfoReques
         @BindView(R.id.btn_my_quota_remove)
         ImageButton removeButton;
         private PassengerInfoRequest passengerInfoRequest;
-        private WeakReference<Observer<Integer>> observerRef;
-        private int position;
-
+        private WeakReference<Observer<Pair<PassengerInfoRequest, Integer>>> observerRef;
 
         MyQuotaViewHolder(View itemView) {
             super(itemView);
@@ -84,7 +82,8 @@ public class PassengerInfoRequestAdapter extends BaseAdapter<PassengerInfoReques
             if (observerRef == null) {
                 return;
             }
-            Observable.just(position).subscribe(observerRef.get());
+            Pair<PassengerInfoRequest, Integer> passenger = new Pair<>(passengerInfoRequest, getAdapterPosition());
+            Observable.just(passenger).subscribe(observerRef.get());
         }
     }
 }

@@ -1,9 +1,7 @@
 package com.angular.gerardosuarez.carpoolingapp.mvp.presenter;
 
-import android.text.TextUtils;
-
 import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
-import com.angular.gerardosuarez.carpoolingapp.mvp.base.BasePresenter;
+import com.angular.gerardosuarez.carpoolingapp.mvp.base.BaseFragmentPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.DriverInfoRequest;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerInfoRequest;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.User;
@@ -17,26 +15,23 @@ import com.google.firebase.database.ValueEventListener;
 
 import timber.log.Timber;
 
-public class MyBookingPassengerPresenter extends BasePresenter {
+public class MyBookingPassengerFragmentPresenter extends BaseFragmentPresenter {
 
     private MyBookingPassengerView view;
 
     private ValueEventListener bookingPassengerListener;
-    private ValueEventListener userListener;
 
     private MyBookingPassengerService bookingPassengerService;
     private UserService userService;
-    private MapPreference mapPreference;
 
-    private String community;
-    private String fromOrTo;
-    private String date;
-    private String hour;
+    private boolean thereIsDriver = false;
+    private DriverInfoRequest currentDriverInfo;
 
-    public MyBookingPassengerPresenter(MyBookingPassengerView view,
-                                       MyBookingPassengerService bookingPassengerService,
-                                       UserService userService,
-                                       MapPreference mapPreference) {
+    public MyBookingPassengerFragmentPresenter(MyBookingPassengerView view,
+                                               MyBookingPassengerService bookingPassengerService,
+                                               UserService userService,
+                                               MapPreference mapPreference) {
+        super(mapPreference, view);
         this.view = view;
         this.bookingPassengerService = bookingPassengerService;
         this.userService = userService;
@@ -45,32 +40,15 @@ public class MyBookingPassengerPresenter extends BasePresenter {
 
     public void init() {
         view.init();
+        if (!getMapPreferencesWithoutErrorMsg()) {
+            view.cleanFragmentView();
+        }
     }
 
     public void unsubscribeFirebaseListener() {
         if (bookingPassengerListener != null) {
             databaseRef.removeEventListener(bookingPassengerListener);
         }
-        if (userListener != null) {
-            databaseRef.removeEventListener(userListener);
-        }
-    }
-
-    private boolean getMapPreferences() {
-        community = mapPreference.getCommunity();
-        if (TextUtils.isEmpty(community)) {
-            return false;
-        }
-        fromOrTo = mapPreference.getFromOrTo();
-        if (TextUtils.isEmpty(fromOrTo)) {
-            return false;
-        }
-        date = mapPreference.getDate();
-        if (TextUtils.isEmpty(date)) {
-            return false;
-        }
-        hour = mapPreference.getTime();
-        return !TextUtils.isEmpty(hour);
     }
 
     //MyPassengerDriverService
@@ -82,7 +60,7 @@ public class MyBookingPassengerPresenter extends BasePresenter {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 try {
-                                    view.cleanTexts();
+                                    view.cleanFragmentView();
                                     DriverInfoRequest driverInfoRequest = snapshot.getValue(DriverInfoRequest.class);
                                     if (driverInfoRequest != null) {
                                         if (!DriverInfoRequest.STATUS_CANCELED.equalsIgnoreCase(driverInfoRequest.status)) {
@@ -118,7 +96,11 @@ public class MyBookingPassengerPresenter extends BasePresenter {
                         }
                         driverInfoRequest.setDriverName(user.name);
                         driverInfoRequest.setDriverPhotoUri(user.photo_uri);
+                        driverInfoRequest.setKey(uid);
+                        view.makeViewsVisible();
                         view.setDriverInfo(driverInfoRequest, date, hour);
+                        thereIsDriver = true;
+                        currentDriverInfo = driverInfoRequest;
                         //view.add(driverInfoRequest);
                     }
                 } catch (DatabaseException e) {
@@ -133,4 +115,22 @@ public class MyBookingPassengerPresenter extends BasePresenter {
         });
     }
 
+    public void onCancelBookingClick() {
+        if (thereIsDriver) {
+            if (currentDriverInfo != null) {
+                if (getMapPreferences()) {
+                    bookingPassengerService.refuseDriverRequest(getRoute(), currentDriverInfo);
+                    thereIsDriver = false;
+                    view.setInitialSearchingDriverInfo();
+                }
+            }
+        } else {
+            if (getMapPreferences()) {
+                bookingPassengerService.cancelMyBooking(getRoute(), getMyUid());
+                thereIsDriver = false;
+                view.cleanFragmentView();
+                resetMapPreferences();
+            }
+        }
+    }
 }

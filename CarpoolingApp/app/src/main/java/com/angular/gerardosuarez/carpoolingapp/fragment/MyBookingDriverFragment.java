@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreferenceImpl;
-import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MyBookingDriverPresenter;
+import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MyBookingDriverFragmentPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyBookingDriverView;
 import com.angular.gerardosuarez.carpoolingapp.service.MyBookingDriverService;
 import com.angular.gerardosuarez.carpoolingapp.service.UserService;
@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
 public class MyBookingDriverFragment extends Fragment {
 
     public static final String TAG = "my_quota";
-    private MyBookingDriverPresenter presenter;
+    private MyBookingDriverFragmentPresenter presenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,7 +32,7 @@ public class MyBookingDriverFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter = new MyBookingDriverPresenter(
+        presenter = new MyBookingDriverFragmentPresenter(
                 new MyBookingDriverView(this),
                 new MyBookingDriverService(),
                 new UserService(),

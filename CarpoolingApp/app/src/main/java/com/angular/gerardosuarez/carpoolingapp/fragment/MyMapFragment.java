@@ -16,7 +16,7 @@ import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference
 import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreference;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreferenceImpl;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerBooking;
-import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MyMapPresenter;
+import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MyMapFragmentPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyMapView;
 import com.angular.gerardosuarez.carpoolingapp.service.DriverMapService;
 import com.angular.gerardosuarez.carpoolingapp.service.PassengerMapService;
@@ -52,7 +52,7 @@ public class MyMapFragment extends Fragment
     public static final String TAG = "driver_map";
     public static final int PERMISSION_REQUEST_FINE_LOCATION = 1;
 
-    private MyMapPresenter presenter;
+    private MyMapFragmentPresenter presenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,7 +67,7 @@ public class MyMapFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
         MapPreference mapPreference = new MapPreferenceImpl(getActivity(), MapPreferenceImpl.NAME);
         RolePreference rolePreference = new RolePreferenceImpl(getActivity(), RolePreferenceImpl.NAME);
-        presenter = new MyMapPresenter(
+        presenter = new MyMapFragmentPresenter(
                 new MyMapView(this),
                 new DriverMapService(),
                 new PassengerMapService(),

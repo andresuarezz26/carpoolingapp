@@ -1,32 +1,30 @@
 package com.angular.gerardosuarez.carpoolingapp.service;
 
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.DriverInfoRequest;
+import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerInfoRequest;
 import com.angular.gerardosuarez.carpoolingapp.service.base.BaseFirebaseService;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by gerardosuarez on 7/08/17.
- */
-
 public class MyBookingPassengerService extends BaseFirebaseService {
-
-    private static final String MY_BOOKING_PASSENGER = "peticiones-a-pasajeros";
 
     public DatabaseReference getPassengerBookings(String community, String fromOrTo, String date, String hour) {
         return databaseReference.child(MY_BOOKING_PASSENGER).child(fromOrTo + "-" + community).child(date).child(hour).child("user1");
     }
 
-    public void refuseDriverRequest() {
-        //String key = databaseReference.child(REQUEST_TO_PASSENGERS).child("from-icesi").child("18062017").child("1600").child(request.userId).push().getKey();
+    public void refuseDriverRequest(String bookingsRoute, DriverInfoRequest driverInfoRequest) {
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/peticiones-a-pasajeros/from-icesi/18062017/1600/passengerMock/conductorUid/status/", DriverInfoRequest.STATUS_CANCELED);
-        childUpdates.put("/solicitudes-enviadas-conductor/from-icesi/18062017/1600/yo/passengerMock/status", DriverInfoRequest.STATUS_CANCELED);
-        //FIXME : change the query
+        childUpdates.put(MY_BOOKING_PASSENGER_SLASH + bookingsRoute + driverInfoRequest.passengerUid + "/" + driverInfoRequest.getKey(), null);
+        childUpdates.put(MY_BOOKING_DRIVER_SLASH + bookingsRoute + driverInfoRequest.getKey() + "/" + driverInfoRequest.passengerUid, null);
+        childUpdates.put(bookingsRoute + driverInfoRequest.passengerUid + "/status", PassengerInfoRequest.STATUS_WAITING);
         databaseReference.updateChildren(childUpdates);
-        //databaseReference.child(REQUEST_TO_PASSENGERS).child("from-icesi").child("18062017").child("1600").child(passengerUid).child(request.userId).setValue(request);
+    }
 
+    public void cancelMyBooking(String bookingsRoute, String userUid) {
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put(bookingsRoute + userUid, null);
+        databaseReference.updateChildren(childUpdates);
     }
 }

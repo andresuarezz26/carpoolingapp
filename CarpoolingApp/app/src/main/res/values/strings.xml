@@ -34,4 +34,5 @@
     <string name="text_cancel_booking">Cancelar Cupo</string>
     <string name="my_booking_passenger_searching">Buscando..</string>
     <string name="my_booking_passenger_description">Espera un poco, un cupo perfecto \n para ti  está a punto de llegar</string>
+    <string name="my_booking_passenger_button_cancel_booking">Cancelar Cupo</string>
 </resources>

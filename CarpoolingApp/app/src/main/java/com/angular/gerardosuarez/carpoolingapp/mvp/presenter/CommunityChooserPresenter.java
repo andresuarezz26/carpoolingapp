@@ -3,9 +3,6 @@ package com.angular.gerardosuarez.carpoolingapp.mvp.presenter;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.CommunityChooserView;
 
-/**
- * Created by gerardosuarez on 7/08/17.
- */
 
 public class CommunityChooserPresenter {
 

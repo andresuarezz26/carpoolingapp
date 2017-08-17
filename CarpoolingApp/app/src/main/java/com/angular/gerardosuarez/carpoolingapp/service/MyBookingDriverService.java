@@ -11,21 +11,18 @@ import java.util.Map;
 
 public class MyBookingDriverService extends BaseFirebaseService {
 
-    private static final String MY_BOOKING_DRIVER = "solicitudes-enviadas-conductor";
 
     public DatabaseReference getRequestOfTheDriver(@NonNull String comunity, @NonNull String origin, @NonNull String date, @NonNull String hour, @NonNull String driverId) {
         // FIXME : change the query
-        return databaseReference.child(MY_BOOKING_DRIVER).child(origin+"-"+comunity).child(date).child(hour).child(driverId);
+        return databaseReference.child(MY_BOOKING_DRIVER).child(origin + "-" + comunity).child(date).child(hour).child(driverId);
     }
 
-    public void cancelRequest() {
-        //String key = databaseReference.child(REQUEST_TO_PASSENGERS).child("from-icesi").child("18062017").child("1600").child(request.userId).push().getKey();
+    public void cancelPassengerBooking(String bookingsRoute, PassengerInfoRequest passengerInfoRequest) {
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/peticiones-a-pasajeros/from-icesi/18062017/1600/passengerMock/conductorUid/status/", PassengerInfoRequest.STATUS_CANCELED);
-        childUpdates.put("/solicitudes-enviadas-conductor/from-icesi/18062017/1600/yo/passengerMock/status", PassengerInfoRequest.STATUS_CANCELED);
-        //FIXME : change the query
+        childUpdates.put(MY_BOOKING_PASSENGER_SLASH + bookingsRoute + passengerInfoRequest.getKey() + "/" + passengerInfoRequest.driverUid, null);
+        childUpdates.put(MY_BOOKING_DRIVER_SLASH + bookingsRoute + passengerInfoRequest.driverUid + "/" + passengerInfoRequest.getKey(), null);
+        childUpdates.put(bookingsRoute + passengerInfoRequest.getKey() + "/status", PassengerInfoRequest.STATUS_WAITING);
         databaseReference.updateChildren(childUpdates);
-        //databaseReference.child(REQUEST_TO_PASSENGERS).child("from-icesi").child("18062017").child("1600").child(passengerUid).child(request.userId).setValue(request);
     }
 
     public void cancelCurrentRoute() {

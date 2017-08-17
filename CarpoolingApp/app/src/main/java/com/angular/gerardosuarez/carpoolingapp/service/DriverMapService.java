@@ -25,18 +25,13 @@ public class DriverMapService extends BaseFirebaseService {
 
     public void assignBookingToDriverAndPassenger(PassengerInfoRequest passengerInfoRequest,
                                                   DriverInfoRequest driverInfoRequest,
-                                                  String route) {
-        //String key = databaseReference.child(REQUEST_TO_PASSENGERS).child("from-icesi").child("18062017").child("1600").child(request.userId).push().getKey();
+                                                  String bookingsRoute) {
         Map<String, Object> postValuesPassenger = passengerInfoRequest.toMap();
         Map<String, Object> postValuesDriver = driverInfoRequest.toMap();
-        Map<String, Object> postValuesPassengerBooking = new HashMap<>();
-        postValuesPassengerBooking.put("status", PassengerInfoRequest.STATUS_ACCEPTED);
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/peticiones-a-pasajeros/" + route + passengerInfoRequest.getKey() + "/" + driverInfoRequest.getKey(), postValuesPassenger);
-        childUpdates.put("/solicitudes-enviadas-conductor/" + route + driverInfoRequest.getKey() + "/" + passengerInfoRequest.getKey(), postValuesDriver);
-        childUpdates.put(route + driverInfoRequest.getKey() + "/status", PassengerInfoRequest.STATUS_ACCEPTED);
-        //FIXME : change the query
+        childUpdates.put(MY_BOOKING_PASSENGER_SLASH + bookingsRoute + passengerInfoRequest.getKey() + "/" + driverInfoRequest.getKey(), postValuesPassenger);
+        childUpdates.put(MY_BOOKING_DRIVER_SLASH + bookingsRoute + driverInfoRequest.getKey() + "/" + passengerInfoRequest.getKey(), postValuesDriver);
+        childUpdates.put(bookingsRoute + driverInfoRequest.getKey() + "/status", PassengerInfoRequest.STATUS_ACCEPTED);
         databaseReference.updateChildren(childUpdates);
-        //databaseReference.child(REQUEST_TO_PASSENGERS).child("from-icesi").child("18062017").child("1600").child(passengerUid).child(request.userId).setValue(request);
     }
 }

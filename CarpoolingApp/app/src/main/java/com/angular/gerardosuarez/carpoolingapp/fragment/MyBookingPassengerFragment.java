@@ -9,17 +9,18 @@ import android.view.ViewGroup;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreferenceImpl;
-import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MyBookingPassengerPresenter;
+import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MyBookingPassengerFragmentPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyBookingPassengerView;
 import com.angular.gerardosuarez.carpoolingapp.service.MyBookingPassengerService;
 import com.angular.gerardosuarez.carpoolingapp.service.UserService;
 
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MyBookingPassengerFragment extends Fragment {
 
     public static final String TAG = "my_booking_passenger";
-    private MyBookingPassengerPresenter presenter;
+    private MyBookingPassengerFragmentPresenter presenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,7 +33,7 @@ public class MyBookingPassengerFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter = new MyBookingPassengerPresenter(
+        presenter = new MyBookingPassengerFragmentPresenter(
                 new MyBookingPassengerView(this),
                 new MyBookingPassengerService(),
                 new UserService(),
@@ -45,4 +46,10 @@ public class MyBookingPassengerFragment extends Fragment {
         super.onResume();
         presenter.getDriversRequestInfo();
     }
+
+    @OnClick(R.id.btn_cancel_booking)
+    void onCancelBooking() {
+        presenter.onCancelBookingClick();
+    }
+
 }

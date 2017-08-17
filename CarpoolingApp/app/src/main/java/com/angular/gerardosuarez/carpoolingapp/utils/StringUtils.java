@@ -15,7 +15,7 @@ import timber.log.Timber;
 public final class StringUtils {
 
     public static final String ENCODING = "UTF-8";
-    public static final String SPLIT_SEPARATOR = " ";
+    private static final String SPLIT_SEPARATOR = " ";
     public static final String REGEX_FULL_NAME = "^[a-zA-Z0-9 - ! # $ % & ' * + - / = ? ^ _ ` { | } ~]*$";
     public static final String REGEX_ONLY_SPACES = "[ ]*";
     private static final String EMAIL_PATTERN = "^[A-Z0-9_.%+-]+@[A-Z0-9]+\\.[A-Z]{2,6}$";
@@ -30,7 +30,8 @@ public final class StringUtils {
     public static final String DOUBLE_BREAK = "\n\n";
     public static final String COLON = ",";
     public static final String DOUBLE_POINT = ":";
-    public static final String ZERO_STRING = "0";
+    private static final String ZERO_STRING = "0";
+    private static final int INT_TEN = 10;
 
     private StringUtils() {
 
@@ -61,7 +62,7 @@ public final class StringUtils {
 
     public static String addZeroToStart(int number) {
         String formatNumber;
-        if (number < 10) {
+        if (number < INT_TEN) {
             formatNumber = ZERO_STRING + number;
         } else {
             formatNumber = number + EMPTY_STRING;
@@ -73,14 +74,6 @@ public final class StringUtils {
         Pattern validEmailAddressRegex = Pattern.compile(EMAIL_PATTERN, Pattern.CASE_INSENSITIVE);
         Matcher matcher = validEmailAddressRegex.matcher(email);
         return matcher.find();
-    }
-
-    public static String removeBarreled(String value) {
-        if (TextUtils.isEmpty(value)) {
-            return null;
-        }
-        return value.replace("-", " ");
-
     }
 
     public static String capitalizeAllWords(final String value) {
@@ -105,7 +98,6 @@ public final class StringUtils {
             builder.append(SPLIT_SEPARATOR);
         }
         return builder.toString();
-
     }
 
     public static String encodeString(String string) {
@@ -137,24 +129,6 @@ public final class StringUtils {
         return stringExtra;
     }
 
-    public static String getCharPerLineString(String text, int charSizePerLine) {
-        String tenCharPerLineString = EMPTY_STRING;
-        while (text.length() > charSizePerLine) {
-            String buffer = text.substring(0, charSizePerLine);
-            tenCharPerLineString = tenCharPerLineString + buffer + LINE_SEPARATOR;
-            text = text.substring(charSizePerLine);
-        }
-        tenCharPerLineString = tenCharPerLineString + text.substring(0);
-        return tenCharPerLineString;
-    }
-
-    public static String addEllipsisEndToText(String text, int charLimit) {
-        if (text.length() < charLimit) {
-            return text;
-        } else {
-            return String.format(HORIZONTAL_ELLIPSIS, text.substring(0, charLimit));
-        }
-    }
 
     public static boolean isEmpty(String string) {
         return string == null || string.isEmpty() || EMPTY_STRING.equals(string);

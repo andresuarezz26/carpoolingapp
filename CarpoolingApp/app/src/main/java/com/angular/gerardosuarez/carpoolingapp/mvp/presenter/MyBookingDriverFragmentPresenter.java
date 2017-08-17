@@ -1,15 +1,16 @@
 package com.angular.gerardosuarez.carpoolingapp.mvp.presenter;
 
-import android.text.TextUtils;
+import android.support.v4.util.Pair;
 
 import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
-import com.angular.gerardosuarez.carpoolingapp.mvp.base.BasePresenter;
+import com.angular.gerardosuarez.carpoolingapp.mvp.base.BaseFragmentPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerInfoRequest;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.User;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.rx.DefaultPresenterObserver;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyBookingDriverView;
 import com.angular.gerardosuarez.carpoolingapp.service.MyBookingDriverService;
 import com.angular.gerardosuarez.carpoolingapp.service.UserService;
+import com.angular.gerardosuarez.carpoolingapp.utils.StringUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
@@ -20,7 +21,7 @@ import java.util.List;
 
 import timber.log.Timber;
 
-public class MyBookingDriverPresenter extends BasePresenter {
+public class MyBookingDriverFragmentPresenter extends BaseFragmentPresenter {
 
     private MyBookingDriverView view;
 
@@ -29,43 +30,18 @@ public class MyBookingDriverPresenter extends BasePresenter {
 
     private MyBookingDriverService bookingDriverService;
     private UserService userService;
-    private MapPreference mapPreference;
-
-    private String community;
-    private String fromOrTo;
-    private String date;
-    private String hour;
 
     private List<PassengerInfoRequest> passengerInfoRequestList;
 
-    public MyBookingDriverPresenter(MyBookingDriverView view,
-                                    MyBookingDriverService bookingDriverService,
-                                    UserService userService,
-                                    MapPreference mapPreference) {
+    public MyBookingDriverFragmentPresenter(MyBookingDriverView view,
+                                            MyBookingDriverService bookingDriverService,
+                                            UserService userService,
+                                            MapPreference mapPreference) {
+        super(mapPreference, view);
         this.view = view;
         this.bookingDriverService = bookingDriverService;
         this.userService = userService;
         this.mapPreference = mapPreference;
-    }
-
-    private boolean getMapPreferences() {
-        community = mapPreference.getCommunity();
-        if (TextUtils.isEmpty(community)) {
-            return false;
-        }
-        fromOrTo = mapPreference.getFromOrTo();
-        if (TextUtils.isEmpty(fromOrTo)) {
-            return false;
-        }
-        date = mapPreference.getDate();
-        if (TextUtils.isEmpty(date)) {
-            return false;
-        }
-        hour = mapPreference.getTime();
-        if (TextUtils.isEmpty(hour)) {
-            return false;
-        }
-        return true;
     }
 
     public void init() {
@@ -143,16 +119,22 @@ public class MyBookingDriverPresenter extends BasePresenter {
         });
     }
 
-    private class MyQuotaObserver extends DefaultPresenterObserver<Integer, MyBookingDriverPresenter> {
+    private class MyQuotaObserver extends DefaultPresenterObserver<Pair<PassengerInfoRequest, Integer>, MyBookingDriverFragmentPresenter> {
 
-        public MyQuotaObserver(MyBookingDriverPresenter presenter) {
+        public MyQuotaObserver(MyBookingDriverFragmentPresenter presenter) {
             super(presenter);
         }
 
         @Override
-        public void onNext(Integer value) {
+        public void onNext(Pair<PassengerInfoRequest, Integer> value) {
             super.onNext(value);
-            view.remove(value);
+            if (getMapPreferences()) {
+                PassengerInfoRequest passengerInfoRequest = value.first;
+                if (passengerInfoRequest != null) {
+                    bookingDriverService.cancelPassengerBooking(StringUtils.buildRoute(community, fromOrTo, date, hour), passengerInfoRequest);
+                }
+                view.remove(value.second);
+            }
         }
     }
 

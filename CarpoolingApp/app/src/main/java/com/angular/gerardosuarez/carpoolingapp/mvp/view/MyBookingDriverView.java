@@ -1,6 +1,7 @@
 package com.angular.gerardosuarez.carpoolingapp.mvp.view;
 
 import android.app.Activity;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -15,13 +16,16 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MyBookingDriverView extends FragmentView<MyBookingDriverFragment, Integer> {
-    @BindView(R.id.recycler_view_my_booking_driver) RecyclerView recyclerView;
+public class MyBookingDriverView extends FragmentView<MyBookingDriverFragment, Pair<PassengerInfoRequest, Integer>> {
+    @BindView(R.id.recycler_view_my_booking_driver)
+    RecyclerView recyclerView;
     private PassengerInfoRequestAdapter adapter;
 
     public MyBookingDriverView(MyBookingDriverFragment fragment) {
         super(fragment);
-        ButterKnife.bind(this, fragment.getView());
+        if (fragment.getView() != null) {
+            ButterKnife.bind(this, fragment.getView());
+        }
     }
 
     public void init() {
@@ -34,12 +38,11 @@ public class MyBookingDriverView extends FragmentView<MyBookingDriverFragment, I
         recyclerView.setAdapter(adapter);
     }
 
-
     public void addAll(List<PassengerInfoRequest> list) {
         adapter.addAll(list);
     }
 
-    public void removeAll(){
+    public void removeAll() {
         adapter.removeAll();
     }
 
@@ -47,7 +50,7 @@ public class MyBookingDriverView extends FragmentView<MyBookingDriverFragment, I
         adapter.remove(position);
     }
 
-    public void add(PassengerInfoRequest passengerInfoRequest){
+    public void add(PassengerInfoRequest passengerInfoRequest) {
         adapter.add(passengerInfoRequest);
     }
 }

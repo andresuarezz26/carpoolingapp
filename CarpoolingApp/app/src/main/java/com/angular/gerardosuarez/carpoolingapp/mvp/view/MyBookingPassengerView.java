@@ -3,6 +3,8 @@ package com.angular.gerardosuarez.carpoolingapp.mvp.view;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,6 +32,8 @@ public class MyBookingPassengerView extends FragmentView<MyBookingPassengerFragm
     TextView textDriverHour;
     @BindView(R.id.image_photo)
     ImageView imagePhoto;
+    @BindView(R.id.btn_cancel_booking)
+    Button btnCancelButton;
 
     public MyBookingPassengerView(MyBookingPassengerFragment fragment) {
         super(fragment);
@@ -67,11 +71,23 @@ public class MyBookingPassengerView extends FragmentView<MyBookingPassengerFragm
         textDriverHour.setText(hour);
     }
 
-    public void cleanTexts() {
+    public void cleanFragmentView() {
         textDriverPhone.setText(StringUtils.EMPTY_STRING);
         textDriverAddress.setText(StringUtils.EMPTY_STRING);
         textDriverDate.setText(StringUtils.EMPTY_STRING);
         textDriverHour.setText(StringUtils.EMPTY_STRING);
+        makeViewsInvisible();
+
+    }
+
+    public void makeViewsVisible() {
+        btnCancelButton.setVisibility(View.VISIBLE);
+        imagePhoto.setVisibility(View.VISIBLE);
+    }
+
+    public void makeViewsInvisible() {
+        btnCancelButton.setVisibility(View.INVISIBLE);
+        imagePhoto.setVisibility(View.INVISIBLE);
     }
 
     public void setInitialSearchingDriverInfo() {
@@ -80,7 +96,7 @@ public class MyBookingPassengerView extends FragmentView<MyBookingPassengerFragm
         textDriverAddress.setText(getActivity().getResources().getText(R.string.my_booking_passenger_description));
         textDriverDate.setText(StringUtils.EMPTY_STRING);
         textDriverHour.setText(StringUtils.EMPTY_STRING);
+        btnCancelButton.setVisibility(View.VISIBLE);
+        btnCancelButton.setText(getActivity().getResources().getText(R.string.my_booking_passenger_button_cancel_booking));
     }
-
-
 }

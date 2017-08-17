@@ -10,7 +10,6 @@ import android.support.v4.content.ContextCompat;
 import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.customviews.dialog.DialogAcceptPassengerBooking;
@@ -134,14 +133,6 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
         dialog.show();
     }
 
-    public void showToast(int res) {
-        Toast.makeText(getActivity(), getActivity().getResources().getString(res), Toast.LENGTH_SHORT).show();
-    }
-
-    public void showToast(String message) {
-        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-    }
-
     public void setMap(GoogleMap map) {
         this.map = map;
         moveCamera(LATITUDE_INITIAL, LONGITUDE_INITIAL);
@@ -151,7 +142,7 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), INITIAL_ZOOM));
     }
 
-    public void setMarker(LatLng latLng, String title, int id) {
+    private void setMarker(LatLng latLng, String title, int id) {
         map.addMarker(new MarkerOptions()
                 .position(latLng)
                 .title(title))
@@ -194,9 +185,11 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
     }
 
     public void requestPermissionsActivity() {
-        ActivityCompat.requestPermissions(getActivity(),
-                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                MyMapFragment.PERMISSION_REQUEST_FINE_LOCATION);
+        if (getActivity() != null) {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MyMapFragment.PERMISSION_REQUEST_FINE_LOCATION);
+        }
     }
 
     public LatLng getCurrentCoordinatesFromCamera() {
@@ -262,7 +255,7 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
         //btnHour.setBackgroundColor(getResources().getColor(R.color.colorAccent));
     }
 
-    public void setButtonDate() {
+    public void setButtonDate(String date) {
         btnDate.setText("Listo");
         //btnDate.setBackgroundColor(getResources().getColor(R.color.colorAccent));
     }
