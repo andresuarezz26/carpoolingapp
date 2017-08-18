@@ -12,6 +12,7 @@ public class MapPreferenceImpl extends BasePreferenceImpl implements MapPreferen
     public static final String TIME = "TIME";
     public static final String COMUNITY = "COMUNITY";
     public static final String FROM_OR_TO = "FROM_OR_TO";
+    public static final String ALREADY_REGISTERED = "ALREADY_REGISTERED";
 
     public MapPreferenceImpl(Context context, String name) {
         super(context, name);
@@ -55,5 +56,15 @@ public class MapPreferenceImpl extends BasePreferenceImpl implements MapPreferen
     @Override
     public String getFromOrTo() {
         return getString(FROM_OR_TO);
+    }
+
+    @Override
+    public void putAlreadyRegister(boolean value) {
+        put(ALREADY_REGISTERED, value);
+    }
+
+    @Override
+    public boolean isAlreadyRegister() {
+        return getBoolean(ALREADY_REGISTERED);
     }
 }

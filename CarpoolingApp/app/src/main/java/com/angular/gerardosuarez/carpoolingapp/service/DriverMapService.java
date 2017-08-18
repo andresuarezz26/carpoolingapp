@@ -19,7 +19,6 @@ public class DriverMapService extends BaseFirebaseService {
     }
 
     public DatabaseReference getQuotasPerCommunityOriginDateAndHour(@NonNull String comunity, @NonNull String origin, @NonNull String date, @NonNull String hour) {
-        // FIXME : change the query
         return databaseReference.child(origin + "-" + comunity).child(date).child(hour);
     }
 

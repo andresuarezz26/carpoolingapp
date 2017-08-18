@@ -12,11 +12,11 @@ import com.angular.gerardosuarez.carpoolingapp.fragment.MyBookingPassengerFragme
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyMapFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyProfileFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyBookingDriverFragment;
+import com.angular.gerardosuarez.carpoolingapp.fragment.RegisterFragment;
 import com.angular.gerardosuarez.carpoolingapp.utils.StringUtils;
 
 public class NavigationManager {
 
-    private static NavigationManager navigationManager;
     private FragmentManager fragmentManager;
     private RolePreference rolePreference;
     private MapPreference mapPreference;
@@ -24,14 +24,7 @@ public class NavigationManager {
     private final static String ROLE_DRIVER = "driver";
     private final static String ROLE_PASSEGNER = "passenger";
 
-    public static NavigationManager getInstance(FragmentManager fragmentManager, RolePreference preference, MapPreference mapPreference) {
-        if (navigationManager == null) {
-            navigationManager = new NavigationManager(fragmentManager, preference, mapPreference);
-        }
-        return navigationManager;
-    }
-
-    private NavigationManager(FragmentManager fragmentManager, RolePreference rolePreference, MapPreference mapPreference) {
+    public NavigationManager(FragmentManager fragmentManager, RolePreference rolePreference, MapPreference mapPreference) {
         this.fragmentManager = fragmentManager;
         this.rolePreference = rolePreference;
         this.mapPreference = mapPreference;
@@ -42,11 +35,21 @@ public class NavigationManager {
     }
 
     public void chooseInitialScreen() {
-        if (mapPreference.getCommunity() != null) {
-            goToMyProfileFragment();
+        if (mapPreference.isAlreadyRegister()) {
+            if (mapPreference.getCommunity() != null) {
+                goToMyProfileFragment();
+            } else {
+                goToCommunityChooserFragment();
+            }
         } else {
-            goToCommunityChooserFragment();
+            goToRegisterFragment();
         }
+    }
+
+    private void goToRegisterFragment() {
+        popEveryFragment();
+        hideMapFragment();
+        open(new RegisterFragment(), RegisterFragment.TAG);
     }
 
     public void goToMyProfileFragment() {
@@ -136,9 +139,5 @@ public class NavigationManager {
         if (fragment != null) {
             fragment.onRoleChanged();
         }
-    }
-
-    public void destroyNavigation() {
-        navigationManager = null;
     }
 }

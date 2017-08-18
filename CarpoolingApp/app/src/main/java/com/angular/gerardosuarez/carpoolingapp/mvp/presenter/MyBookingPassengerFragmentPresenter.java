@@ -1,5 +1,7 @@
 package com.angular.gerardosuarez.carpoolingapp.mvp.presenter;
 
+import android.text.TextUtils;
+
 import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
 import com.angular.gerardosuarez.carpoolingapp.mvp.base.BaseFragmentPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.DriverInfoRequest;
@@ -25,7 +27,9 @@ public class MyBookingPassengerFragmentPresenter extends BaseFragmentPresenter {
     private UserService userService;
 
     private boolean thereIsDriver = false;
+    private boolean thereAreData;
     private DriverInfoRequest currentDriverInfo;
+
 
     public MyBookingPassengerFragmentPresenter(MyBookingPassengerView view,
                                                MyBookingPassengerService bookingPassengerService,
@@ -39,9 +43,12 @@ public class MyBookingPassengerFragmentPresenter extends BaseFragmentPresenter {
     }
 
     public void init() {
-        view.init();
         if (!getMapPreferencesWithoutErrorMsg()) {
             view.cleanFragmentView();
+            thereAreData = false;
+        } else {
+            thereAreData = true;
+            view.init(date, hour);
         }
     }
 
@@ -53,7 +60,7 @@ public class MyBookingPassengerFragmentPresenter extends BaseFragmentPresenter {
 
     //MyPassengerDriverService
     public void getDriversRequestInfo() {
-        if (getMapPreferences()) {
+        if (thereAreData) {
             bookingPassengerListener = bookingPassengerService.getPassengerBookings(community, fromOrTo, date, hour)
                     .addValueEventListener(new ValueEventListener() {
                         @Override
@@ -78,9 +85,8 @@ public class MyBookingPassengerFragmentPresenter extends BaseFragmentPresenter {
                             Timber.e(databaseError.toString(), databaseError);
                         }
                     });
-        } else {
-            view.setInitialSearchingDriverInfo();
         }
+
     }
 
     private void setDriverAditionalInfo(final String uid, final DriverInfoRequest driverInfoRequest) {
@@ -116,21 +122,25 @@ public class MyBookingPassengerFragmentPresenter extends BaseFragmentPresenter {
     }
 
     public void onCancelBookingClick() {
-        if (thereIsDriver) {
-            if (currentDriverInfo != null) {
-                if (getMapPreferences()) {
-                    bookingPassengerService.refuseDriverRequest(getRoute(), currentDriverInfo);
+        String currentUid = getMyUid();
+        if (!TextUtils.isEmpty(currentUid)) {
+            if (thereIsDriver) {
+                if (currentDriverInfo != null) {
+                    if (getMapPreferences()) {
+                        bookingPassengerService.refuseDriverRequest(getRoute(), currentDriverInfo, currentUid);
+                        thereIsDriver = false;
+                        view.setInitialSearchingDriverInfo();
+                    }
+                }
+            } else {
+                if (getMapPreferencesWithoutErrorMsg()) {
+                    bookingPassengerService.cancelMyBooking(getRoute(), currentUid);
                     thereIsDriver = false;
-                    view.setInitialSearchingDriverInfo();
+                    view.cleanFragmentView();
+                    resetMapPreferences();
                 }
             }
-        } else {
-            if (getMapPreferences()) {
-                bookingPassengerService.cancelMyBooking(getRoute(), getMyUid());
-                thereIsDriver = false;
-                view.cleanFragmentView();
-                resetMapPreferences();
-            }
         }
+
     }
 }

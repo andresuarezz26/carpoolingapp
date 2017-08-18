@@ -35,4 +35,11 @@
     <string name="my_booking_passenger_searching">Buscando..</string>
     <string name="my_booking_passenger_description">Espera un poco, un cupo perfecto \n para ti  está a punto de llegar</string>
     <string name="my_booking_passenger_button_cancel_booking">Cancelar Cupo</string>
+    <string name="my_booking_passenger_not_selected_values">No ha seleccionado datos para su viaje.</string>
+    <string name="network_not_available">No hay conexión a internet</string>
+    <string name="error_empty_fields">Debe llenar todos los campos</string>
+    <string name="error_phone_number_characters">Su número celular debe contener 10 catacteres. Ej: 3013051455</string>
+    <string name="dialog_request_booking">¿Quieres solicitar este nuevo cupo?</string>
+    <string name="dialog_starting_point_description">Punto de partida:</string>
+    <string name="final_point_description">Destino:</string>
 </resources>

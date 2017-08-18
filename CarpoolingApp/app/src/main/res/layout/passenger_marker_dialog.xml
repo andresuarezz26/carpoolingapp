@@ -16,7 +16,8 @@
         android:layout_height="60dp"
         android:layout_gravity="center_horizontal"
         android:background="@color/white"
-        android:scaleType="fitXY" />
+        android:scaleType="fitXY"
+        android:layout_marginBottom="20dp"/>
 
     <TextView
         android:id="@+id/txt_name"

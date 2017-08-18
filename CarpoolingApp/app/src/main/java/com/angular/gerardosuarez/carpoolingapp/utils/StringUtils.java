@@ -32,6 +32,7 @@ public final class StringUtils {
     public static final String DOUBLE_POINT = ":";
     private static final String ZERO_STRING = "0";
     private static final int INT_TEN = 10;
+    private static final String DATE_PATTERN = "dd/mm/yyyy";
 
     private StringUtils() {
 
@@ -132,5 +133,19 @@ public final class StringUtils {
 
     public static boolean isEmpty(String string) {
         return string == null || string.isEmpty() || EMPTY_STRING.equals(string);
+    }
+
+    public static String formatDate(@NonNull String date) {
+        return date.substring(0, 2) +
+                "/" +
+                date.substring(3, 5) +
+                "/" +
+                date.substring(5, date.length());
+    }
+
+    public static String formatHour(@NonNull String hour) {
+        return hour.substring(0, 2) +
+                ":" +
+                hour.substring(2, hour.length());
     }
 }

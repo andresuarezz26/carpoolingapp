@@ -3,6 +3,7 @@ package com.angular.gerardosuarez.carpoolingapp.customviews.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
@@ -12,24 +13,27 @@ import android.widget.TextView;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerBooking;
+import com.angular.gerardosuarez.carpoolingapp.mvp.model.RequestInfo;
 import com.squareup.picasso.Picasso;
 
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.subjects.PublishSubject;
 
 
-public class DialogAcceptPassengerBooking extends Dialog implements
-        android.view.View.OnClickListener {
+public class DialogRequestBookingPassenger extends Dialog implements
+        View.OnClickListener {
 
     public Context context;
     private PassengerBooking passengerBooking;
-    private PublishSubject<PassengerBooking> publishSubject = PublishSubject.create();
+    private RequestInfo requestInfo;
+    private PublishSubject<Pair<PassengerBooking, RequestInfo>> publishSubject = PublishSubject.create();
 
 
-    public DialogAcceptPassengerBooking(Context context, PassengerBooking passengerBooking) {
+    public DialogRequestBookingPassenger(Context context, PassengerBooking passengerBooking, RequestInfo requestInfo) {
         super(context);
         this.context = context;
         this.passengerBooking = passengerBooking;
+        this.requestInfo = requestInfo;
     }
 
     @Override
@@ -61,7 +65,8 @@ public class DialogAcceptPassengerBooking extends Dialog implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_accept_quota:
-                publishSubject.onNext(passengerBooking);
+                Pair<PassengerBooking, RequestInfo> pair = new Pair(passengerBooking, requestInfo);
+                publishSubject.onNext(pair);
                 dismiss();
                 break;
             case R.id.btn_cancel_quota:
@@ -74,7 +79,7 @@ public class DialogAcceptPassengerBooking extends Dialog implements
         dismiss();
     }
 
-    public void subscribeToDialogEvent(DisposableObserver<PassengerBooking> observer) {
+    public void subscribeToDialogEvent(DisposableObserver<Pair<PassengerBooking, RequestInfo>> observer) {
         publishSubject.subscribe(observer);
     }
 

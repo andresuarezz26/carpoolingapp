@@ -32,9 +32,9 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
         presenter = new MainPresenter(new MainView(this));
         presenter.init();
-        final RolePreference preference = new RolePreferenceImpl(this, RolePreferenceImpl.NAME);
+        final RolePreference rolePreference = new RolePreferenceImpl(this, RolePreferenceImpl.NAME);
         final MapPreference mapPreference = new MapPreferenceImpl(this, MapPreferenceImpl.NAME);
-        navigationManager = NavigationManager.getInstance(getFragmentManager(), preference, mapPreference);
+        navigationManager = new NavigationManager(getFragmentManager(), rolePreference, mapPreference);
         navigationManager.chooseInitialScreen();
 
         bottomMenu.setOnNavigationItemSelectedListener(
@@ -58,18 +58,17 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        navigationManager.destroyNavigation();
-    }
-
-    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         MyMapFragment fragment = navigationManager.getDriverMapFragment();
         if (fragment != null) {
             fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     public NavigationManager getNavigationManager() {

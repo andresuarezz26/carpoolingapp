@@ -44,7 +44,6 @@
         android:layout_below="@+id/txt_driver_phone"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/margin_normal"
-        android:text="Direccion 5 a numero 3 48"
         android:textColor="@color/cupos_dark_gray"
         android:textSize="18sp" />
 
@@ -54,7 +53,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/txt_driver_address"
         android:layout_centerHorizontal="true"
-        android:text="Hoy 5 de Mayo"
         android:textColor="@color/cupos_dark_gray"
         android:textSize="18sp" />
 
@@ -64,7 +62,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/txt_driver_date"
         android:layout_centerHorizontal="true"
-        android:text="8:00 pm"
         android:textColor="@color/cupos_dark_gray"
         android:textSize="18sp" />
 

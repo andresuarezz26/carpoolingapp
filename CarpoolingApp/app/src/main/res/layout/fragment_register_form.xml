@@ -4,8 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/cupos_blue"
     android:gravity="center_horizontal"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
@@ -14,9 +13,9 @@
         android:layout_marginBottom="@dimen/margin_normal"
         android:layout_marginTop="@dimen/margin_register"
         android:gravity="center_horizontal"
-        android:text="@string/register"
         android:paddingEnd="@dimen/margin_register"
         android:paddingStart="@dimen/margin_register"
+        android:text="@string/register"
         android:textColor="@color/white"
         android:textSize="40sp" />
 
@@ -25,7 +24,8 @@
         style="@style/RegisterText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/register_name" />
+        android:hint="@string/register_name"
+        android:inputType="none" />
 
     <EditText
         android:id="@+id/edit_email"
@@ -33,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/register_email"
-        android:inputType="textEmailAddress" />
+        android:inputType="none" />
 
     <EditText
         android:id="@+id/edit_phone"
@@ -41,7 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/register_phone"
-        android:inputType="phone" />
+        android:inputType="number" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -51,6 +51,7 @@
         android:orientation="vertical">
 
         <Button
+            android:id="@+id/btn_continue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"

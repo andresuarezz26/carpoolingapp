@@ -22,4 +22,8 @@ public interface MapPreference {
     void putFromOrTo(String value);
 
     String getFromOrTo();
+
+    void putAlreadyRegister(boolean value);
+
+    boolean isAlreadyRegister();
 }

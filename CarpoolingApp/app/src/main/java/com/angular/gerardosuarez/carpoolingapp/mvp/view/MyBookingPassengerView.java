@@ -41,11 +41,13 @@ public class MyBookingPassengerView extends FragmentView<MyBookingPassengerFragm
             ButterKnife.bind(this, fragment.getView());
     }
 
-    public void init() {
+    public void init(String date, String hour) {
         final Activity activity = getActivity();
         if (activity == null) {
             return;
         }
+        textDriverDate.setText(StringUtils.formatDate(date));
+        textDriverHour.setText(StringUtils.formatHour(hour));
     }
 
     public void setDriverInfo(@NonNull DriverInfoRequest driverInfo, @NonNull String date, @NonNull String hour) {
@@ -72,7 +74,9 @@ public class MyBookingPassengerView extends FragmentView<MyBookingPassengerFragm
     }
 
     public void cleanFragmentView() {
-        textDriverPhone.setText(StringUtils.EMPTY_STRING);
+        if (getActivity() == null) return;
+        textDriverName.setText(StringUtils.EMPTY_STRING);
+        textDriverPhone.setText(getActivity().getResources().getText(R.string.my_booking_passenger_not_selected_values));
         textDriverAddress.setText(StringUtils.EMPTY_STRING);
         textDriverDate.setText(StringUtils.EMPTY_STRING);
         textDriverHour.setText(StringUtils.EMPTY_STRING);
@@ -85,18 +89,21 @@ public class MyBookingPassengerView extends FragmentView<MyBookingPassengerFragm
         imagePhoto.setVisibility(View.VISIBLE);
     }
 
-    public void makeViewsInvisible() {
+    private void makeViewsInvisible() {
         btnCancelButton.setVisibility(View.INVISIBLE);
         imagePhoto.setVisibility(View.INVISIBLE);
     }
 
     public void setInitialSearchingDriverInfo() {
         if (getActivity() == null) return;
-        textDriverPhone.setText(getActivity().getResources().getText(R.string.my_booking_passenger_searching));
+        textDriverName.setText(getActivity().getResources().getText(R.string.my_booking_passenger_searching));
+        textDriverPhone.setText(StringUtils.EMPTY_STRING);
         textDriverAddress.setText(getActivity().getResources().getText(R.string.my_booking_passenger_description));
         textDriverDate.setText(StringUtils.EMPTY_STRING);
         textDriverHour.setText(StringUtils.EMPTY_STRING);
         btnCancelButton.setVisibility(View.VISIBLE);
         btnCancelButton.setText(getActivity().getResources().getText(R.string.my_booking_passenger_button_cancel_booking));
+        //TODO: change this by the right resource
+        imagePhoto.setImageResource(R.drawable.rounded_button_background);
     }
 }

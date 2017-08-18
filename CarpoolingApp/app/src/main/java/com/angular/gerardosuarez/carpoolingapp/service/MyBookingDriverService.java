@@ -17,10 +17,10 @@ public class MyBookingDriverService extends BaseFirebaseService {
         return databaseReference.child(MY_BOOKING_DRIVER).child(origin + "-" + comunity).child(date).child(hour).child(driverId);
     }
 
-    public void cancelPassengerBooking(String bookingsRoute, PassengerInfoRequest passengerInfoRequest) {
+    public void cancelPassengerBooking(@NonNull String bookingsRoute, @NonNull PassengerInfoRequest passengerInfoRequest, @NonNull String currentUid) {
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put(MY_BOOKING_PASSENGER_SLASH + bookingsRoute + passengerInfoRequest.getKey() + "/" + passengerInfoRequest.driverUid, null);
-        childUpdates.put(MY_BOOKING_DRIVER_SLASH + bookingsRoute + passengerInfoRequest.driverUid + "/" + passengerInfoRequest.getKey(), null);
+        childUpdates.put(MY_BOOKING_PASSENGER_SLASH + bookingsRoute + passengerInfoRequest.getKey() + "/" + currentUid, null);
+        childUpdates.put(MY_BOOKING_DRIVER_SLASH + bookingsRoute + currentUid + "/" + passengerInfoRequest.getKey(), null);
         childUpdates.put(bookingsRoute + passengerInfoRequest.getKey() + "/status", PassengerInfoRequest.STATUS_WAITING);
         databaseReference.updateChildren(childUpdates);
     }

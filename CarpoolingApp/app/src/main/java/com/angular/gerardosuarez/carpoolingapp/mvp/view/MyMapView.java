@@ -296,5 +296,4 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
         }
     }
 
-
 }

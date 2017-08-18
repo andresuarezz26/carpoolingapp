@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.text.TextUtils;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
@@ -21,6 +22,7 @@ import com.angular.gerardosuarez.carpoolingapp.mvp.base.BaseFragmentPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.DriverInfoRequest;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerBooking;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerInfoRequest;
+import com.angular.gerardosuarez.carpoolingapp.mvp.model.RequestInfo;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.User;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyMapView;
 import com.angular.gerardosuarez.carpoolingapp.service.DriverMapService;
@@ -180,6 +182,12 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
         if (passengerBooking != null) assignBookingToDriverAndPassenger(passengerBooking);
     }
 
+    public void onPassengerRequestingBookingDialogResponse(Pair<PassengerInfoRequest, RequestInfo> pair) {
+        if (pair != null) {
+
+        }
+    }
+
     private void assignBookingToDriverAndPassenger(@NonNull PassengerBooking passengerBooking) {
         PassengerInfoRequest passengerInfoRequest = new PassengerInfoRequest();
         passengerInfoRequest.driverUid = "user1";
@@ -333,19 +341,23 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
     }
 
     private String calculateAddress(LatLng currentCoordinates) {
-        String address = StringUtils.EMPTY_STRING;
-        try {
-            Geocoder geocoder;
-            List<Address> addresses;
-            geocoder = new Geocoder(view.getActivity(), Locale.getDefault());
-            addresses = geocoder.getFromLocation(currentCoordinates.latitude, currentCoordinates.longitude, 1);
-            if (!addresses.isEmpty()) {
-                address = addresses.get(FIRST_POSITION).getAddressLine(FIRST_POSITION);
+        if (view.isNetworkAvailable()) {
+            String address = StringUtils.EMPTY_STRING;
+            try {
+                Geocoder geocoder;
+                List<Address> addresses;
+                geocoder = new Geocoder(view.getActivity(), Locale.getDefault());
+                addresses = geocoder.getFromLocation(currentCoordinates.latitude, currentCoordinates.longitude, 1);
+                if (!addresses.isEmpty()) {
+                    address = addresses.get(FIRST_POSITION).getAddressLine(FIRST_POSITION);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+            return address;
         }
-        return address;
+        view.showToast(R.string.network_not_available);
+        return StringUtils.EMPTY_STRING;
     }
 
     public void onTimeSelected(String time) {
@@ -429,7 +441,7 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
         view.setLocationRequest();
     }
 
-    public void showDialog(DisposableObserver<PassengerBooking> observer, Marker marker) {
+    public void showClickMarkerDialog(DisposableObserver<PassengerBooking> observer, Marker marker) {
         view.showDialogQuota(observer, passengerBookingMap.get(marker.getTitle()));
     }
 
@@ -444,5 +456,7 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
     public void showDatePickerFragment(DisposableObserver<String> observer) {
         view.showDatePickerFragment(observer);
     }
+
+
 }
 

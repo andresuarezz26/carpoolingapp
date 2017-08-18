@@ -72,6 +72,7 @@ public class MyBookingDriverFragmentPresenter extends BaseFragmentPresenter {
                                 try {
                                     PassengerInfoRequest passengerInfoRequest = snapshot.getValue(PassengerInfoRequest.class);
                                     if (passengerInfoRequest != null) {
+                                        passengerInfoRequest.setKey(snapshot.getKey());
                                         if (!PassengerInfoRequest.STATUS_CANCELED.equalsIgnoreCase(passengerInfoRequest.status)) {
                                             setPassengerAditionalInfo(snapshot.getKey(), passengerInfoRequest);
                                         }
@@ -131,7 +132,10 @@ public class MyBookingDriverFragmentPresenter extends BaseFragmentPresenter {
             if (getMapPreferences()) {
                 PassengerInfoRequest passengerInfoRequest = value.first;
                 if (passengerInfoRequest != null) {
-                    bookingDriverService.cancelPassengerBooking(StringUtils.buildRoute(community, fromOrTo, date, hour), passengerInfoRequest);
+                    String currentUid = getMyUid();
+                    if(currentUid != null){
+                        bookingDriverService.cancelPassengerBooking(StringUtils.buildRoute(community, fromOrTo, date, hour), passengerInfoRequest, currentUid);
+                    }
                 }
                 view.remove(value.second);
             }

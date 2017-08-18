@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 import com.angular.gerardosuarez.carpoolingapp.activity.BaseActivity;
+import com.angular.gerardosuarez.carpoolingapp.utils.NetworkUtils;
 
 import java.lang.ref.WeakReference;
 
@@ -46,5 +47,9 @@ public class FragmentView<T extends Fragment, AO> {
         if (getActivity() != null) {
             Toast.makeText(getActivity(), getActivity().getResources().getString(res), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public boolean isNetworkAvailable() {
+        return NetworkUtils.isNetworkAvailable(getActivity());
     }
 }
