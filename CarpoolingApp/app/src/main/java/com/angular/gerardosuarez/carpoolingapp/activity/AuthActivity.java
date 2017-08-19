@@ -3,7 +3,6 @@ package com.angular.gerardosuarez.carpoolingapp.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -58,8 +57,6 @@ public class AuthActivity extends BaseActivity implements OnCompleteListener<Aut
         ButterKnife.bind(this);
 
         mCallbackManager = CallbackManager.Factory.create();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         if (presenter == null) {
             firebaseAuth = FirebaseAuth.getInstance();
