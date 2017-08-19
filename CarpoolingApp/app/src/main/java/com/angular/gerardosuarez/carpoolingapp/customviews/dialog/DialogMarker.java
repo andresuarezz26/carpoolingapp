@@ -18,7 +18,7 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.subjects.PublishSubject;
 
 
-public class DialogAcceptPassengerBooking extends Dialog implements
+public class DialogMarker extends Dialog implements
         android.view.View.OnClickListener {
 
     public Context context;
@@ -26,7 +26,7 @@ public class DialogAcceptPassengerBooking extends Dialog implements
     private PublishSubject<PassengerBooking> publishSubject = PublishSubject.create();
 
 
-    public DialogAcceptPassengerBooking(Context context, PassengerBooking passengerBooking) {
+    public DialogMarker(Context context, PassengerBooking passengerBooking) {
         super(context);
         this.context = context;
         this.passengerBooking = passengerBooking;

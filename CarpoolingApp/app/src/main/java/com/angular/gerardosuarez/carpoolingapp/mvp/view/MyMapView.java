@@ -7,17 +7,21 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
-import com.angular.gerardosuarez.carpoolingapp.customviews.dialog.DialogAcceptPassengerBooking;
+import com.angular.gerardosuarez.carpoolingapp.customviews.dialog.DialogMarker;
+import com.angular.gerardosuarez.carpoolingapp.customviews.dialog.DialogPassengerMap;
 import com.angular.gerardosuarez.carpoolingapp.dialogfragment.DatePickerFragment;
 import com.angular.gerardosuarez.carpoolingapp.dialogfragment.TimePickerFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyMapFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.base.FragmentView;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerBooking;
+import com.angular.gerardosuarez.carpoolingapp.mvp.model.RequestInfo;
+import com.angular.gerardosuarez.carpoolingapp.utils.StringUtils;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
@@ -56,7 +60,8 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
     private static final double LONGITUDE_INITIAL = -76.54428374022244;
     private static final double LATITUDE_INITIAL = 3.4380741597868383;
 
-    private DialogAcceptPassengerBooking dialogQuota;
+    private DialogMarker dialogMarkerClick;
+    private DialogPassengerMap dialogPassengerMap;
     private TimePickerFragment timePickerFragment;
     private DatePickerFragment datePickerFragment;
 
@@ -119,8 +124,7 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
         mGoogleApiClient.connect();
     }
 
-    public void initViews(String fromOrTo, String community) {
-        textLocation.setText(fromOrTo + community);
+    public void initViews() {
         switchFromTo.setOnCheckedChangeListener(getFragment());
     }
 
@@ -202,9 +206,16 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
 
     public void showDialogQuota(DisposableObserver<PassengerBooking> observer, PassengerBooking passengerBooking) {
         if (getActivity() == null) return;
-        dialogQuota = new DialogAcceptPassengerBooking(getActivity(), passengerBooking);
-        dialogQuota.subscribeToDialogEvent(observer);
-        dialogQuota.show();
+        dialogMarkerClick = new DialogMarker(getActivity(), passengerBooking);
+        dialogMarkerClick.subscribeToDialogEvent(observer);
+        dialogMarkerClick.show();
+    }
+
+    public void showDialogRequestBooking(DisposableObserver<Pair<PassengerBooking, RequestInfo>> observer, PassengerBooking passengerBooking, RequestInfo requestInfo) {
+        if (getActivity() == null) return;
+        dialogPassengerMap = new DialogPassengerMap(getActivity(), passengerBooking, requestInfo);
+        dialogPassengerMap.subscribeToDialogEvent(observer);
+        dialogPassengerMap.show();
     }
 
     public void setListeners() {
@@ -250,13 +261,13 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
         }
     }
 
-    public void setButtonHour() {
-        btnHour.setText("Listo");
+    public void setButtonHour(String hour) {
+        btnHour.setText(StringUtils.formatHour(hour));
         //btnHour.setBackgroundColor(getResources().getColor(R.color.colorAccent));
     }
 
     public void setButtonDate(String date) {
-        btnDate.setText("Listo");
+        btnDate.setText(date);
         //btnDate.setBackgroundColor(getResources().getColor(R.color.colorAccent));
     }
 
@@ -286,14 +297,17 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
             timePickerFragment.unsubscribeToDialogFragment();
             timePickerFragment.dismiss();
         }
-        if (dialogQuota != null) {
-            dialogQuota.unsubscribeToDialogEvent();
-            dialogQuota.dismiss();
+        if (dialogMarkerClick != null) {
+            dialogMarkerClick.unsubscribeToDialogEvent();
+            dialogMarkerClick.dismiss();
         }
         if (datePickerFragment != null) {
             datePickerFragment.unsubscribeToDialogFragment();
             datePickerFragment.dismiss();
         }
+        if (dialogPassengerMap != null) {
+            dialogPassengerMap.unsubscribeToDialogEvent();
+            dialogPassengerMap.dismiss();
+        }
     }
-
 }

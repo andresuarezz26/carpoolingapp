@@ -4,23 +4,22 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerBooking;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.RequestInfo;
-import com.squareup.picasso.Picasso;
+import com.angular.gerardosuarez.carpoolingapp.utils.StringUtils;
 
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.subjects.PublishSubject;
 
 
-public class DialogRequestBookingPassenger extends Dialog implements
+public class DialogPassengerMap extends Dialog implements
         View.OnClickListener {
 
     public Context context;
@@ -29,7 +28,7 @@ public class DialogRequestBookingPassenger extends Dialog implements
     private PublishSubject<Pair<PassengerBooking, RequestInfo>> publishSubject = PublishSubject.create();
 
 
-    public DialogRequestBookingPassenger(Context context, PassengerBooking passengerBooking, RequestInfo requestInfo) {
+    public DialogPassengerMap(Context context, PassengerBooking passengerBooking, RequestInfo requestInfo) {
         super(context);
         this.context = context;
         this.passengerBooking = passengerBooking;
@@ -40,21 +39,24 @@ public class DialogRequestBookingPassenger extends Dialog implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.passenger_marker_dialog);
-        ImageView imageFacebook = (ImageView) findViewById(R.id.image_facebook);
+        setContentView(R.layout.passenger_accept_booking_dialog);
         Button buttonAccept = (Button) findViewById(R.id.btn_accept_quota);
         Button buttonCancel = (Button) findViewById(R.id.btn_cancel_quota);
-        TextView textName = (TextView) findViewById(R.id.txt_name);
-        if (passengerBooking != null) {
-            if (passengerBooking.getName() != null) {
-                textName.setText(passengerBooking.getName());
-            }
-            TextView textDescription = (TextView) findViewById(R.id.txt_description);
-            if (passengerBooking.address != null) {
-                textDescription.setText(passengerBooking.address);
-            }
-            if (!TextUtils.isEmpty(passengerBooking.getPhotoUri())) {
-                Picasso.with(imageFacebook.getContext()).load(passengerBooking.getPhotoUri()).into(imageFacebook);
+        TextView startingPointText = (TextView) findViewById(R.id.txt_starting_point);
+        TextView finalPointText = (TextView) findViewById(R.id.txt_final_point);
+        TextView dateAndHourText = (TextView) findViewById(R.id.txt_date_and_hour);
+        if (requestInfo != null) {
+            if (requestInfo.getFromOrTo() != null) {
+                if (MapPreference.FROM.equalsIgnoreCase(requestInfo.getFromOrTo())) {
+                    startingPointText.setText(requestInfo.getCommunity());
+                    finalPointText.setText(requestInfo.getAddress());
+                } else {
+                    startingPointText.setText(requestInfo.getAddress());
+                    finalPointText.setText(requestInfo.getCommunity());
+                }
+                String date = StringUtils.formatDateWithTodayLogic(requestInfo.getDate());
+                String hour = StringUtils.formatHour(requestInfo.getHour());
+                dateAndHourText.setText(date + " " + hour);
             }
         }
         buttonAccept.setOnClickListener(this);
@@ -65,7 +67,7 @@ public class DialogRequestBookingPassenger extends Dialog implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_accept_quota:
-                Pair<PassengerBooking, RequestInfo> pair = new Pair(passengerBooking, requestInfo);
+                Pair<PassengerBooking, RequestInfo> pair = new Pair<>(passengerBooking, requestInfo);
                 publishSubject.onNext(pair);
                 dismiss();
                 break;

@@ -26,4 +26,10 @@ public interface MapPreference {
     void putAlreadyRegister(boolean value);
 
     boolean isAlreadyRegister();
+
+    void putAlreadyDataChoosen(boolean value);
+
+    boolean isAlreadyDataChoosen();
+
+
 }

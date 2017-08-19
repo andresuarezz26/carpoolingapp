@@ -125,22 +125,30 @@ public class MyBookingPassengerFragmentPresenter extends BaseFragmentPresenter {
         String currentUid = getMyUid();
         if (!TextUtils.isEmpty(currentUid)) {
             if (thereIsDriver) {
-                if (currentDriverInfo != null) {
-                    if (getMapPreferences()) {
-                        bookingPassengerService.refuseDriverRequest(getRoute(), currentDriverInfo, currentUid);
-                        thereIsDriver = false;
-                        view.setInitialSearchingDriverInfo();
-                    }
-                }
+                refuseDriverRequest();
             } else {
-                if (getMapPreferencesWithoutErrorMsg()) {
-                    bookingPassengerService.cancelMyBooking(getRoute(), currentUid);
-                    thereIsDriver = false;
-                    view.cleanFragmentView();
-                    resetMapPreferences();
-                }
+                cancelMYBooking();
             }
         }
+    }
 
+    private void refuseDriverRequest() {
+        if (currentDriverInfo != null) {
+            if (getMapPreferencesWithoutErrorMsg()) {
+                bookingPassengerService.refuseDriverRequest(getRoute(), currentDriverInfo, getMyUid());
+                thereIsDriver = false;
+                view.setInitialSearchingDriverInfo();
+            }
+        }
+    }
+
+    private void cancelMYBooking() {
+        if (getMapPreferencesWithoutErrorMsg()) {
+            bookingPassengerService.cancelMyBooking(getRoute(), getMyUid());
+            thereIsDriver = false;
+            putAlreadyDataChoosen(false);
+            view.cleanFragmentView();
+            resetMapPreferences();
+        }
     }
 }

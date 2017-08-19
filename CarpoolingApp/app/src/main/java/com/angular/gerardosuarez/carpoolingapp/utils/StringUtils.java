@@ -2,11 +2,16 @@ package com.angular.gerardosuarez.carpoolingapp.utils;
 
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.Base64;
 
+import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
+
+import java.util.Calendar;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -135,7 +140,9 @@ public final class StringUtils {
         return string == null || string.isEmpty() || EMPTY_STRING.equals(string);
     }
 
-    public static String formatDate(@NonNull String date) {
+    public static String formatDate(@Nullable String date) {
+        if (date != null && date.length() != 9) return EMPTY_STRING;
+        if (TextUtils.isEmpty(date)) return EMPTY_STRING;
         return date.substring(0, 2) +
                 "/" +
                 date.substring(3, 5) +
@@ -143,9 +150,39 @@ public final class StringUtils {
                 date.substring(5, date.length());
     }
 
-    public static String formatHour(@NonNull String hour) {
+    public static String formatDateWithTodayLogic(@NonNull String dateString) {
+        Calendar calendar = Calendar.getInstance();
+        Date date = new Date();
+        calendar.setTimeInMillis(date.getTime());
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
+        String dayString = addZeroToStart(day);
+        String monthString = addZeroToStart(month);
+        String finalDate = dayString + monthString + year;
+        if (dateString.equalsIgnoreCase(finalDate)) {
+            return "Hoy";
+        } else {
+            monthString = addZeroToStart(month + 1);
+            return dayString + "/" + monthString;
+        }
+    }
+
+    public static String formatHour(@Nullable String hour) {
+        if (TextUtils.isEmpty(hour)) return EMPTY_STRING;
         return hour.substring(0, 2) +
                 ":" +
                 hour.substring(2, hour.length());
+    }
+
+    public static String getFromOrToFormattedText(@Nullable String fromOrTo, @Nullable String community) {
+        if (TextUtils.isEmpty(fromOrTo) || TextUtils.isEmpty(community)) return EMPTY_STRING;
+        else {
+            if (MapPreference.FROM.equalsIgnoreCase(fromOrTo)) {
+                return "Inicio: \n" + community;
+            } else {
+                return "Destino: \n" + community;
+            }
+        }
     }
 }

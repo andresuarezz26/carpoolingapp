@@ -45,7 +45,7 @@ public class FragmentView<T extends Fragment, AO> {
 
     public void showToast(int res) {
         if (getActivity() != null) {
-            Toast.makeText(getActivity(), getActivity().getResources().getString(res), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getActivity().getResources().getString(res), Toast.LENGTH_LONG).show();
         }
     }
 
