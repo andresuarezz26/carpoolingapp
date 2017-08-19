@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.activity.MainActivity;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreferenceImpl;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MyProfilePresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyProfileView;
 
@@ -31,7 +32,7 @@ public class MyProfileFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter = new MyProfilePresenter(new MyProfileView(this));
+        presenter = new MyProfilePresenter(new MyProfileView(this), new MapPreferenceImpl(getActivity(), MapPreferenceImpl.NAME));
         presenter.init();
     }
 

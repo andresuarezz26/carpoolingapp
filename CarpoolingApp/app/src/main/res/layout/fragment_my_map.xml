@@ -22,7 +22,7 @@
         <Switch
             android:id="@+id/switch_from_to"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginBottom="15dp"
             android:layout_weight="1"
             android:gravity="center"
@@ -36,7 +36,7 @@
             android:layout_height="match_parent"
             android:layout_weight="4"
             android:gravity="center"
-            android:text="Destino Icesi"/>
+            android:text="Destino Icesi" />
 
         <Button
             android:id="@+id/btn_hour"
@@ -49,7 +49,7 @@
             android:id="@+id/btn_date"
             style="@style/TextMaps"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/date_map" />
 
     </LinearLayout>

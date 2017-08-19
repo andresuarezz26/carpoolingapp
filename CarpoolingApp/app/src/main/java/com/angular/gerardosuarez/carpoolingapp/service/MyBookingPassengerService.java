@@ -10,8 +10,8 @@ import java.util.Map;
 
 public class MyBookingPassengerService extends BaseFirebaseService {
 
-    public DatabaseReference getPassengerBookings(String community, String fromOrTo, String date, String hour) {
-        return databaseReference.child(MY_BOOKING_PASSENGER).child(fromOrTo + "-" + community).child(date).child(hour).child("user1");
+    public DatabaseReference getPassengerBookings(String community, String fromOrTo, String date, String hour, String myUid) {
+        return databaseReference.child(MY_BOOKING_PASSENGER).child(fromOrTo + "-" + community).child(date).child(hour).child(myUid);
     }
 
     public void refuseDriverRequest(String bookingsRoute, DriverInfoRequest driverInfoRequest, String currentUserUid) {

@@ -8,9 +8,17 @@ public class User {
     public String phone;
     public String photo_uri;
     public String name;
+    private String key;
 
     public User() {
 
     }
 
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 }

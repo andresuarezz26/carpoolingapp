@@ -1,6 +1,5 @@
 package com.angular.gerardosuarez.carpoolingapp.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +12,7 @@ import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.AuthPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.AuthView;
 import com.angular.gerardosuarez.carpoolingapp.service.AuthUserService;
+import com.angular.gerardosuarez.carpoolingapp.service.UserService;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -30,22 +30,23 @@ import com.google.firebase.auth.FirebaseUser;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
 //facebook imports
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
 
 public class AuthActivity extends BaseActivity implements OnCompleteListener<AuthResult> {
 
-    public static final String TAG =AuthActivity.class.getSimpleName();
+    public static final String TAG = AuthActivity.class.getSimpleName();
 
-    @BindView(R.id.edit_password) EditText editPassword;
-    @BindView(R.id.edit_username) EditText editUsername;
-    @BindView(R.id.loginButton) LoginButton mLoginButton;
+    @BindView(R.id.edit_password)
+    EditText editPassword;
+    @BindView(R.id.edit_username)
+    EditText editUsername;
+    @BindView(R.id.loginButton)
+    LoginButton mLoginButton;
 
     private AuthPresenter presenter;
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    //fblogin
     private CallbackManager mCallbackManager;
 
 
@@ -57,7 +58,6 @@ public class AuthActivity extends BaseActivity implements OnCompleteListener<Aut
         ButterKnife.bind(this);
 
         mCallbackManager = CallbackManager.Factory.create();
-        final Activity activity = this;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -65,7 +65,8 @@ public class AuthActivity extends BaseActivity implements OnCompleteListener<Aut
             firebaseAuth = FirebaseAuth.getInstance();
             presenter = new AuthPresenter(
                     new AuthUserService(firebaseAuth),
-                    new AuthView(this)
+                    new AuthView(this),
+                    new UserService()
             );
         }
 
@@ -76,7 +77,6 @@ public class AuthActivity extends BaseActivity implements OnCompleteListener<Aut
             @Override
             public void onSuccess(LoginResult loginResult) {
                 handleFbAccessToken(loginResult.getAccessToken());
-                //presenter.showMain();
             }
 
             @Override
@@ -94,27 +94,35 @@ public class AuthActivity extends BaseActivity implements OnCompleteListener<Aut
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                Log.d(TAG, "user:" +user);
-                if(user != null){
+                Log.d(TAG, "user:" + user);
+                if (user != null) {
+                    presenter.createOrUpdateUser(user);
                     presenter.showMain();
                 }
             }
         };
     }
 
-    private void handleFbAccessToken(AccessToken accessToken){
+    private void handleFbAccessToken(AccessToken accessToken) {
         AuthCredential authCredential = FacebookAuthProvider.getCredential(accessToken.getToken());
         firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(!task.isSuccessful()){
-                    Toast.makeText(getApplicationContext(),R.string.loginfirebase_error, Toast.LENGTH_LONG).show();
+                if (!task.isSuccessful()) {
+                    Toast.makeText(getApplicationContext(), R.string.loginfirebase_error, Toast.LENGTH_LONG).show();
+                } else {
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    Log.d(TAG, "user:" + user);
+                    if (user != null) {
+                        presenter.createOrUpdateUser(user);
+                        presenter.showMain();
+                    }
                 }
             }
         });
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
@@ -145,13 +153,3 @@ public class AuthActivity extends BaseActivity implements OnCompleteListener<Aut
         }
     }
 }
-
-/*if(user !=null){
-    String name = user.getDisplayName();
-    String email = user.getEmail();
-    Uri photoUrl = user.getPhotoUrl();
-
-    nameTextView.setText(name);
-    emailTextView.setText(name);
-    nameTextView.setText(name);
-}*/

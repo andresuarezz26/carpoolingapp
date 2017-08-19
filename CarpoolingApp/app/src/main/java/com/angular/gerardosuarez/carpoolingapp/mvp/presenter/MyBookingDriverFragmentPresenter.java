@@ -36,7 +36,7 @@ public class MyBookingDriverFragmentPresenter extends BaseFragmentPresenter {
                                             MyBookingDriverService bookingDriverService,
                                             UserService userService,
                                             MapPreference mapPreference) {
-        super(mapPreference, view);
+        super(mapPreference, view, userService);
         this.view = view;
         this.bookingDriverService = bookingDriverService;
         this.userService = userService;
@@ -58,7 +58,8 @@ public class MyBookingDriverFragmentPresenter extends BaseFragmentPresenter {
     //MyBookingDriverService
     public void getRequestsOfDriver() {
         if (getMapPreferences()) {
-            bookingDriverListener = bookingDriverService.getRequestOfTheDriver(community, fromOrTo, date, hour, "user1")
+            if (getMyUid() == null) return;
+            bookingDriverListener = bookingDriverService.getRequestOfTheDriver(community, fromOrTo, date, hour, getMyUid())
                     .addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -129,7 +130,7 @@ public class MyBookingDriverFragmentPresenter extends BaseFragmentPresenter {
                 PassengerInfoRequest passengerInfoRequest = value.first;
                 if (passengerInfoRequest != null) {
                     String currentUid = getMyUid();
-                    if(currentUid != null){
+                    if (currentUid != null) {
                         bookingDriverService.cancelPassengerBooking(StringUtils.buildRoute(community, fromOrTo, date, hour), passengerInfoRequest, currentUid);
                     }
                 }

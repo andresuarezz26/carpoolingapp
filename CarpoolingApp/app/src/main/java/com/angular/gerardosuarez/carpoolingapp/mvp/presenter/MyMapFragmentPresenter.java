@@ -79,7 +79,7 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
                                   RolePreference rolePreference,
                                   MapPreference mapPreference,
                                   UserService userService) {
-        super(mapPreference, view);
+        super(mapPreference, view, userService);
         this.view = view;
         this.driverMapService = driverMapService;
         this.passengerMapService = passengerMapService;
@@ -194,7 +194,9 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
     private void assignBookingToDriverAndPassenger(@NonNull PassengerBooking passengerBooking) {
         PassengerInfoRequest passengerInfoRequest = new PassengerInfoRequest();
         // FIXME: remove mocked stuff
-        passengerInfoRequest.driverUid = "user1";
+        String myUid = getMyUid();
+        if (myUid != null)
+            passengerInfoRequest.driverUid = myUid;
         if (!TextUtils.isEmpty(currentAddress)) {
             passengerInfoRequest.address = currentAddress;
         }
@@ -204,9 +206,8 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
         driverInfoRequest.status = PassengerInfoRequest.STATUS_ACCEPTED;
         driverInfoRequest.address = passengerBooking.address;
         driverInfoRequest.passengerUid = passengerBooking.getKey();
-        driverInfoRequest.setKey("user1");
+        driverInfoRequest.setKey(myUid);
         if (getMapPreferences()) {
-
             driverMapService.assignBookingToDriverAndPassenger(
                     passengerInfoRequest,
                     driverInfoRequest,

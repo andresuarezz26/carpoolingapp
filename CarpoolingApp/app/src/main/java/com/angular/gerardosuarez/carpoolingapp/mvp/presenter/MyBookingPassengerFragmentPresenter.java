@@ -35,7 +35,7 @@ public class MyBookingPassengerFragmentPresenter extends BaseFragmentPresenter {
                                                MyBookingPassengerService bookingPassengerService,
                                                UserService userService,
                                                MapPreference mapPreference) {
-        super(mapPreference, view);
+        super(mapPreference, view, userService);
         this.view = view;
         this.bookingPassengerService = bookingPassengerService;
         this.userService = userService;
@@ -61,7 +61,8 @@ public class MyBookingPassengerFragmentPresenter extends BaseFragmentPresenter {
     //MyPassengerDriverService
     public void getDriversRequestInfo() {
         if (thereAreData) {
-            bookingPassengerListener = bookingPassengerService.getPassengerBookings(community, fromOrTo, date, hour)
+            if (getMyUid() == null) return;
+            bookingPassengerListener = bookingPassengerService.getPassengerBookings(community, fromOrTo, date, hour, getMyUid())
                     .addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {

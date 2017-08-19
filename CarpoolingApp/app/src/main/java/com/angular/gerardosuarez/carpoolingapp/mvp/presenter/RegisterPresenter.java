@@ -16,19 +16,43 @@ public class RegisterPresenter extends BaseFragmentPresenter {
     private UserService userService;
 
     public RegisterPresenter(MapPreference mapPreference, RegisterView view, UserService userService) {
-        super(mapPreference, view);
+        super(mapPreference, view, userService);
         this.view = view;
         this.userService = userService;
     }
 
 
     public void init() {
-        view.setInitialTexts("Gerardo Suarez", "andresuarezz26@hotmail.com", "");
+        User currentUser = getCurrentUser();
+        if (currentUser != null) {
+            view.setInitialTexts(currentUser.name, currentUser.email);
+        }
         hideMenu();
     }
 
     public boolean saveUserData() {
         User user = view.createUserFromForm();
+        if (validatePhoneNumber(user)) {
+            User userFromFirebase = getCurrentUser();
+            if (userFromFirebase != null) {
+                user.photo_uri = userFromFirebase.photo_uri;
+            }
+            if (getMyUid() != null) {
+                user.setKey(getMyUid());
+                userService.createOrUpdateUser(user);
+                mapPreference.putAlreadyRegister(true);
+                return true;
+            } else {
+                mapPreference.putAlreadyRegister(false);
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+
+    private boolean validatePhoneNumber(User user) {
         if (TextUtils.isEmpty(user.phone)) {
             view.showToast(R.string.error_empty_fields);
             return false;
@@ -37,11 +61,8 @@ public class RegisterPresenter extends BaseFragmentPresenter {
                 view.showToast(R.string.error_phone_number_characters);
                 return false;
             }
-            userService.updateUser(view.createUserFromForm());
-            mapPreference.putAlreadyRegister(true);
-            return true;
         }
-
+        return true;
     }
 
     public void hideMenu() {

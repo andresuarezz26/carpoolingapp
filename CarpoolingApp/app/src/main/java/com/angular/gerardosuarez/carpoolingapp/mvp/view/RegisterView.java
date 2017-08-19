@@ -44,18 +44,18 @@ public class RegisterView extends FragmentView<RegisterFragment, Void> {
         bottomMenu.setVisibility(View.VISIBLE);
     }
 
-    public void setInitialTexts(String name, String email, String phone) {
+    public void setInitialTexts(String name, String email) {
         if (!TextUtils.isEmpty(name)) {
             editName.setText(name);
             editName.setEnabled(false);
+        }else{
+            editEmail.setEnabled(true);
         }
         if (!TextUtils.isEmpty(email)) {
             editEmail.setText(email);
             editEmail.setEnabled(false);
-        }
-        if (!TextUtils.isEmpty(phone)) {
-            editPhone.setText(phone);
-            editPhone.setEnabled(false);
+        } else {
+            editEmail.setEnabled(true);
         }
     }
 
