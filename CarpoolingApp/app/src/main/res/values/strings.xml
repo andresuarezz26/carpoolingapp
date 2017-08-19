@@ -18,6 +18,12 @@
     <string name="cancel_quota">No, Gracias</string>
     <string name="hour_map">"Hora \n Llegada"</string>
     <string name="date_map">"Dia \n Viaje"</string>
+    <!--- facebook -->
+    <string name="facebook_app_id">1973609756218148</string>
+    <string name="fb_login_protocol_scheme">fb1973609756218148</string>
+    <string name="loginfb_cancel">La operacion se ha cancelado</string>
+    <string name="loginfb_error">Ha ocurrido un error al iniciar con Facebook</string>
+    <string name="loginfirebase_error">Ha ocurrido un error al iniciar con firebase</string>
     <string name="choose_community">Elige tu comunidad</string>
     <string name="txt_icesi">Icesi</string>
     <string name="txt_javeriana">javeriana</string>

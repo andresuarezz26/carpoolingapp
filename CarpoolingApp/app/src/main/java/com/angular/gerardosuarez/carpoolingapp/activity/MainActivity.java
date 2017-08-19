@@ -17,6 +17,8 @@ import com.angular.gerardosuarez.carpoolingapp.navigation.NavigationManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.facebook.AccessToken;
+
 
 public class MainActivity extends BaseActivity {
 
@@ -55,6 +57,9 @@ public class MainActivity extends BaseActivity {
                         return true;
                     }
                 });
+        if (AccessToken.getCurrentAccessToken() == null){
+            presenter.showLoginScreen();//metodo vacio
+        }
     }
 
     @Override
