@@ -54,7 +54,7 @@ public class AuthPresenter {
         }
     }
 
-    private void showMain() {
+    public void showMain() {
         final AuthActivity activity = view.getActivity();
         if (activity == null) {
             return;

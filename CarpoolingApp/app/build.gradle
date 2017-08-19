@@ -51,6 +51,10 @@ dependencies {
     testCompile 'org.mockito:mockito-core:2.0.5-beta'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+    //facebook
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+
 }
 
 repositories {
