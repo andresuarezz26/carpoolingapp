@@ -3,15 +3,16 @@ package com.angular.gerardosuarez.carpoolingapp.navigation;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.text.TextUtils;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreference;
 import com.angular.gerardosuarez.carpoolingapp.fragment.CommunityChooserFragment;
+import com.angular.gerardosuarez.carpoolingapp.fragment.MyBookingDriverFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyBookingPassengerFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyMapFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyProfileFragment;
-import com.angular.gerardosuarez.carpoolingapp.fragment.MyBookingDriverFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.RegisterFragment;
 import com.angular.gerardosuarez.carpoolingapp.utils.StringUtils;
 
@@ -126,18 +127,33 @@ public class NavigationManager {
     }
 
     public void setToPassengerRole() {
+        boolean isANewRole = changeRoleLogic(rolePreference.getCurrentRole(), ROLE_PASSEGNER);
         rolePreference.putCurrentRole(ROLE_PASSEGNER);
         MyMapFragment fragment = getDriverMapFragment();
         if (fragment != null) {
-            fragment.onRoleChanged();
+            fragment.onRoleClicked(isANewRole);
         }
     }
 
     public void setToDriverRole() {
+        boolean isANewRole = changeRoleLogic(rolePreference.getCurrentRole(), ROLE_DRIVER);
         rolePreference.putCurrentRole(ROLE_DRIVER);
         MyMapFragment fragment = getDriverMapFragment();
         if (fragment != null) {
-            fragment.onRoleChanged();
+            fragment.onRoleClicked(isANewRole);
         }
+    }
+
+    private boolean changeRoleLogic(String lastRole, String currentRole) {
+        if (!TextUtils.isEmpty(rolePreference.getCurrentRole())) {
+            if (!lastRole.equalsIgnoreCase(currentRole)) {
+                mapPreference.putAlreadyDataChoosen(false);
+                mapPreference.putTime(null);
+                mapPreference.putFromOrTo(MapPreference.FROM);
+                mapPreference.putDate(null);
+                return true;
+            }
+        }
+        return false;
     }
 }

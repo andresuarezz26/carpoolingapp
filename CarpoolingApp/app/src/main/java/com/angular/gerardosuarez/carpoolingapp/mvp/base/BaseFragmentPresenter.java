@@ -1,9 +1,11 @@
 package com.angular.gerardosuarez.carpoolingapp.mvp.base;
 
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
+import com.angular.gerardosuarez.carpoolingapp.mvp.model.RequestInfo;
 import com.angular.gerardosuarez.carpoolingapp.utils.StringUtils;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -61,12 +63,29 @@ public class BaseFragmentPresenter {
             return false;
         }
         hour = mapPreference.getTime();
-        if (TextUtils.isEmpty(hour)) {
-            return false;
-        }
-        return true;
+        return !TextUtils.isEmpty(hour);
     }
 
+    protected boolean alreadyDataChoosen() {
+        return mapPreference.isAlreadyDataChoosen();
+    }
+
+    protected void putAlreadyDataChoosen(boolean isChoosen) {
+        mapPreference.putAlreadyDataChoosen(isChoosen);
+    }
+
+    @Nullable
+    protected RequestInfo getRequestInfo() {
+        if (getMapPreferencesWithoutErrorMsg()) {
+            RequestInfo requestInfo = new RequestInfo();
+            requestInfo.setDate(mapPreference.getDate());
+            requestInfo.setHour(mapPreference.getTime());
+            requestInfo.setCommunity(mapPreference.getCommunity());
+            requestInfo.setFromOrTo(mapPreference.getFromOrTo());
+            return requestInfo;
+        }
+        return null;
+    }
 
     protected String getRoute() {
         return StringUtils.buildRoute(community, fromOrTo, date, hour);
@@ -78,7 +97,7 @@ public class BaseFragmentPresenter {
 
     protected void resetMapPreferences() {
         mapPreference.putDate(null);
-        mapPreference.putFromOrTo(null);
+        mapPreference.putFromOrTo(MapPreference.FROM);
         mapPreference.putTime(null);
     }
 }

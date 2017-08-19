@@ -26,7 +26,6 @@ public class MyBookingDriverFragmentPresenter extends BaseFragmentPresenter {
     private MyBookingDriverView view;
 
     private ValueEventListener bookingDriverListener;
-    private ValueEventListener userListener;
 
     private MyBookingDriverService bookingDriverService;
     private UserService userService;
@@ -53,9 +52,6 @@ public class MyBookingDriverFragmentPresenter extends BaseFragmentPresenter {
     public void unsubscribeFirebaseListener() {
         if (bookingDriverListener != null) {
             databaseRef.removeEventListener(bookingDriverListener);
-        }
-        if (userListener != null) {
-            databaseRef.removeEventListener(userListener);
         }
     }
 
@@ -122,7 +118,7 @@ public class MyBookingDriverFragmentPresenter extends BaseFragmentPresenter {
 
     private class MyQuotaObserver extends DefaultPresenterObserver<Pair<PassengerInfoRequest, Integer>, MyBookingDriverFragmentPresenter> {
 
-        public MyQuotaObserver(MyBookingDriverFragmentPresenter presenter) {
+        MyQuotaObserver(MyBookingDriverFragmentPresenter presenter) {
             super(presenter);
         }
 

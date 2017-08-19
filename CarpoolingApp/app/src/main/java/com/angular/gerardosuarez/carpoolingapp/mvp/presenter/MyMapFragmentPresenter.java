@@ -97,7 +97,6 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
         }
         requestPermissions(activity);
         setListeners();
-
     }
 
     public void setListeners() {
@@ -182,14 +181,16 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
         if (passengerBooking != null) assignBookingToDriverAndPassenger(passengerBooking);
     }
 
-    public void onPassengerRequestingBookingDialogResponse(Pair<PassengerInfoRequest, RequestInfo> pair) {
+    private void onPassengerRequestingBookingDialogResponse(Pair<PassengerBooking, RequestInfo> pair) {
         if (pair != null) {
-
+            putBooking();
+            putAlreadyDataChoosen(true);
         }
     }
 
     private void assignBookingToDriverAndPassenger(@NonNull PassengerBooking passengerBooking) {
         PassengerInfoRequest passengerInfoRequest = new PassengerInfoRequest();
+        // FIXME: remove mocked stuff
         passengerInfoRequest.driverUid = "user1";
         if (!TextUtils.isEmpty(currentAddress)) {
             passengerInfoRequest.address = currentAddress;
@@ -214,7 +215,9 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
     private void putBooking() {
         PassengerBooking passengerBooking = new PassengerBooking();
         //FIXME: change by curent user
-        passengerBooking.setKey("user1");
+        if (!TextUtils.isEmpty(getMyUid())) {
+            passengerBooking.setKey(getMyUid());
+        }
 
         if (currentCoordinates == null) {
             view.showToast(R.string.error_empty_coordinates);
@@ -312,9 +315,7 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
             return;
         }
         LatLng placeLocation = place.getLatLng();
-        String placeName = place.getName().toString();
         view.animateCamera(placeLocation);
-        //view.setMarker(placeLocation, placeName);
     }
 
     public void onLocationChanged(Location location) {
@@ -362,13 +363,13 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
 
     public void onTimeSelected(String time) {
         wasTimeSelected = true;
-        view.setButtonHour();
+        view.setButtonHour(time);
         mapPreference.putTime(time);
         if (wasDateSelected) {
             if (rolePreference.getCurrentRole().equalsIgnoreCase(ROLE_DRIVER)) {
                 getQuotas();
             } else {
-                putBooking();
+                startDialogToPutPassengerBooking();
             }
             wasDateSelected = false;
         }
@@ -377,14 +378,13 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
     public void onDateSelected(String date) {
         if (!StringUtils.isEmpty(date)) {
             wasDateSelected = true;
-            view.setButtonDate(date);
+            view.setButtonDate(StringUtils.formatDateWithTodayLogic(date));
             mapPreference.putDate(date);
             if (wasTimeSelected) {
                 if (rolePreference.getCurrentRole().equalsIgnoreCase(ROLE_DRIVER)) {
                     getQuotas();
                 } else {
-                    view.clearMap();
-                    putBooking();
+                    startDialogToPutPassengerBooking();
                 }
                 wasTimeSelected = false;
             }
@@ -393,11 +393,47 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
         }
     }
 
-    public void onRoleChanged() {
+    private void startDialogToPutPassengerBooking() {
+        view.clearMap();
+        PassengerBooking passengerBooking = new PassengerBooking();
+        RequestInfo requestInfo = getRequestInfo();
+        if (requestInfo != null) {
+            requestInfo.setAddress(currentAddress);
+            view.showDialogRequestBooking(new OnPassengerRequestingBookingObserver(), passengerBooking, requestInfo);
+        }
+    }
+
+    public void changeViewElements() {
+        view.setTextLocationText(StringUtils.getFromOrToFormattedText(
+                mapPreference.getFromOrTo() == null ? MapPreference.FROM : mapPreference.getFromOrTo(),
+                mapPreference.getCommunity()));
+    }
+
+    private class OnPassengerRequestingBookingObserver extends DisposableObserver<Pair<PassengerBooking, RequestInfo>> {
+
+        @Override
+        public void onNext(Pair<PassengerBooking, RequestInfo> pair) {
+
+            onPassengerRequestingBookingDialogResponse(pair);
+        }
+
+        @Override
+        public void onError(Throwable e) {
+
+        }
+
+        @Override
+        public void onComplete() {
+        }
+    }
+
+    public void onRoleChanged(boolean newRole) {
+        if (newRole) view.showToast(R.string.deleted_hour_and_date);
         String role = rolePreference.getCurrentRole();
         if (role.equalsIgnoreCase(ROLE_PASSEGNER)) {
             if (passengerBookingMap.size() > 0) {
                 wasDateSelected = false;
+                wasTimeSelected = false;
                 view.clearMap();
             }
         }
@@ -424,16 +460,20 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
     public void initView() {
         mapPreference.putFromOrTo(MapPreference.FROM);
         String community = mapPreference.getCommunity();
-        view.initViews(MapPreference.FROM, community != null ? community : StringUtils.EMPTY_STRING);
+        view.initViews();
     }
 
     public void onSwitchChanged(boolean isChecked) {
         if (isChecked) {
-            view.setTextLocationText("DESTINO: ICESI");
             mapPreference.putFromOrTo(MapPreference.TO);
+            view.setTextLocationText(StringUtils.getFromOrToFormattedText(
+                    MapPreference.TO, mapPreference.getCommunity()));
+
         } else {
-            view.setTextLocationText("ORIGEN: ICESI");
             mapPreference.putFromOrTo(MapPreference.FROM);
+            view.setTextLocationText(StringUtils.getFromOrToFormattedText(
+                    MapPreference.FROM, mapPreference.getCommunity()));
+
         }
     }
 
@@ -446,7 +486,11 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
     }
 
     public void showTimePickerFragment(DisposableObserver<String> observer) {
-        view.showTimePickerFragment(observer);
+        if (!alreadyDataChoosen()) {
+            view.showTimePickerFragment(observer);
+        } else {
+            alreadyDataChoosenErrorMsg();
+        }
     }
 
     public void unsubscribeObservers() {
@@ -454,7 +498,20 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
     }
 
     public void showDatePickerFragment(DisposableObserver<String> observer) {
-        view.showDatePickerFragment(observer);
+        if (!alreadyDataChoosen()) {
+            view.showDatePickerFragment(observer);
+        } else {
+            alreadyDataChoosenErrorMsg();
+        }
+    }
+
+    private void alreadyDataChoosenErrorMsg() {
+        String role = rolePreference.getCurrentRole();
+        if (!TextUtils.isEmpty(role)) {
+            int res = ROLE_DRIVER.equalsIgnoreCase(rolePreference.getCurrentRole()) ?
+                    R.string.already_data_choosen_driver : R.string.already_data_choosen_passenger;
+            view.showToast(res);
+        }
     }
 
 

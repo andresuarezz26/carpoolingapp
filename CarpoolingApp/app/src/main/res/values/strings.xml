@@ -42,4 +42,7 @@
     <string name="dialog_request_booking">¿Quieres solicitar este nuevo cupo?</string>
     <string name="dialog_starting_point_description">Punto de partida:</string>
     <string name="final_point_description">Destino:</string>
+    <string name="already_data_choosen_driver">Ya seleccionó datos. Cancele la ruta en la pantalla mis cupos para seleccionar una nueva.</string>
+    <string name="already_data_choosen_passenger">Ya solicitó un cupo. Si quiere solicitar uno nuevo cancélelo en la pantalla mis cupos.</string>
+    <string name="deleted_hour_and_date">Ha cambiado de rol. Su hora y día fueron borradas.</string>
 </resources>

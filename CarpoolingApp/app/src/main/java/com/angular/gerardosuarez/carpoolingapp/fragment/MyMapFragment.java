@@ -5,7 +5,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +16,6 @@ import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference
 import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreference;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreferenceImpl;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerBooking;
-import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerInfoRequest;
-import com.angular.gerardosuarez.carpoolingapp.mvp.model.RequestInfo;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MyMapFragmentPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyMapView;
 import com.angular.gerardosuarez.carpoolingapp.service.DriverMapService;
@@ -147,10 +144,11 @@ public class MyMapFragment extends Fragment
     public void onResume() {
         super.onResume();
         presenter.setListeners();
+        presenter.changeViewElements();
     }
 
-    public void onRoleChanged() {
-        presenter.onRoleChanged();
+    public void onRoleClicked(boolean newRole) {
+        presenter.onRoleChanged(newRole);
     }
 
     @Override
@@ -222,24 +220,6 @@ public class MyMapFragment extends Fragment
         public void onNext(PassengerBooking passengerBooking) {
 
             presenter.onDialogResponse(passengerBooking);
-        }
-
-        @Override
-        public void onError(Throwable e) {
-
-        }
-
-        @Override
-        public void onComplete() {
-        }
-    }
-
-    private class OnPassengerRequestingBookingObserver extends DisposableObserver<Pair<PassengerInfoRequest, RequestInfo>> {
-
-        @Override
-        public void onNext(Pair<PassengerInfoRequest, RequestInfo> pair) {
-
-            presenter.onPassengerRequestingBookingDialogResponse(pair);
         }
 
         @Override

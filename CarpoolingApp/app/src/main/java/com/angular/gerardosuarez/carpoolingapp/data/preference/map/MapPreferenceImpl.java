@@ -13,6 +13,7 @@ public class MapPreferenceImpl extends BasePreferenceImpl implements MapPreferen
     public static final String COMUNITY = "COMUNITY";
     public static final String FROM_OR_TO = "FROM_OR_TO";
     public static final String ALREADY_REGISTERED = "ALREADY_REGISTERED";
+    public static final String ALREADY_DATA_CHOOSEN = "ALREADY_DATA_CHOOSEN";
 
     public MapPreferenceImpl(Context context, String name) {
         super(context, name);
@@ -66,5 +67,15 @@ public class MapPreferenceImpl extends BasePreferenceImpl implements MapPreferen
     @Override
     public boolean isAlreadyRegister() {
         return getBoolean(ALREADY_REGISTERED);
+    }
+
+    @Override
+    public void putAlreadyDataChoosen(boolean value) {
+        put(ALREADY_DATA_CHOOSEN, value);
+    }
+
+    @Override
+    public boolean isAlreadyDataChoosen() {
+        return getBoolean(ALREADY_DATA_CHOOSEN);
     }
 }
