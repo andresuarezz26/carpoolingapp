@@ -13,8 +13,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
-import com.angular.gerardosuarez.carpoolingapp.customviews.dialog.DialogAcceptPassengerBooking;
-import com.angular.gerardosuarez.carpoolingapp.customviews.dialog.DialogRequestBookingPassenger;
+import com.angular.gerardosuarez.carpoolingapp.customviews.dialog.DialogMarker;
+import com.angular.gerardosuarez.carpoolingapp.customviews.dialog.DialogPassengerMap;
 import com.angular.gerardosuarez.carpoolingapp.dialogfragment.DatePickerFragment;
 import com.angular.gerardosuarez.carpoolingapp.dialogfragment.TimePickerFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyMapFragment;
@@ -60,8 +60,8 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
     private static final double LONGITUDE_INITIAL = -76.54428374022244;
     private static final double LATITUDE_INITIAL = 3.4380741597868383;
 
-    private DialogAcceptPassengerBooking dialogMarkerClick;
-    private DialogRequestBookingPassenger dialogRequestBookingPassenger;
+    private DialogMarker dialogMarkerClick;
+    private DialogPassengerMap dialogPassengerMap;
     private TimePickerFragment timePickerFragment;
     private DatePickerFragment datePickerFragment;
 
@@ -206,16 +206,16 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
 
     public void showDialogQuota(DisposableObserver<PassengerBooking> observer, PassengerBooking passengerBooking) {
         if (getActivity() == null) return;
-        dialogMarkerClick = new DialogAcceptPassengerBooking(getActivity(), passengerBooking);
+        dialogMarkerClick = new DialogMarker(getActivity(), passengerBooking);
         dialogMarkerClick.subscribeToDialogEvent(observer);
         dialogMarkerClick.show();
     }
 
     public void showDialogRequestBooking(DisposableObserver<Pair<PassengerBooking, RequestInfo>> observer, PassengerBooking passengerBooking, RequestInfo requestInfo) {
         if (getActivity() == null) return;
-        dialogRequestBookingPassenger = new DialogRequestBookingPassenger(getActivity(), passengerBooking, requestInfo);
-        dialogRequestBookingPassenger.subscribeToDialogEvent(observer);
-        dialogRequestBookingPassenger.show();
+        dialogPassengerMap = new DialogPassengerMap(getActivity(), passengerBooking, requestInfo);
+        dialogPassengerMap.subscribeToDialogEvent(observer);
+        dialogPassengerMap.show();
     }
 
     public void setListeners() {
@@ -305,9 +305,9 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
             datePickerFragment.unsubscribeToDialogFragment();
             datePickerFragment.dismiss();
         }
-        if (dialogRequestBookingPassenger != null) {
-            dialogRequestBookingPassenger.unsubscribeToDialogEvent();
-            dialogRequestBookingPassenger.dismiss();
+        if (dialogPassengerMap != null) {
+            dialogPassengerMap.unsubscribeToDialogEvent();
+            dialogPassengerMap.dismiss();
         }
     }
 }

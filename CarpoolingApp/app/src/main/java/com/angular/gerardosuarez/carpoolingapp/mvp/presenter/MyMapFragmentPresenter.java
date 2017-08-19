@@ -126,17 +126,20 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
                 addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            snapshot.getKey();
-                            try {
-                                view.clearMap();
-                                PassengerBooking passengerBooking = snapshot.getValue(PassengerBooking.class);
-                                if (!PassengerInfoRequest.STATUS_ACCEPTED.equalsIgnoreCase(passengerBooking.status)) {
-                                    setPassengerBookingAditionalInfo(snapshot.getKey(), passengerBooking);
-                                }
+                        String role = rolePreference.getCurrentRole();
+                        if (role != null && role.equalsIgnoreCase(ROLE_DRIVER)) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                snapshot.getKey();
+                                try {
+                                    view.clearMap();
+                                    PassengerBooking passengerBooking = snapshot.getValue(PassengerBooking.class);
+                                    if (!PassengerInfoRequest.STATUS_ACCEPTED.equalsIgnoreCase(passengerBooking.status)) {
+                                        setPassengerBookingAditionalInfo(snapshot.getKey(), passengerBooking);
+                                    }
 
-                            } catch (DatabaseException e) {
-                                Timber.e(e.getMessage(), e);
+                                } catch (DatabaseException e) {
+                                    Timber.e(e.getMessage(), e);
+                                }
                             }
                         }
                     }
@@ -366,7 +369,8 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
         view.setButtonHour(time);
         mapPreference.putTime(time);
         if (wasDateSelected) {
-            if (rolePreference.getCurrentRole().equalsIgnoreCase(ROLE_DRIVER)) {
+            String role = rolePreference.getCurrentRole();
+            if (role != null && role.equalsIgnoreCase(ROLE_DRIVER)) {
                 getQuotas();
             } else {
                 startDialogToPutPassengerBooking();
@@ -381,8 +385,10 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
             view.setButtonDate(StringUtils.formatDateWithTodayLogic(date));
             mapPreference.putDate(date);
             if (wasTimeSelected) {
-                if (rolePreference.getCurrentRole().equalsIgnoreCase(ROLE_DRIVER)) {
+                String role = rolePreference.getCurrentRole();
+                if (role != null && role.equalsIgnoreCase(ROLE_DRIVER)) {
                     getQuotas();
+                    putAlreadyDataChoosen(true);
                 } else {
                     startDialogToPutPassengerBooking();
                 }
@@ -394,7 +400,6 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
     }
 
     private void startDialogToPutPassengerBooking() {
-        view.clearMap();
         PassengerBooking passengerBooking = new PassengerBooking();
         RequestInfo requestInfo = getRequestInfo();
         if (requestInfo != null) {
