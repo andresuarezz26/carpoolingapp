@@ -14,6 +14,10 @@
     <string name="text_start_travel">Iniciar Recorrido</string>
     <string name="my_profile_driver">Conductor</string>
     <string name="text_community">Destino:Universidad Icesi</string>
+    <string name="accept_quota">Aceptar Cupo</string>
+    <string name="cancel_quota">No, Gracias</string>
+    <string name="hour_map">"Hora \n Llegada"</string>
+    <string name="date_map">"Dia \n Viaje"</string>
     <!--- facebook -->
     <string name="facebook_app_id">1973609756218148</string>
     <string name="fb_login_protocol_scheme">fb1973609756218148</string>

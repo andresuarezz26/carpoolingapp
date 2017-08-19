@@ -28,6 +28,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
@@ -37,6 +38,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
+import io.reactivex.observers.DisposableObserver;
 import timber.log.Timber;
 
 public class MyMapPresenter extends BaseMapPresenter {
@@ -109,10 +111,14 @@ public class MyMapPresenter extends BaseMapPresenter {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    PassengerQuota passengerQuota = snapshot.getValue(PassengerQuota.class);
-                    passengerQuotasMap.put(passengerQuota.userId, passengerQuota);
-                    int position = new ArrayList<>(passengerQuotasMap.keySet()).indexOf(passengerQuota.userId);
-                    view.addPassengerQuotaMarker(passengerQuota, position);
+                    try {
+                        PassengerQuota passengerQuota = snapshot.getValue(PassengerQuota.class);
+                        passengerQuotasMap.put(passengerQuota.userId, passengerQuota);
+                        int position = new ArrayList<>(passengerQuotasMap.keySet()).indexOf(passengerQuota.userId);
+                        view.addPassengerQuotaMarker(passengerQuota, position);
+                    } catch (DatabaseException e) {
+                        Timber.e(e.getMessage(), e);
+                    }
                 }
             }
 
@@ -260,7 +266,7 @@ public class MyMapPresenter extends BaseMapPresenter {
         return address;
     }
 
-    public void onTimeSelected(Integer integer) {
+    public void onTimeSelected(String time) {
         wasTimeSelected = true;
         view.setButtonHour();
         mapPreference.putTime("1600");
@@ -274,7 +280,7 @@ public class MyMapPresenter extends BaseMapPresenter {
         }
     }
 
-    public void onDateSelected(Integer integer) {
+    public void onDateSelected(String date) {
         wasDateSelected = true;
         view.setButtonDate();
         mapPreference.putDate("18062017");
@@ -287,16 +293,6 @@ public class MyMapPresenter extends BaseMapPresenter {
             }
             wasTimeSelected = false;
         }
-    }
-
-    public void getRole() {
-        /*String role = rolePreference.getCurrentRole();
-        if (role.equalsIgnoreCase(ROLE_PASSEGNER)) {
-            if (passengerQuotasMap.size() > 0) {
-                wasDateSelected = false;
-                view.clearMap();
-            }
-        }*/
     }
 
     public void onRoleChanged() {
@@ -341,6 +337,10 @@ public class MyMapPresenter extends BaseMapPresenter {
 
     public void setLocationRequest() {
         view.setLocationRequest();
+    }
+
+    public void showDialog(DisposableObserver<Boolean> observer, Marker marker) {
+        view.showDialogQuota(observer, marker.getTitle(), marker.getTitle());
     }
 }
 

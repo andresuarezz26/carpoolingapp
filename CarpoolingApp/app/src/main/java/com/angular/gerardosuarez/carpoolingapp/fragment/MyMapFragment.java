@@ -1,6 +1,5 @@
 package com.angular.gerardosuarez.carpoolingapp.fragment;
 
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.location.Location;
 import android.os.Bundle;
@@ -34,8 +33,7 @@ import com.google.android.gms.maps.model.Marker;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
 import timber.log.Timber;
 
 public class MyMapFragment extends Fragment
@@ -59,7 +57,7 @@ public class MyMapFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_driver_map, container, false);
+        View view = inflater.inflate(R.layout.fragment_my_map, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -84,7 +82,8 @@ public class MyMapFragment extends Fragment
 
     @OnClick(R.id.btn_hour)
     void onTimeClick() {
-        DialogFragment timePickerFragment = new TimePickerFragment(new OnTimeSelectedObserver());
+        TimePickerFragment timePickerFragment = new TimePickerFragment();
+        timePickerFragment.subscribeToDialogFragment(new OnTimeSelectedObserver());
         timePickerFragment.show(getFragmentManager(), "timePicker");
     }
 
@@ -94,16 +93,11 @@ public class MyMapFragment extends Fragment
         presenter.onSwitchChanged(isChecked);
     }
 
-    private class OnTimeSelectedObserver implements Observer<Integer> {
+    private class OnTimeSelectedObserver extends DisposableObserver<String> {
 
         @Override
-        public void onSubscribe(Disposable d) {
-
-        }
-
-        @Override
-        public void onNext(Integer integer) {
-            presenter.onTimeSelected(integer);
+        public void onNext(String time) {
+            presenter.onTimeSelected(time);
         }
 
         @Override
@@ -113,7 +107,6 @@ public class MyMapFragment extends Fragment
 
         @Override
         public void onComplete() {
-
         }
     }
 
@@ -125,20 +118,17 @@ public class MyMapFragment extends Fragment
 
     @OnClick(R.id.btn_date)
     void onDateClick() {
-        DialogFragment newFragment = new DatePickerFragment(new OnDateSelectedObserver());
+        DatePickerFragment newFragment = new DatePickerFragment();
+        newFragment.subscribeToDialogFragment(new OnDateSelectedObserver());
         newFragment.show(getFragmentManager(), "datePicker");
     }
 
-    private class OnDateSelectedObserver implements Observer<Integer> {
+    private class OnDateSelectedObserver extends DisposableObserver<String> {
+
 
         @Override
-        public void onSubscribe(Disposable d) {
-
-        }
-
-        @Override
-        public void onNext(Integer integer) {
-            presenter.onDateSelected(integer);
+        public void onNext(String s) {
+            presenter.onDateSelected(s);
         }
 
         @Override
@@ -156,10 +146,9 @@ public class MyMapFragment extends Fragment
     public void onResume() {
         super.onResume();
         presenter.setListeners();
-        presenter.getRole();
     }
 
-    public void onRoleChanged(){
+    public void onRoleChanged() {
         presenter.onRoleChanged();
     }
 
@@ -222,8 +211,27 @@ public class MyMapFragment extends Fragment
     //GoogleMap.OnMarkerClickListener callback
     @Override
     public boolean onMarkerClick(Marker marker) {
-        return presenter.onMarkerClick(marker);
+        presenter.showDialog(new OnDialogResponseObserver(), marker);
+        return true;
     }
+
+    private class OnDialogResponseObserver extends DisposableObserver<Boolean> {
+
+        @Override
+        public void onNext(Boolean isAccepted) {
+            //Query firebasedatebase
+        }
+
+        @Override
+        public void onError(Throwable e) {
+
+        }
+
+        @Override
+        public void onComplete() {
+        }
+    }
+
 
     //GoogleApiClient.ConnectionCallbacks,
     //GoogleApiClient.OnConnectionFailedListener
@@ -241,4 +249,6 @@ public class MyMapFragment extends Fragment
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Timber.i("failed");
     }
+
+
 }

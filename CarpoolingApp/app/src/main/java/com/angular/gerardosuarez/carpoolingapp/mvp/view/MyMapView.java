@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
+import com.angular.gerardosuarez.carpoolingapp.customviews.dialog.DialogPassengerQuota;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyMapFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.base.FragmentView;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerQuota;
@@ -31,6 +32,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.observers.DisposableObserver;
 import timber.log.Timber;
 
 public class MyMapView extends FragmentView<MyMapFragment, Void> {
@@ -51,6 +53,7 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
     private static final double LONGITUDE_INITIAL = -76.54428374022244;
     private static final double LATITUDE_INITIAL = 3.4380741597868383;
 
+    private DialogPassengerQuota dialogQuota;
 
     @BindView(R.id.switch_from_to)
     Switch switchFromTo;
@@ -196,6 +199,13 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
 
     public void addPassengerQuotaMarker(PassengerQuota passengerQuota, int id) {
         setMarker(new LatLng(passengerQuota.latitude, passengerQuota.longitude), passengerQuota.userId, id);
+    }
+
+    public void showDialogQuota(DisposableObserver<Boolean> observer, String passengerName, String address) {
+        if (getActivity() == null) return;
+        dialogQuota = new DialogPassengerQuota(getActivity(), passengerName, address);
+        dialogQuota.subscribeToDialogEvent(observer);
+        dialogQuota.show();
     }
 
     public void setListeners() {
