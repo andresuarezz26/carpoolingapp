@@ -114,7 +114,7 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
 
     //region DriverServices
     private void getQuotas() {
-        if (getMapPreferences()) {
+        if (getMapPreferencesWithoutErrorMsg()) {
             getQuotas(community, fromOrTo, date, hour);
         }
     }
@@ -202,7 +202,7 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
         driverInfoRequest.address = passengerBooking.address;
         driverInfoRequest.passengerUid = passengerBooking.getKey();
         driverInfoRequest.setKey(myUid);
-        if (getMapPreferences()) {
+        if (getMapPreferencesWithoutErrorMsg()) {
             driverMapService.assignBookingToDriverAndPassenger(
                     passengerInfoRequest,
                     driverInfoRequest,
@@ -228,7 +228,7 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
         passengerBooking.latitude = currentCoordinates.latitude;
         passengerBooking.longitude = currentCoordinates.longitude;
         passengerBooking.status = PassengerInfoRequest.STATUS_WAITING;
-        if (getMapPreferences()) {
+        if (getMapPreferencesWithoutErrorMsg()) {
             passengerMapService.putPassengerBookingPerCommunityOriginDate(passengerBooking, fromOrTo + "-" + community, date, hour);
         }
     }

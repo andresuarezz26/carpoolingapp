@@ -1,48 +1,40 @@
 package com.angular.gerardosuarez.carpoolingapp.activity;
 
-import android.content.Intent;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.widget.VideoView;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.init.InitPreferenceImpl;
+import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.VideoActivityPresenter;
+import com.angular.gerardosuarez.carpoolingapp.mvp.view.VideoActivityView;
 
 public class VideoActivity extends BaseActivity implements MediaPlayer.OnCompletionListener {
-    private VideoView videoview;
+    private VideoActivityPresenter presenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
-        init();
+        presenter = new VideoActivityPresenter(new InitPreferenceImpl(this, InitPreferenceImpl.NAME),
+                new VideoActivityView(this));
+        presenter.init();
     }
-
-    private void init() {
-        videoview = (VideoView) findViewById(R.id.video_tutorial);
-        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.intro);
-        videoview.setVideoURI(uri);
-        videoview.setOnCompletionListener(this);
-        videoview.start();
-    }
-
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        Intent i = new Intent(this, AuthActivity.class);
-        startActivity(i);
+        presenter.goToAuthActivity();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        videoview.pause();
+        presenter.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        videoview.start();
+        presenter.onResume();
     }
 }
