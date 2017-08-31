@@ -15,8 +15,11 @@ import java.util.Map;
 public class MyBookingDriverService extends BaseFirebaseService {
 
 
-    public DatabaseReference getRequestOfTheDriver(@NonNull String comunity, @NonNull String origin, @NonNull String date, @NonNull String hour, @NonNull String driverId) {
-        // FIXME : change the query
+    public DatabaseReference getRequestOfTheDriver(@NonNull String comunity,
+                                                   @NonNull String origin,
+                                                   @NonNull String date,
+                                                   @NonNull String hour,
+                                                   @NonNull String driverId) {
         return databaseReference.child(MY_BOOKING_DRIVER).child(origin + "-" + comunity).child(date).child(hour).child(driverId);
     }
 
@@ -24,9 +27,9 @@ public class MyBookingDriverService extends BaseFirebaseService {
                                        @NonNull PassengerInfoRequest passengerInfoRequest,
                                        @NonNull String currentUid) {
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put(MY_BOOKING_PASSENGER_SLASH + bookingsRoute + passengerInfoRequest.getKey() + "/" + currentUid, null);
-        childUpdates.put(MY_BOOKING_DRIVER_SLASH + bookingsRoute + currentUid + "/" + passengerInfoRequest.getKey(), null);
-        childUpdates.put(bookingsRoute + passengerInfoRequest.getKey() + "/status", PassengerInfoRequest.STATUS_WAITING);
+        childUpdates.put(MY_BOOKING_PASSENGER_SLASH + bookingsRoute + passengerInfoRequest.getKey() + StringUtils.SLASH + currentUid, null);
+        childUpdates.put(MY_BOOKING_DRIVER_SLASH + bookingsRoute + currentUid + StringUtils.SLASH + passengerInfoRequest.getKey(), null);
+        childUpdates.put(bookingsRoute + passengerInfoRequest.getKey() + STATUS, PassengerInfoRequest.STATUS_WAITING);
         databaseReference.updateChildren(childUpdates);
     }
 

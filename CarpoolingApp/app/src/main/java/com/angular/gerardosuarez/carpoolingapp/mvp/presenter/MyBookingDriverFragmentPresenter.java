@@ -135,7 +135,7 @@ public class MyBookingDriverFragmentPresenter extends BaseFragmentPresenter {
         String myUid = getMyUid();
         if (!TextUtils.isEmpty(myUid)) {
             if (getMapPreferencesWithoutErrorMsg()) {
-                bookingDriverService.startRoute(getRoute(), view.getPassengerList(), myUid);
+                bookingDriverService.cancelCurrentRoute(getRoute(), view.getPassengerList(), myUid);
                 resetMapPreferences();
                 mapPreference.putDateSelected(false);
                 mapPreference.putTimeSelected(false);

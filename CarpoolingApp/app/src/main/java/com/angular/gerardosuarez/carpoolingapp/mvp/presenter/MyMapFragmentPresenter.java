@@ -189,7 +189,6 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
 
     private void assignBookingToDriverAndPassenger(@NonNull PassengerBooking passengerBooking) {
         PassengerInfoRequest passengerInfoRequest = new PassengerInfoRequest();
-        // FIXME: remove mocked stuff
         String myUid = getMyUid();
         if (myUid != null)
             passengerInfoRequest.driverUid = myUid;
@@ -214,7 +213,6 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
     //Passenger Services
     private void putBooking() {
         PassengerBooking passengerBooking = new PassengerBooking();
-        //FIXME: change by curent user
         if (!TextUtils.isEmpty(getMyUid())) {
             passengerBooking.setKey(getMyUid());
         }
