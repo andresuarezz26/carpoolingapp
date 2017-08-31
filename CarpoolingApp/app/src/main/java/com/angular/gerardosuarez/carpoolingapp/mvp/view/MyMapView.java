@@ -84,6 +84,8 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
     }
 
     public void setAutocompleteFragment() {
+        if (getFragment() == null) return;
+        if (getFragment().getChildFragmentManager() == null) return;
         autocompleteFragment = (PlaceAutocompleteFragment) getFragment().
                 getChildFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
         autocompleteFragment.setBoundsBias(new LatLngBounds(
@@ -95,14 +97,29 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
     }
 
     private void setTextAutocompleteFragmentWithText(String text) {
-        autocompleteFragment.setText(text);
+        try {
+            if (autocompleteFragment != null && text != null) {
+                autocompleteFragment.setText(text);
+            }
+        } catch (NullPointerException e) {
+            Timber.e(e, e.getMessage());
+        }
+
     }
 
     public void setTextAutocompleteFragmentWithCurrentCoord(String currentLocation) {
-        autocompleteFragment.setText(currentLocation);
+        try {
+            if (autocompleteFragment != null && currentLocation != null) {
+                autocompleteFragment.setText(currentLocation);
+            }
+        } catch (NullPointerException e) {
+            Timber.e(e, e.getMessage());
+        }
     }
 
     public void initMap() {
+        if (getFragment() == null) return;
+        if (getFragment().getChildFragmentManager() == null) return;
         MapFragment mapFragment = (MapFragment) getFragment().getChildFragmentManager().findFragmentById(R.id.map_fragment);
         mapFragment.getMapAsync(getFragment());
     }

@@ -5,6 +5,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,14 +52,25 @@ public class MyMapFragment extends Fragment
 
     public static final String TAG = "driver_map";
     public static final int PERMISSION_REQUEST_FINE_LOCATION = 1;
+    private static View view;
 
     private MyMapFragmentPresenter presenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_my_map, container, false);
-        ButterKnife.bind(this, view);
+        if (view != null) {
+            ViewGroup parent = (ViewGroup) view.getParent();
+            if (parent != null)
+                parent.removeView(view);
+        }
+        try {
+            view = inflater.inflate(R.layout.fragment_my_map, container, false);
+            ButterKnife.bind(this, view);
+        } catch (InflateException e) {
+        /* map is already there, just return view as it is */
+        }
+
         return view;
     }
 
@@ -77,8 +89,9 @@ public class MyMapFragment extends Fragment
         if (presenter.googleServicesAvailable()) {
             presenter.initMap();
         }
-        presenter.setAutocompleteFragment();
         presenter.initView();
+        presenter.setAutocompleteFragment();
+
     }
 
     @OnClick(R.id.btn_hour)

@@ -34,6 +34,7 @@ public class VideoActivityView extends ActivityView<VideoActivity> {
         if (getActivity() == null) return;
         Intent i = new Intent(getActivity(), AuthActivity.class);
         getActivity().startActivity(i);
+        getActivity().finish();
     }
 
     public void pauseVideo() {
