@@ -52,4 +52,5 @@
     <string name="already_data_choosen_passenger">Ya solicitó un cupo. Si quiere solicitar uno nuevo cancélelo en la pantalla mis cupos.</string>
     <string name="deleted_hour_and_date">Ha cambiado de rol. Su hora y día fueron borradas.</string>
     <string name="error_time_range">Debe usar rangos de media hora. Ej: 6:30, 5:00</string>
+    <string name="title_activity_video">Tutorial</string>
 </resources>
