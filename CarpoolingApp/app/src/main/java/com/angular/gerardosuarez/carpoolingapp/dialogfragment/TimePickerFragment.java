@@ -28,7 +28,11 @@ public class TimePickerFragment extends BaseDialogFragment<Integer>
     }
 
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        publishSubject.onNext(StringUtils.addZeroToStart(hourOfDay) + "" + StringUtils.addZeroToStart(minute));
+        if (minute % 30 == 0) {
+            publishSubject.onNext(StringUtils.addZeroToStart(hourOfDay) + "" + StringUtils.addZeroToStart(minute));
+        } else {
+            publishSubject.onNext(null);
+        }
         unsubscribeToDialogFragment();
     }
 }

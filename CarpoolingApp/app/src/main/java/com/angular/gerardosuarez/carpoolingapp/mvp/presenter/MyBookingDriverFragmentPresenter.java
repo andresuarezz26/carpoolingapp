@@ -1,6 +1,7 @@
 package com.angular.gerardosuarez.carpoolingapp.mvp.presenter;
 
 import android.support.v4.util.Pair;
+import android.text.TextUtils;
 
 import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
 import com.angular.gerardosuarez.carpoolingapp.mvp.base.BaseFragmentPresenter;
@@ -57,7 +58,7 @@ public class MyBookingDriverFragmentPresenter extends BaseFragmentPresenter {
 
     //MyBookingDriverService
     public void getRequestsOfDriver() {
-        if (getMapPreferences()) {
+        if (getMapPreferencesWithoutErrorMsg()) {
             if (getMyUid() == null) return;
             bookingDriverListener = bookingDriverService.getRequestOfTheDriver(community, fromOrTo, date, hour, getMyUid())
                     .addValueEventListener(new ValueEventListener() {
@@ -117,6 +118,32 @@ public class MyBookingDriverFragmentPresenter extends BaseFragmentPresenter {
         });
     }
 
+    public void onStartTravel() {
+        String myUid = getMyUid();
+        if (!TextUtils.isEmpty(myUid)) {
+            if (getMapPreferencesWithoutErrorMsg()) {
+                bookingDriverService.startRoute(getRoute(), view.getPassengerList(), myUid);
+                resetMapPreferences();
+                mapPreference.putDateSelected(false);
+                mapPreference.putTimeSelected(false);
+                mapPreference.putAlreadyDataChoosen(false);
+            }
+        }
+    }
+
+    public void onCancelRoute() {
+        String myUid = getMyUid();
+        if (!TextUtils.isEmpty(myUid)) {
+            if (getMapPreferencesWithoutErrorMsg()) {
+                bookingDriverService.startRoute(getRoute(), view.getPassengerList(), myUid);
+                resetMapPreferences();
+                mapPreference.putDateSelected(false);
+                mapPreference.putTimeSelected(false);
+                mapPreference.putAlreadyDataChoosen(false);
+            }
+        }
+    }
+
     private class MyQuotaObserver extends DefaultPresenterObserver<Pair<PassengerInfoRequest, Integer>, MyBookingDriverFragmentPresenter> {
 
         MyQuotaObserver(MyBookingDriverFragmentPresenter presenter) {
@@ -126,7 +153,7 @@ public class MyBookingDriverFragmentPresenter extends BaseFragmentPresenter {
         @Override
         public void onNext(Pair<PassengerInfoRequest, Integer> value) {
             super.onNext(value);
-            if (getMapPreferences()) {
+            if (getMapPreferencesWithoutErrorMsg()) {
                 PassengerInfoRequest passengerInfoRequest = value.first;
                 if (passengerInfoRequest != null) {
                     String currentUid = getMyUid();

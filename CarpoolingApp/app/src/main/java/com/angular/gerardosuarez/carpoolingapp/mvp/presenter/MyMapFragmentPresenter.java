@@ -66,8 +66,6 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
     private String currentRole;
 
     private boolean mapWasTouched = false;
-    private boolean wasDateSelected = false;
-    private boolean wasTimeSelected = false;
     private String currentAddress;
     private LatLng currentCoordinates;
 
@@ -114,7 +112,7 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
         }
     }
 
-    //Driver Services
+    //region DriverServices
     private void getQuotas() {
         if (getMapPreferences()) {
             getQuotas(community, fromOrTo, date, hour);
@@ -158,12 +156,8 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
                 try {
                     User user = dataSnapshot.getValue(User.class);
                     if (user != null) {
-                        passengerBooking.setPhone(user.phone);
-                        passengerBooking.setEmail(user.email);
-                        passengerBooking.setName(user.name);
-                        passengerBooking.setPhotoUri(user.photo_uri);
+                        passengerBooking.setUserAttributes(user);
                         passengerBooking.setKey(uid);
-
                         passengerBookingMap.put(passengerBooking.getKey(), passengerBooking);
                         int position = new ArrayList<>(passengerBookingMap.keySet()).indexOf(passengerBooking.getKey());
                         view.addPassengerQuotaMarker(passengerBooking, position);
@@ -179,6 +173,8 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
             }
         });
     }
+
+    //region
 
     public void onDialogResponse(@Nullable PassengerBooking passengerBooking) {
         if (passengerBooking != null) assignBookingToDriverAndPassenger(passengerBooking);
@@ -366,26 +362,30 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
     }
 
     public void onTimeSelected(String time) {
-        wasTimeSelected = true;
-        view.setButtonHour(time);
-        mapPreference.putTime(time);
-        if (wasDateSelected) {
-            String role = rolePreference.getCurrentRole();
-            if (role != null && role.equalsIgnoreCase(ROLE_DRIVER)) {
-                getQuotas();
-            } else {
-                startDialogToPutPassengerBooking();
+        if (time != null) {
+            mapPreference.putTimeSelected(true);
+            view.setButtonHour(time);
+            mapPreference.putTime(time);
+            if (mapPreference.isDateSelected()) {
+                String role = rolePreference.getCurrentRole();
+                if (role != null && role.equalsIgnoreCase(ROLE_DRIVER)) {
+                    getQuotas();
+                } else {
+                    startDialogToPutPassengerBooking();
+                }
+                mapPreference.putDateSelected(false);
             }
-            wasDateSelected = false;
+        } else {
+            view.showToast(R.string.error_time_range);
         }
     }
 
     public void onDateSelected(String date) {
         if (!StringUtils.isEmpty(date)) {
-            wasDateSelected = true;
+            mapPreference.putDateSelected(true);
             view.setButtonDate(StringUtils.formatDateWithTodayLogic(date));
             mapPreference.putDate(date);
-            if (wasTimeSelected) {
+            if (mapPreference.isTimeSelected()) {
                 String role = rolePreference.getCurrentRole();
                 if (role != null && role.equalsIgnoreCase(ROLE_DRIVER)) {
                     getQuotas();
@@ -393,7 +393,7 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
                 } else {
                     startDialogToPutPassengerBooking();
                 }
-                wasTimeSelected = false;
+                mapPreference.putTimeSelected(false);
             }
         } else {
             view.showToast(R.string.error_empty_date);
@@ -437,11 +437,15 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
         if (newRole) view.showToast(R.string.deleted_hour_and_date);
         String role = rolePreference.getCurrentRole();
         if (role.equalsIgnoreCase(ROLE_PASSEGNER)) {
-            if (passengerBookingMap.size() > 0) {
-                wasDateSelected = false;
-                wasTimeSelected = false;
-                view.clearMap();
-            }
+            clearMapTimeAndDate();
+        }
+    }
+
+    private void clearMapTimeAndDate() {
+        if (passengerBookingMap.size() > 0) {
+            mapPreference.putTimeSelected(false);
+            mapPreference.putDateSelected(false);
+            view.clearMap();
         }
     }
 

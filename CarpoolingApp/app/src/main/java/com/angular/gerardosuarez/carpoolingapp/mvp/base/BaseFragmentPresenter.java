@@ -22,7 +22,7 @@ public class BaseFragmentPresenter {
     protected DatabaseReference databaseRef;
     protected MapPreference mapPreference;
     protected FragmentView view;
-    protected UserService userService;
+    private UserService userService;
     private FirebaseAuth firebaseAuth;
 
     protected BaseFragmentPresenter(MapPreference mapPreference, FragmentView view, UserService userService) {
@@ -107,15 +107,15 @@ public class BaseFragmentPresenter {
     }
 
     @Nullable
-    protected User getCurrentUser(){
+    protected User getCurrentUser() {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        if ( firebaseUser == null) return null;
+        if (firebaseUser == null) return null;
         return userService.mapFirebaseUserToUser(firebaseUser);
     }
 
     protected void resetMapPreferences() {
         mapPreference.putDate(null);
-        mapPreference.putFromOrTo(MapPreference.FROM);
         mapPreference.putTime(null);
+        mapPreference.putFromOrTo(MapPreference.FROM);
     }
 }

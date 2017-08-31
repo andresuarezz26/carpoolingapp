@@ -38,6 +38,7 @@ public final class StringUtils {
     private static final String ZERO_STRING = "0";
     private static final int INT_TEN = 10;
     private static final String DATE_PATTERN = "dd/mm/yyyy";
+    public static final String SLASH = "/";
 
     private StringUtils() {
 

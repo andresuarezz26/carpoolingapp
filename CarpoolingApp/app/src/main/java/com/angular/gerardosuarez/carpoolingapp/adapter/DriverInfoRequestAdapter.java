@@ -12,6 +12,7 @@ import com.angular.gerardosuarez.carpoolingapp.adapter.base.BaseAdapter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.DriverInfoRequest;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -19,6 +20,11 @@ import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 
+/**
+ * This class is not used due to new business rules but when the passenger have request for drivers
+ * this class would work fine
+ */
+@Deprecated
 public class DriverInfoRequestAdapter extends BaseAdapter<DriverInfoRequest, Integer, DriverInfoRequestAdapter.DriverInfoRequestViewHolder> {
 
     public DriverInfoRequestAdapter(Observer<Integer> observer) {
@@ -52,6 +58,11 @@ public class DriverInfoRequestAdapter extends BaseAdapter<DriverInfoRequest, Int
         return new DriverInfoRequestViewHolder(view);
     }
 
+    @Override
+    public List<DriverInfoRequest> getItems() {
+        return items;
+    }
+
     class DriverInfoRequestViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.text_my_quota_name)
@@ -62,7 +73,6 @@ public class DriverInfoRequestAdapter extends BaseAdapter<DriverInfoRequest, Int
         ImageButton removeButton;
         private DriverInfoRequest driverInfoRequest;
         private WeakReference<Observer<Integer>> observerRef;
-
 
         DriverInfoRequestViewHolder(View itemView) {
             super(itemView);

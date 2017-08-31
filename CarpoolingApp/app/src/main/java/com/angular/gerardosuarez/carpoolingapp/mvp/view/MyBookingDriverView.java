@@ -46,6 +46,10 @@ public class MyBookingDriverView extends FragmentView<MyBookingDriverFragment, P
         adapter.removeAll();
     }
 
+    public List<PassengerInfoRequest> getPassengerList() {
+        return adapter.getItems();
+    }
+
     public void remove(int position) {
         adapter.remove(position);
     }

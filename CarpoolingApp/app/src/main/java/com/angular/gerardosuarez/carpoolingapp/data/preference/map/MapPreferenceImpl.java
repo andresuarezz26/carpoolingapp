@@ -14,6 +14,8 @@ public class MapPreferenceImpl extends BasePreferenceImpl implements MapPreferen
     public static final String FROM_OR_TO = "FROM_OR_TO";
     public static final String ALREADY_REGISTERED = "ALREADY_REGISTERED";
     public static final String ALREADY_DATA_CHOOSEN = "ALREADY_DATA_CHOOSEN";
+    public static final String IS_DATE_SELECTED = "IS_DATE_SELECTED";
+    public static final String IS_TIME_SELECTED = "IS_TIME_SELECTED";
 
     public MapPreferenceImpl(Context context, String name) {
         super(context, name);
@@ -77,5 +79,25 @@ public class MapPreferenceImpl extends BasePreferenceImpl implements MapPreferen
     @Override
     public boolean isAlreadyDataChoosen() {
         return getBoolean(ALREADY_DATA_CHOOSEN);
+    }
+
+    @Override
+    public boolean isDateSelected() {
+        return getBoolean(IS_DATE_SELECTED);
+    }
+
+    @Override
+    public void putDateSelected(boolean value) {
+        put(IS_DATE_SELECTED, value);
+    }
+
+    @Override
+    public boolean isTimeSelected() {
+        return getBoolean(IS_TIME_SELECTED);
+    }
+
+    @Override
+    public void putTimeSelected(boolean value) {
+        put(IS_TIME_SELECTED, value);
     }
 }

@@ -15,6 +15,7 @@ import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerInfoRequest;
 import com.squareup.picasso.Picasso;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,6 +58,11 @@ public class PassengerInfoRequestAdapter extends BaseAdapter<PassengerInfoReques
     @Override
     protected MyQuotaViewHolder getViewHolder(View view) {
         return new MyQuotaViewHolder(view);
+    }
+
+    @Override
+    public List<PassengerInfoRequest> getItems() {
+        return items;
     }
 
     class MyQuotaViewHolder extends RecyclerView.ViewHolder {

@@ -31,5 +31,13 @@ public interface MapPreference {
 
     boolean isAlreadyDataChoosen();
 
+    boolean isDateSelected();
+
+    void putDateSelected(boolean value);
+
+    boolean isTimeSelected();
+
+    void putTimeSelected(boolean value);
+
 
 }

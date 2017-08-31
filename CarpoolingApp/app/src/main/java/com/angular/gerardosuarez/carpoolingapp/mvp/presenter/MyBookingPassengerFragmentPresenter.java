@@ -52,12 +52,6 @@ public class MyBookingPassengerFragmentPresenter extends BaseFragmentPresenter {
         }
     }
 
-    public void unsubscribeFirebaseListener() {
-        if (bookingPassengerListener != null) {
-            databaseRef.removeEventListener(bookingPassengerListener);
-        }
-    }
-
     //MyPassengerDriverService
     public void getDriversRequestInfo() {
         if (thereAreData) {

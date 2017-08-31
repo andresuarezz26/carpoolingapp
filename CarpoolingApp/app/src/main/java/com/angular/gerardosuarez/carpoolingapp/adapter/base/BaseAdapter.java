@@ -118,4 +118,6 @@ public abstract class BaseAdapter<T, OT, VH extends RecyclerView.ViewHolder> ext
         items.clear();
         notifyDataSetChanged();
     }
+
+    public abstract List<T> getItems();
 }

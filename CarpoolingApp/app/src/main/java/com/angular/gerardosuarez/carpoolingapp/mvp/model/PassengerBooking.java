@@ -57,4 +57,11 @@ public class PassengerBooking {
     public void setKey(String key) {
         this.key = key;
     }
+
+    public void setUserAttributes(User user) {
+        this.phone = user.phone;
+        this.email = user.email;
+        this.name = user.name;
+        this.photoUri = user.photo_uri;
+    }
 }

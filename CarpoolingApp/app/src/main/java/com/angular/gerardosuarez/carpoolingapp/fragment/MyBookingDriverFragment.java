@@ -15,6 +15,7 @@ import com.angular.gerardosuarez.carpoolingapp.service.MyBookingDriverService;
 import com.angular.gerardosuarez.carpoolingapp.service.UserService;
 
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MyBookingDriverFragment extends Fragment {
 
@@ -44,5 +45,15 @@ public class MyBookingDriverFragment extends Fragment {
     public void onResume() {
         super.onResume();
         presenter.getRequestsOfDriver();
+    }
+
+    @OnClick(R.id.btn_start_travel)
+    void onStartTravelClick() {
+        presenter.onStartTravel();
+    }
+
+    @OnClick(R.id.btn_cancel_route)
+    void onCancelBooking() {
+        presenter.onCancelRoute();
     }
 }

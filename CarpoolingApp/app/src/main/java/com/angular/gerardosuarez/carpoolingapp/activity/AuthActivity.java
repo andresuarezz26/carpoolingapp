@@ -93,7 +93,6 @@ public class AuthActivity extends BaseActivity implements OnCompleteListener<Aut
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 Log.d(TAG, "user:" + user);
                 if (user != null) {
-                    presenter.createOrUpdateUser(user);
                     presenter.showMain();
                 }
             }

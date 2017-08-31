@@ -36,7 +36,6 @@ public class AuthPresenter {
 
     public void createOrUpdateUser(@NonNull final FirebaseUser firebaseUser) {
         final User user = userService.mapFirebaseUserToUser(firebaseUser);
-        userService.createOrUpdateUser(user);
         createAuxUserNode(user);
     }
 
