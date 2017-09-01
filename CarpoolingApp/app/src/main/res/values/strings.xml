@@ -53,4 +53,8 @@
     <string name="deleted_hour_and_date">Ha cambiado de rol. Su hora y día fueron borradas.</string>
     <string name="error_time_range">Debe usar rangos de media hora. Ej: 6:30, 5:00</string>
     <string name="title_activity_video">Tutorial</string>
+    <string name="txt_app_title">MIS CUPOS</string>
+    <string name="txt_app_slogan">La movilidad en comunidad</string>
+    <string name="text_i_am_drvier">Soy conductor</string>
+    <string name="text_i_am_passenger">Soy pasajero</string>
 </resources>
