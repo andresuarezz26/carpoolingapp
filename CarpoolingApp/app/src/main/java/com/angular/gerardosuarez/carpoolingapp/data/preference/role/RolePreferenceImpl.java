@@ -7,6 +7,7 @@ import com.angular.gerardosuarez.carpoolingapp.data.preference.BasePreferenceImp
 public class RolePreferenceImpl extends BasePreferenceImpl implements RolePreference {
 
     private final static String CURRENT_ROLE = "role";
+    private final static String CURRENT_TAG = "tag";
     public final static String NAME = "role_preference";
 
     public RolePreferenceImpl(Context context, String name) {
@@ -21,5 +22,15 @@ public class RolePreferenceImpl extends BasePreferenceImpl implements RolePrefer
     @Override
     public String getCurrentRole() {
         return getString(CURRENT_ROLE);
+    }
+
+    @Override
+    public void putCurrentTag(String value) {
+        put(CURRENT_TAG, value);
+    }
+
+    @Override
+    public String getCurrentTag() {
+        return getString(CURRENT_TAG);
     }
 }

@@ -67,7 +67,7 @@ public class NavigationManager {
     private void goToMyProfileFragmentWithoutBackStack() {
         popEveryFragment();
         hideMapFragment();
-        openWithoutBackStack(new MyProfileFragment(), MyProfileFragment.TAG);
+        openWithoutBackStack(new MyProfileFragment());
     }
 
     public void goToMapFragment() {
@@ -111,16 +111,34 @@ public class NavigationManager {
     }
 
     private void open(Fragment fragment, String tag) {
-        if (fragmentManager != null) {
-            fragmentManager
-                    .beginTransaction()
-                    .replace(R.id.main_container, fragment)
-                    .addToBackStack(tag)
-                    .commit();
+        if (fragmentManager == null) return;
+        Fragment currentFragment = fragmentManager.findFragmentById(R.id.main_container);
+        if (currentFragment != null) {
+            if (!currentFragment.getClass().equals(fragment.getClass())) {
+                addToBackStack(fragment, fragment.getClass().getName());
+            }
+        } else {
+            addToBackStack(fragment, tag);
         }
     }
 
-    private void openWithoutBackStack(Fragment fragment, String tag) {
+    private void addToBackStack(Fragment fragment, String tag) {
+        boolean addBackStack = shouldAddFragmentToBackStack(tag);
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.main_container, fragment)
+                .addToBackStack(addBackStack ? tag : null)
+                .commit();
+    }
+
+    private boolean shouldAddFragmentToBackStack(String tag) {
+        boolean fragmentPopped = fragmentManager.popBackStackImmediate(tag, 0);
+        return fragmentPopped ||
+                !CommunityChooserFragment.TAG.equalsIgnoreCase(tag)
+                        && !RegisterFragment.TAG.equalsIgnoreCase(tag);
+    }
+
+    private void openWithoutBackStack(Fragment fragment) {
         if (fragmentManager != null) {
             fragmentManager
                     .beginTransaction()

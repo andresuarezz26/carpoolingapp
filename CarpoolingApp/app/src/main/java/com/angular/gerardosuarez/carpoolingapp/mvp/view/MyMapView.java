@@ -265,8 +265,12 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
     }
 
     private void removeLocationUpdates() {
-        if (mGoogleApiClient != null && getFragment() != null) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, getFragment());
+        try {
+            if (mGoogleApiClient != null && getFragment() != null) {
+                LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, getFragment());
+            }
+        } catch (IllegalStateException e) {
+            Timber.e(e.toString(), e);
         }
     }
 
