@@ -38,5 +38,13 @@
         <item name="colorControlActivated">@color/cupos_blue</item>
     </style>
 
+    <style name="FacebookLoginButton">
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_height">140dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">20dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style>
+
 
 </resources>
