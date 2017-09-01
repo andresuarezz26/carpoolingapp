@@ -4,10 +4,12 @@
     <item
         android:id="@+id/action_my_profile"
         android:enabled="true"
+        android:icon="@drawable/icon_my_profile"
         android:title="@string/text_menu_my_profile"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_my_quota"
+        android:icon="@drawable/icon_my_booking"
         android:enabled="true"
         android:title="@string/text_menu_my_quota"
         app:showAsAction="ifRoom" />
