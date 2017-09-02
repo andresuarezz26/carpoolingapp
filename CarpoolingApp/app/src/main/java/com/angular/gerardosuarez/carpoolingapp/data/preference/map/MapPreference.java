@@ -13,7 +13,7 @@ public interface MapPreference {
 
     void putTime(String value);
 
-    String getTime();
+    String getHour();
 
     void putCommunity(String value);
 

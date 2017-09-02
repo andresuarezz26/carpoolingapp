@@ -119,13 +119,14 @@ public class NavigationManager {
 
     private void addToBackStack(Fragment fragment, String tag) {
         boolean addBackStack = isThisFragmentOnNoBackStackGroup(tag);
-        if (!fragmentManager.popBackStackImmediate(tag, 0)) {
-            fragmentManager
-                    .beginTransaction()
-                    .replace(R.id.main_container, fragment)
-                    .addToBackStack(addBackStack ? tag : null)
-                    .commit();
-        }
+        //boolean popFragment = fragmentManager.popBackStackImmediate(tag, 0);
+        //if (!popFragment) {
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.main_container, fragment)
+                .addToBackStack(null)
+                .commit();
+        //}
     }
 
     private boolean isThisFragmentOnNoBackStackGroup(String tag) {

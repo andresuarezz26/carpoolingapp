@@ -49,7 +49,7 @@ public class BaseFragmentPresenter {
             view.showToast(R.string.error_empty_date);
             return false;
         }
-        hour = mapPreference.getTime();
+        hour = mapPreference.getHour();
         if (TextUtils.isEmpty(hour)) {
             view.showToast(R.string.error_empty_hour);
             return false;
@@ -70,7 +70,7 @@ public class BaseFragmentPresenter {
         if (TextUtils.isEmpty(date)) {
             return false;
         }
-        hour = mapPreference.getTime();
+        hour = mapPreference.getHour();
         return !TextUtils.isEmpty(hour);
     }
 
@@ -87,7 +87,7 @@ public class BaseFragmentPresenter {
         if (getMapPreferencesWithoutErrorMsg()) {
             RequestInfo requestInfo = new RequestInfo();
             requestInfo.setDate(mapPreference.getDate());
-            requestInfo.setHour(mapPreference.getTime());
+            requestInfo.setHour(mapPreference.getHour());
             requestInfo.setCommunity(mapPreference.getCommunity());
             requestInfo.setFromOrTo(mapPreference.getFromOrTo());
             return requestInfo;

@@ -362,7 +362,7 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
     public void onTimeSelected(String time) {
         if (time != null) {
             mapPreference.putTimeSelected(true);
-            view.setButtonHour(time);
+            view.setButtonHour(StringUtils.formatHour(time));
             mapPreference.putTime(time);
             if (mapPreference.isDateSelected()) {
                 String role = rolePreference.getCurrentRole();
@@ -411,6 +411,17 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
         view.setTextLocationText(StringUtils.getFromOrToFormattedText(
                 mapPreference.getFromOrTo() == null ? MapPreference.FROM : mapPreference.getFromOrTo(),
                 mapPreference.getCommunity()));
+        if (mapPreference.getDate() == null) {
+            view.setButtonDate("Fecha");
+        } else {
+            view.setButtonDate(StringUtils.formatDateWithTodayLogic(mapPreference.getDate()));
+        }
+        if (mapPreference.getHour() == null) {
+            view.setButtonHour("Hora");
+        } else {
+            view.setButtonHour(StringUtils.formatHour(mapPreference.getHour()));
+        }
+
     }
 
     private class OnPassengerRequestingBookingObserver extends DisposableObserver<Pair<PassengerBooking, RequestInfo>> {

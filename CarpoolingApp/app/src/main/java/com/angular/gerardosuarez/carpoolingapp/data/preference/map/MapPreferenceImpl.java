@@ -37,7 +37,7 @@ public class MapPreferenceImpl extends BasePreferenceImpl implements MapPreferen
     }
 
     @Override
-    public String getTime() {
+    public String getHour() {
         return getString(TIME);
     }
 

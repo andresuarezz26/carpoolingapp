@@ -21,7 +21,6 @@ import com.angular.gerardosuarez.carpoolingapp.fragment.MyMapFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.base.FragmentView;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerBooking;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.RequestInfo;
-import com.angular.gerardosuarez.carpoolingapp.utils.StringUtils;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
@@ -67,7 +66,7 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
 
     @BindView(R.id.switch_from_to)
     Switch switchFromTo;
-    @BindView(R.id.edit_location)
+    @BindView(R.id.txt_from_to_location)
     TextView textLocation;
     @BindView(R.id.btn_hour)
     Button btnHour;
@@ -292,13 +291,11 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
     }
 
     public void setButtonHour(String hour) {
-        btnHour.setText(StringUtils.formatHour(hour));
-        //btnHour.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        btnHour.setText(hour);
     }
 
     public void setButtonDate(String date) {
         btnDate.setText(date);
-        //btnDate.setBackgroundColor(getResources().getColor(R.color.colorAccent));
     }
 
     public void clearMap() {
