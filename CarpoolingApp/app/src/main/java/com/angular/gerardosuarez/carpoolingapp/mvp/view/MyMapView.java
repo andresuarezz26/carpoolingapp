@@ -187,6 +187,7 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
     }
 
     public void setLocationRequest() {
+        if (getActivity() == null) return;
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(1000);
         mLocationRequest.setFastestInterval(1000);
@@ -194,15 +195,23 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
         if (ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, getFragment());
+            try {
+                if (mGoogleApiClient != null && mLocationRequest != null) {
+                    LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, getFragment());
+                }
+            } catch (IllegalStateException e) {
+                Timber.e(e.getMessage(), e);
+            }
         }
     }
 
     public void goToCurrentLocation(LatLng latLng, String currentAddress) {
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM);
-        map.animateCamera(cameraUpdate);
-        removeLocationUpdates();
-        setTextAutocompleteFragmentWithText(currentAddress);
+        if (map != null) {
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM);
+            map.animateCamera(cameraUpdate);
+            removeLocationUpdates();
+            setTextAutocompleteFragmentWithText(currentAddress);
+        }
     }
 
     public void requestPermissionsActivity() {

@@ -48,19 +48,16 @@ public class NavigationManager {
     }
 
     private void goToRegisterFragment() {
-        popEveryFragment();
         hideMapFragment();
         open(new RegisterFragment(), RegisterFragment.TAG);
     }
 
     public void goToMyProfileFragment() {
         popEveryFragment();
-        hideMapFragment();
         open(new MyProfileFragment(), MyProfileFragment.TAG);
     }
 
     private void gotToCommunityChooserFragmentWithotBackStack() {
-        popEveryFragment();
         open(new CommunityChooserFragment(), CommunityChooserFragment.TAG);
     }
 
@@ -71,7 +68,6 @@ public class NavigationManager {
     }
 
     public void goToMapFragment() {
-        popEveryFragment();
         String role = rolePreference.getCurrentRole();
         if (StringUtils.isEmpty(role)) {
             return;
@@ -81,12 +77,10 @@ public class NavigationManager {
     }
 
     public void goToCommunityChooserFragment() {
-        popEveryFragment();
         open(new CommunityChooserFragment(), CommunityChooserFragment.TAG);
     }
 
     public void goToMyBookingsFragment() {
-        popEveryFragment();
         hideMapFragment();
         String role = rolePreference.getCurrentRole();
         if (StringUtils.isEmpty(role)) {
@@ -112,30 +106,32 @@ public class NavigationManager {
 
     private void open(Fragment fragment, String tag) {
         if (fragmentManager == null) return;
+        int backStackCount = fragmentManager.getBackStackEntryCount();
         Fragment currentFragment = fragmentManager.findFragmentById(R.id.main_container);
         if (currentFragment != null) {
             if (!currentFragment.getClass().equals(fragment.getClass())) {
                 addToBackStack(fragment, fragment.getClass().getName());
             }
         } else {
-            addToBackStack(fragment, tag);
+            addToBackStack(fragment, fragment.getClass().getName());
         }
     }
 
     private void addToBackStack(Fragment fragment, String tag) {
-        boolean addBackStack = shouldAddFragmentToBackStack(tag);
-        fragmentManager
-                .beginTransaction()
-                .replace(R.id.main_container, fragment)
-                .addToBackStack(addBackStack ? tag : null)
-                .commit();
+        boolean addBackStack = isThisFragmentOnNoBackStackGroup(tag);
+        if (!fragmentManager.popBackStackImmediate(tag, 0)) {
+            fragmentManager
+                    .beginTransaction()
+                    .replace(R.id.main_container, fragment)
+                    .addToBackStack(addBackStack ? tag : null)
+                    .commit();
+        }
     }
 
-    private boolean shouldAddFragmentToBackStack(String tag) {
-        boolean fragmentPopped = fragmentManager.popBackStackImmediate(tag, 0);
-        return fragmentPopped ||
-                !CommunityChooserFragment.TAG.equalsIgnoreCase(tag)
-                        && !RegisterFragment.TAG.equalsIgnoreCase(tag);
+    private boolean isThisFragmentOnNoBackStackGroup(String tag) {
+
+        return !CommunityChooserFragment.class.getName().equalsIgnoreCase(tag)
+                && !RegisterFragment.class.getName().equalsIgnoreCase(tag);
     }
 
     private void openWithoutBackStack(Fragment fragment) {
@@ -158,12 +154,10 @@ public class NavigationManager {
 
     private void popEveryFragment() {
         int backStackCount = fragmentManager.getBackStackEntryCount();
-        /*for (int i = 0; i < backStackCount; i++) {
+        for (int i = 0; i < backStackCount; i++) {
             String backStackId = fragmentManager.getBackStackEntryAt(i).getName();
-            if (!MyMapFragment.TAG.equals(backStackId)) {
-                fragmentManager.popBackStack(backStackId, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            }
-        }*/
+            fragmentManager.popBackStack(backStackId, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
     }
 
     public void setToPassengerRole() {
