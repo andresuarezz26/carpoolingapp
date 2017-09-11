@@ -9,11 +9,14 @@ import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreference;
 import com.angular.gerardosuarez.carpoolingapp.fragment.CommunityChooserFragment;
+import com.angular.gerardosuarez.carpoolingapp.fragment.ConfigurationFragment;
+import com.angular.gerardosuarez.carpoolingapp.fragment.InformationAppFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyBookingDriverFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyBookingPassengerFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyMapFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyProfileFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.RegisterFragment;
+import com.angular.gerardosuarez.carpoolingapp.fragment.TermsAndConditionFragment;
 import com.angular.gerardosuarez.carpoolingapp.utils.StringUtils;
 
 public class NavigationManager {
@@ -35,30 +38,41 @@ public class NavigationManager {
         return (MyMapFragment) fragmentManager.findFragmentByTag(MyMapFragment.TAG);
     }
 
+
     public void chooseInitialScreen() {
-        if (mapPreference.isAlreadyRegister()) {
-            if (mapPreference.getCommunity() != null) {
-                goToMyProfileFragmentWithoutBackStack();
+        if (mapPreference.areTermsAndConditionAccepted()) {
+            if (mapPreference.isAlreadyRegister()) {
+                if (mapPreference.getCommunity() != null) {
+                    goToMyProfileFragmentWithoutBackStack();
+                } else {
+                    gotToCommunityChooserFragmentWithotBackStack();
+                }
             } else {
-                gotToCommunityChooserFragmentWithotBackStack();
+                goToRegisterFragment();
             }
         } else {
-            goToRegisterFragment();
+            goToTermsAndConditionFragment();
         }
+    }
+
+    //region GotoFragments
+
+    private void goToTermsAndConditionFragment() {
+        open(new TermsAndConditionFragment());
     }
 
     private void goToRegisterFragment() {
         hideMapFragment();
-        open(new RegisterFragment(), RegisterFragment.TAG);
+        open(new RegisterFragment());
     }
 
     public void goToMyProfileFragment() {
         popEveryFragment();
-        open(new MyProfileFragment(), MyProfileFragment.TAG);
+        open(new MyProfileFragment());
     }
 
     private void gotToCommunityChooserFragmentWithotBackStack() {
-        open(new CommunityChooserFragment(), CommunityChooserFragment.TAG);
+        open(new CommunityChooserFragment());
     }
 
     private void goToMyProfileFragmentWithoutBackStack() {
@@ -72,12 +86,16 @@ public class NavigationManager {
         if (StringUtils.isEmpty(role)) {
             return;
         }
-        open(new MyMapFragment(), MyMapFragment.TAG);
+        open(new MyMapFragment());
         //openMapFragment(new MyMapFragment(), MyMapFragment.TAG);
     }
 
     public void goToCommunityChooserFragment() {
-        open(new CommunityChooserFragment(), CommunityChooserFragment.TAG);
+        open(new CommunityChooserFragment());
+    }
+
+    public void goToConfigurationFragment() {
+        open(new ConfigurationFragment());
     }
 
     public void goToMyBookingsFragment() {
@@ -87,11 +105,17 @@ public class NavigationManager {
             return;
         }
         if (ROLE_DRIVER.equalsIgnoreCase(role)) {
-            open(new MyBookingDriverFragment(), MyBookingDriverFragment.TAG);
+            open(new MyBookingDriverFragment());
         } else {
-            open(new MyBookingPassengerFragment(), MyBookingPassengerFragment.TAG);
+            open(new MyBookingPassengerFragment());
         }
     }
+
+    public void goToInformatioAppFragment() {
+        open(new InformationAppFragment());
+    }
+
+    //endregion
 
     private void openMapFragment(Fragment fragment, String tag) {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -104,7 +128,7 @@ public class NavigationManager {
         transaction.commit();
     }
 
-    private void open(Fragment fragment, String tag) {
+    private void open(Fragment fragment) {
         if (fragmentManager == null) return;
         int backStackCount = fragmentManager.getBackStackEntryCount();
         Fragment currentFragment = fragmentManager.findFragmentById(R.id.main_container);
@@ -130,7 +154,6 @@ public class NavigationManager {
     }
 
     private boolean isThisFragmentOnNoBackStackGroup(String tag) {
-
         return !CommunityChooserFragment.class.getName().equalsIgnoreCase(tag)
                 && !RegisterFragment.class.getName().equalsIgnoreCase(tag);
     }

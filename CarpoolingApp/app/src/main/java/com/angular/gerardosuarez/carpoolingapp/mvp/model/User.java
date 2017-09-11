@@ -8,6 +8,9 @@ public class User {
     public String phone;
     public String photo_uri;
     public String name;
+    public String car_plate;
+    public String car_color;
+    public String car_model;
     private String key;
 
     public User() {

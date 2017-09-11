@@ -55,6 +55,9 @@ dependencies {
     //facebook
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
 
+    //Navigation view
+    compile 'com.github.ittianyu:BottomNavigationViewEx:1.2.1'
+
 }
 
 repositories {

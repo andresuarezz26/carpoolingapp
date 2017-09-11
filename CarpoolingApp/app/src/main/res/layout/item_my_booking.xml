@@ -40,13 +40,27 @@
         app:layout_constraintTop_toBottomOf="@+id/text_my_quota_name" />
 
     <TextView
-        android:id="@+id/text_my_quota_sector"
+        android:id="@+id/text_my_quota_phone"
+        style="@style/MyBookingDriverSubTexts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="100dp"
         android:layout_marginTop="-1dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_my_quota_address" />
+
+    <Button
+        android:id="@+id/btn_copy"
+        style="@style/RoundedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginRight="-31dp"
+        android:layout_marginTop="59dp"
+        android:contentDescription="@null"
+        android:text="@string/btn_copy_text"
+        android:textSize="12sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/btn_my_quota_remove"

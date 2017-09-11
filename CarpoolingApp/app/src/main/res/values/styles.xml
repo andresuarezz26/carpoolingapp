@@ -19,6 +19,24 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="TermsAndContidionsTitle">
+        <item name="android:textColor">@color/cupos_blue</item>
+        <item name="android:textSize">@dimen/title_text_size</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TermsAndContidionsContent">
+        <item name="android:textColor">@color/cupos_blue</item>
+        <item name="android:textSize">@dimen/content_text_size</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="TermsAndContidionsAccept">
+        <item name="android:textColor">@color/cupos_dark_gray</item>
+        <item name="android:textSize">@dimen/content_text_size</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
     <style name="RegisterText">
         <item name="android:textColor">@color/white</item>
         <item name="android:textColorHint">@color/cupos_dark_gray</item>
@@ -34,6 +52,15 @@
         <item name="android:background">@drawable/rounded_button_background</item>
     </style>
 
+    <style name="WhiteRectangularButton">
+        <item name="android:textColor">@color/cupos_dark_gray</item>
+        <item name="android:paddingStart">@dimen/margin_normal</item>
+        <item name="android:paddingEnd">@dimen/margin_normal</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:textSize">@dimen/content_text_size</item>
+
+    </style>
+
     <style name="SwitchCompatTheme">
         <item name="colorControlActivated">@color/cupos_blue</item>
     </style>
@@ -44,6 +71,12 @@
         <item name="android:layout_marginTop">10dp</item>
         <item name="android:layout_marginBottom">20dp</item>
         <item name="android:layout_gravity">center_horizontal</item>
+    </style>
+
+    <style name="ConfigurationTitle">
+        <item name="android:textColor">@color/cupos_dark_gray</item>
+        <item name="android:textSize">@dimen/big_text_size</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <!--MyBookingDriver -->

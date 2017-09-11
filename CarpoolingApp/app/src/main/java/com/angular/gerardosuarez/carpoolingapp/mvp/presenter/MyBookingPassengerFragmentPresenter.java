@@ -143,7 +143,7 @@ public class MyBookingPassengerFragmentPresenter extends BaseFragmentPresenter {
             thereIsDriver = false;
             putAlreadyDataChoosen(false);
             view.cleanFragmentView();
-            resetMapPreferences();
+            resetMapPreferencesUsedInMapFragment();
         }
     }
 }

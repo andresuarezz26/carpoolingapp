@@ -8,9 +8,13 @@
     <string name="permission_denied">Permiso no aceptado</string>
     <string name="driver">Conductor</string>
     <string name="passenger">Pasajero</string>
+    <!-- Main menu texts-->
     <string name="text_menu_my_profile">Mi Perfil</string>
     <string name="text_menu_my_quota">Mis Cupos</string>
     <string name="text_menu_map">Mapa</string>
+    <string name="text_menu_information_app">Info</string>
+    <string name="text_menu_configuration">Configuración</string>
+
     <string name="text_start_travel">Iniciar Recorrido</string>
     <string name="my_profile_driver">Conductor</string>
     <string name="text_community">Destino:Universidad Icesi</string>
@@ -24,19 +28,23 @@
     <string name="loginfb_cancel">La operacion se ha cancelado</string>
     <string name="loginfb_error">Ha ocurrido un error al iniciar con Facebook</string>
     <string name="loginfirebase_error">Ha ocurrido un error al iniciar con firebase</string>
+    <!-- Comunity Chooser-->
     <string name="choose_community">Elige tu comunidad</string>
     <string name="txt_icesi">Icesi</string>
     <string name="txt_javeriana">javeriana</string>
+    <!-- Register Screen-->
     <string name="register">Regístrate</string>
     <string name="register_name">Nombre y Apellido</string>
     <string name="register_email">Correo Electrónico</string>
     <string name="register_phone">Número de Celular</string>
-    <string name="register_btn">Continúa</string>
+    <string name="register_btn">Continuar</string>
+    <!-- Errors texts -->
     <string name="error_empty_date">Debe escoger una fecha</string>
     <string name="error_empty_hour">Debe escoger una hora</string>
     <string name="error_empty_community">Debe escoger una comunidad</string>
     <string name="error_empty_coordinates">Posición actual no detectada.Intente más tarde.</string>
     <string name="error_empty_from_or_to">Debes escoger lugar de partida y destino</string>
+
     <string name="text_cancel_booking">Cancelar Cupo</string>
     <string name="my_booking_passenger_searching">Buscando..</string>
     <string name="my_booking_passenger_description">Espera un poco, un cupo perfecto \n para ti  está a punto de llegar</string>
@@ -57,4 +65,25 @@
     <string name="txt_app_slogan">La movilidad en comunidad</string>
     <string name="text_i_am_drvier">Soy conductor</string>
     <string name="text_i_am_passenger">Soy pasajero</string>
+    <!-- Terms and conditions -->
+    <string name="terms_and_condition_title">Términos y condiciones</string>
+    <string name="terms_and_condition_content">\"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+        aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+        nulla pariatur. Excepteur sint occaecat cupidatat non proident,sunt in culpa qui officia deserunt mollit anim id est
+        laborum.\
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+        aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+        nulla pariatur. Excepteur sint occaecat cupidatat non proident,sunt in culpa qui officia deserunt mollit anim id est
+        laborum.
+        "</string>
+    <string name="terms_and_condition_accept">Acepto los términos y\ncondiciones y política \nde tratamiento de  \ndatos personales</string>
+    <string name="close_sesion">Cerrar Sesión</string>
+    <string name="report_issue">Reportar un problema</string>
+    <string name="btn_copy_text">copiar</string>
+    <string name="car_plate">Placa</string>
+    <string name="car_color">Color</string>
+    <string name="car_model">Modelo</string>
+    <string name="are_your_driver">Eres conductor?</string>
 </resources>

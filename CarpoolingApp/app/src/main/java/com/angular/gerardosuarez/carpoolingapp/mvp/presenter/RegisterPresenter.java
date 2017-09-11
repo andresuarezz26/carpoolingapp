@@ -8,6 +8,12 @@ import com.angular.gerardosuarez.carpoolingapp.mvp.base.BaseFragmentPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.User;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.RegisterView;
 import com.angular.gerardosuarez.carpoolingapp.service.UserService;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
+import com.google.firebase.database.ValueEventListener;
+
+import timber.log.Timber;
 
 
 public class RegisterPresenter extends BaseFragmentPresenter {
@@ -25,9 +31,34 @@ public class RegisterPresenter extends BaseFragmentPresenter {
     public void init() {
         User currentUser = getCurrentUser();
         if (currentUser != null) {
-            view.setInitialTexts(currentUser.name, currentUser.email);
+            listenForCurrentUser(currentUser.getKey());
         }
         hideMenu();
+    }
+
+    private void listenForCurrentUser(String uid) {
+        userService.getUserByUid(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                try {
+                    User user = dataSnapshot.getValue(User.class);
+                    view.setInitialTexts(
+                            user.name,
+                            user.email,
+                            user.phone,
+                            user.car_plate,
+                            user.car_color,
+                            user.car_model);
+                } catch (DatabaseException e) {
+                    Timber.e(e.getMessage(), e);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Timber.e(databaseError.getMessage(), databaseError);
+            }
+        });
     }
 
     public boolean saveUserData() {

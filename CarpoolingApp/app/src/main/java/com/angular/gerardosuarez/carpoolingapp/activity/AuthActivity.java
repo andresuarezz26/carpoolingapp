@@ -68,8 +68,7 @@ public class AuthActivity extends BaseActivity implements OnCompleteListener<Aut
         }
 
         presenter.init();
-
-
+        mLoginButton.setReadPermissions("email", "public_profile");
         mLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -94,6 +93,8 @@ public class AuthActivity extends BaseActivity implements OnCompleteListener<Aut
                 Log.d(TAG, "user:" + user);
                 if (user != null) {
                     presenter.showMain();
+                    removeAuthListener();
+                    mLoginButton.unregisterCallback(mCallbackManager);
                 }
             }
         };
@@ -112,6 +113,11 @@ public class AuthActivity extends BaseActivity implements OnCompleteListener<Aut
                     if (user != null) {
                         presenter.createOrUpdateUser(user);
                         presenter.showMain();
+                        removeAuthListener();
+                        mLoginButton.unregisterCallback(mCallbackManager);
+                    } else {
+                        Toast.makeText(AuthActivity.this, "Fallo autenticación",
+                                Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -144,6 +150,10 @@ public class AuthActivity extends BaseActivity implements OnCompleteListener<Aut
     @Override
     public void onStop() {
         super.onStop();
+        removeAuthListener();
+    }
+
+    private void removeAuthListener() {
         if (mAuthListener != null) {
             firebaseAuth.removeAuthStateListener(mAuthListener);
         }

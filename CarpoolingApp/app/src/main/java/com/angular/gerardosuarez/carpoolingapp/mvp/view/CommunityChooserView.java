@@ -9,10 +9,6 @@ import com.angular.gerardosuarez.carpoolingapp.mvp.base.FragmentView;
 
 import butterknife.ButterKnife;
 
-/**
- * Created by gerardosuarez on 7/08/17.
- */
-
 public class CommunityChooserView extends FragmentView<CommunityChooserFragment, Void> {
 
     BottomNavigationView bottomMenu;

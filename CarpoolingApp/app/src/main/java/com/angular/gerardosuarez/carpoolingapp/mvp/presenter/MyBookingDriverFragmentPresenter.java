@@ -123,7 +123,7 @@ public class MyBookingDriverFragmentPresenter extends BaseFragmentPresenter {
         if (!TextUtils.isEmpty(myUid)) {
             if (getMapPreferencesWithoutErrorMsg()) {
                 bookingDriverService.startRoute(getRoute(), view.getPassengerList(), myUid);
-                resetMapPreferences();
+                resetMapPreferencesUsedInMapFragment();
                 mapPreference.putDateSelected(false);
                 mapPreference.putTimeSelected(false);
                 mapPreference.putAlreadyDataChoosen(false);
@@ -136,7 +136,7 @@ public class MyBookingDriverFragmentPresenter extends BaseFragmentPresenter {
         if (!TextUtils.isEmpty(myUid)) {
             if (getMapPreferencesWithoutErrorMsg()) {
                 bookingDriverService.cancelCurrentRoute(getRoute(), view.getPassengerList(), myUid);
-                resetMapPreferences();
+                resetMapPreferencesUsedInMapFragment();
                 mapPreference.putDateSelected(false);
                 mapPreference.putTimeSelected(false);
                 mapPreference.putAlreadyDataChoosen(false);

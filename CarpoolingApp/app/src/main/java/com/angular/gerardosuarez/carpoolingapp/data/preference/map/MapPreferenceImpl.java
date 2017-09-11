@@ -8,14 +8,15 @@ public class MapPreferenceImpl extends BasePreferenceImpl implements MapPreferen
 
     private final static String CURRENT_ROLE = "role";
     public final static String NAME = "role_preference";
-    public static final String DATE = "DATE";
-    public static final String TIME = "TIME";
-    public static final String COMUNITY = "COMUNITY";
-    public static final String FROM_OR_TO = "FROM_OR_TO";
-    public static final String ALREADY_REGISTERED = "ALREADY_REGISTERED";
-    public static final String ALREADY_DATA_CHOOSEN = "ALREADY_DATA_CHOOSEN";
-    public static final String IS_DATE_SELECTED = "IS_DATE_SELECTED";
-    public static final String IS_TIME_SELECTED = "IS_TIME_SELECTED";
+    private static final String DATE = "DATE";
+    private static final String TIME = "TIME";
+    private static final String COMUNITY = "COMUNITY";
+    private static final String FROM_OR_TO = "FROM_OR_TO";
+    private static final String ALREADY_REGISTERED = "ALREADY_REGISTERED";
+    private static final String ALREADY_DATA_CHOOSEN = "ALREADY_DATA_CHOOSEN";
+    private static final String IS_DATE_SELECTED = "IS_DATE_SELECTED";
+    private static final String IS_TIME_SELECTED = "IS_TIME_SELECTED";
+    private static final String ARE_TERMS_AND_CONDITIONS_ACCEPTED = "ARE_TERMS_AND_CONDITIONS_ACCEPTED";
 
     public MapPreferenceImpl(Context context, String name) {
         super(context, name);
@@ -99,5 +100,15 @@ public class MapPreferenceImpl extends BasePreferenceImpl implements MapPreferen
     @Override
     public void putTimeSelected(boolean value) {
         put(IS_TIME_SELECTED, value);
+    }
+
+    @Override
+    public boolean areTermsAndConditionAccepted() {
+        return getBoolean(ARE_TERMS_AND_CONDITIONS_ACCEPTED);
+    }
+
+    @Override
+    public void putTermsAndConditionAccepted(boolean value) {
+        put(ARE_TERMS_AND_CONDITIONS_ACCEPTED, value);
     }
 }

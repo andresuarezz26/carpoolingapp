@@ -49,7 +49,7 @@ public class DriverInfoRequestAdapter extends BaseAdapter<DriverInfoRequest, Int
 
     @Override
     protected int getLayout() {
-        return R.layout.item_my_quota;
+        return R.layout.item_my_booking;
     }
 
     @NonNull

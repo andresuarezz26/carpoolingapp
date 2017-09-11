@@ -113,9 +113,22 @@ public class BaseFragmentPresenter {
         return userService.mapFirebaseUserToUser(firebaseUser);
     }
 
-    protected void resetMapPreferences() {
+    protected void resetMapPreferencesUsedInMapFragment() {
         mapPreference.putDate(null);
         mapPreference.putTime(null);
         mapPreference.putFromOrTo(MapPreference.FROM);
     }
+
+    protected void resetAllMapPreferences() {
+        mapPreference.putDate(null);
+        mapPreference.putTime(null);
+        mapPreference.putFromOrTo(MapPreference.FROM);
+        mapPreference.putAlreadyDataChoosen(false);
+        mapPreference.putCommunity(null);
+        mapPreference.putAlreadyRegister(false);
+        mapPreference.putTermsAndConditionAccepted(false);
+        mapPreference.putDateSelected(false);
+        mapPreference.putTimeSelected(false);
+    }
+
 }

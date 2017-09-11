@@ -9,13 +9,23 @@
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_my_quota"
-        android:icon="@drawable/icon_my_booking"
         android:enabled="true"
+        android:icon="@drawable/icon_my_booking"
         android:title="@string/text_menu_my_quota"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_map"
         android:enabled="true"
         android:title="@string/text_menu_map"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_information_app"
+        android:enabled="true"
+        android:title="@string/text_menu_information_app"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_configuration"
+        android:enabled="true"
+        android:title="@string/text_menu_configuration"
         app:showAsAction="ifRoom" />
 </menu>

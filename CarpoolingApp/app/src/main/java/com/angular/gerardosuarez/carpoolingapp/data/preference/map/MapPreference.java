@@ -39,5 +39,9 @@ public interface MapPreference {
 
     void putTimeSelected(boolean value);
 
+    boolean areTermsAndConditionAccepted();
+
+    void putTermsAndConditionAccepted(boolean value);
+
 
 }

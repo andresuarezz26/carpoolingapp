@@ -14,16 +14,17 @@ import com.angular.gerardosuarez.carpoolingapp.fragment.MyMapFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MainPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MainView;
 import com.angular.gerardosuarez.carpoolingapp.navigation.NavigationManager;
+import com.facebook.AccessToken;
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.facebook.AccessToken;
 
 
 public class MainActivity extends BaseActivity {
 
     @BindView(R.id.bottom_navigation)
-    BottomNavigationView bottomMenu;
+    BottomNavigationViewEx bottomMenu;
     MainPresenter presenter;
     private NavigationManager navigationManager;
 
@@ -38,7 +39,8 @@ public class MainActivity extends BaseActivity {
         final MapPreference mapPreference = new MapPreferenceImpl(this, MapPreferenceImpl.NAME);
         navigationManager = new NavigationManager(getFragmentManager(), rolePreference, mapPreference);
         navigationManager.chooseInitialScreen();
-
+        bottomMenu.enableShiftingMode(false);
+        bottomMenu.enableItemShiftingMode(false);
         bottomMenu.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -53,11 +55,17 @@ public class MainActivity extends BaseActivity {
                             case R.id.action_map:
                                 navigationManager.goToMapFragment();
                                 break;
+                            case R.id.action_information_app:
+                                navigationManager.goToInformatioAppFragment();
+                                break;
+                            case R.id.action_configuration:
+                                navigationManager.goToConfigurationFragment();
+                                break;
                         }
                         return true;
                     }
                 });
-        if (AccessToken.getCurrentAccessToken() == null){
+        if (AccessToken.getCurrentAccessToken() == null) {
             presenter.showLoginScreen();//metodo vacio
         }
     }
