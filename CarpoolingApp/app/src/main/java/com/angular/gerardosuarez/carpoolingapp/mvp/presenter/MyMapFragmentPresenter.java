@@ -113,13 +113,13 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
     }
 
     //region DriverServices
-    private void getQuotas() {
+    private void getBookingsAndAddMarkers() {
         if (getMapPreferencesWithoutErrorMsg()) {
-            getQuotas(community, fromOrTo, date, hour);
+            getBookingsAndAddMarkers(community, fromOrTo, date, hour);
         }
     }
 
-    private void getQuotas(@NonNull String comunity, @NonNull String origin, @NonNull String date, @NonNull String hour) {
+    private void getBookingsAndAddMarkers(@NonNull String comunity, @NonNull String origin, @NonNull String date, @NonNull String hour) {
         quotaPassengerListener = driverMapService.getQuotasPerCommunityOriginDateAndHour(comunity, origin, date, hour).
                 addValueEventListener(new ValueEventListener() {
                     @Override
@@ -367,7 +367,7 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
             if (mapPreference.isDateSelected()) {
                 String role = rolePreference.getCurrentRole();
                 if (role != null && role.equalsIgnoreCase(ROLE_DRIVER)) {
-                    getQuotas();
+                    getBookingsAndAddMarkers();
                 } else {
                     startDialogToPutPassengerBooking();
                 }
@@ -386,7 +386,7 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
             if (mapPreference.isTimeSelected()) {
                 String role = rolePreference.getCurrentRole();
                 if (role != null && role.equalsIgnoreCase(ROLE_DRIVER)) {
-                    getQuotas();
+                    getBookingsAndAddMarkers();
                     putAlreadyDataChoosen(true);
                 } else {
                     startDialogToPutPassengerBooking();

@@ -14,7 +14,6 @@ import com.angular.gerardosuarez.carpoolingapp.fragment.MyMapFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MainPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MainView;
 import com.angular.gerardosuarez.carpoolingapp.navigation.NavigationManager;
-import com.facebook.AccessToken;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import butterknife.BindView;
@@ -25,7 +24,8 @@ public class MainActivity extends BaseActivity {
 
     @BindView(R.id.bottom_navigation)
     BottomNavigationViewEx bottomMenu;
-    MainPresenter presenter;
+
+    private MainPresenter presenter;
     private NavigationManager navigationManager;
 
     @Override
@@ -35,12 +35,7 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
         presenter = new MainPresenter(new MainView(this));
         presenter.init();
-        final RolePreference rolePreference = new RolePreferenceImpl(this, RolePreferenceImpl.NAME);
-        final MapPreference mapPreference = new MapPreferenceImpl(this, MapPreferenceImpl.NAME);
-        navigationManager = new NavigationManager(getFragmentManager(), rolePreference, mapPreference);
-        navigationManager.chooseInitialScreen();
-        bottomMenu.enableShiftingMode(false);
-        bottomMenu.enableItemShiftingMode(false);
+        initNavigationManager();
         bottomMenu.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -65,9 +60,15 @@ public class MainActivity extends BaseActivity {
                         return true;
                     }
                 });
-        if (AccessToken.getCurrentAccessToken() == null) {
-            presenter.showLoginScreen();//metodo vacio
-        }
+    }
+
+    private void initNavigationManager() {
+        final RolePreference rolePreference = new RolePreferenceImpl(this, RolePreferenceImpl.NAME);
+        final MapPreference mapPreference = new MapPreferenceImpl(this, MapPreferenceImpl.NAME);
+        navigationManager = new NavigationManager(getFragmentManager(), rolePreference, mapPreference);
+        navigationManager.chooseInitialScreen();
+        bottomMenu.enableShiftingMode(false);
+        bottomMenu.enableItemShiftingMode(false);
     }
 
     @Override

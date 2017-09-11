@@ -80,6 +80,7 @@
         android:id="@+id/btn_community"
         android:layout_width="31dp"
         android:layout_height="29dp"
+        android:background="@drawable/icon_choose_comunity"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginEnd="@dimen/margin_normal"
         app:layout_constraintBottom_toBottomOf="parent"

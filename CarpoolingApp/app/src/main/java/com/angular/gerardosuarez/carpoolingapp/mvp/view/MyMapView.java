@@ -30,6 +30,8 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -163,10 +165,13 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
     }
 
     private void setMarker(LatLng latLng, String title, int id) {
+        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.custom_marker);
         map.addMarker(new MarkerOptions()
                 .position(latLng)
+                .icon(icon)
                 .title(title))
-                .setTag(id);
+                .setTag(id)
+        ;
     }
 
     private void setMarker(LatLng latLng, String title) {
