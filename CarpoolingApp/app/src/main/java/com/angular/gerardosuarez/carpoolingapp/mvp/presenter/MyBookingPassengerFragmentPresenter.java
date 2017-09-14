@@ -19,12 +19,13 @@ import timber.log.Timber;
 
 public class MyBookingPassengerFragmentPresenter extends BaseFragmentPresenter {
 
+    //Constructor
     private MyBookingPassengerView view;
-
-    private ValueEventListener bookingPassengerListener;
-
     private MyBookingPassengerService bookingPassengerService;
     private UserService userService;
+
+    //listeners
+    private ValueEventListener bookingPassengerListener;
 
     private boolean thereIsDriver = false;
     private boolean thereAreData;
@@ -52,7 +53,7 @@ public class MyBookingPassengerFragmentPresenter extends BaseFragmentPresenter {
         }
     }
 
-    //MyPassengerDriverService
+    //region MyDriverRequest
     public void getDriversRequestInfo() {
         if (thereAreData) {
             if (getMyUid() == null) return;
@@ -60,19 +61,7 @@ public class MyBookingPassengerFragmentPresenter extends BaseFragmentPresenter {
                     .addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                try {
-                                    view.cleanFragmentView();
-                                    DriverInfoRequest driverInfoRequest = snapshot.getValue(DriverInfoRequest.class);
-                                    if (driverInfoRequest != null) {
-                                        if (!DriverInfoRequest.STATUS_CANCELED.equalsIgnoreCase(driverInfoRequest.status)) {
-                                            setDriverAditionalInfo(snapshot.getKey(), driverInfoRequest);
-                                        }
-                                    }
-                                } catch (DatabaseException e) {
-                                    Timber.e(e.getMessage(), e);
-                                }
-                            }
+                            processDriverInfoRequest(dataSnapshot);
                         }
 
                         @Override
@@ -84,29 +73,27 @@ public class MyBookingPassengerFragmentPresenter extends BaseFragmentPresenter {
 
     }
 
-    private void setDriverAditionalInfo(final String uid, final DriverInfoRequest driverInfoRequest) {
+    private void processDriverInfoRequest(DataSnapshot dataSnapshot) {
+        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+            try {
+                view.cleanFragmentView();
+                DriverInfoRequest driverInfoRequest = snapshot.getValue(DriverInfoRequest.class);
+                if (driverInfoRequest != null) {
+                    if (!DriverInfoRequest.STATUS_CANCELED.equalsIgnoreCase(driverInfoRequest.status)) {
+                        setDriverAditionalInfoQuery(snapshot.getKey(), driverInfoRequest);
+                    }
+                }
+            } catch (DatabaseException e) {
+                Timber.e(e.getMessage(), e);
+            }
+        }
+    }
+
+    private void setDriverAditionalInfoQuery(final String uid, final DriverInfoRequest driverInfoRequest) {
         userService.getUserByUid(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                try {
-                    User user = dataSnapshot.getValue(User.class);
-                    if (user != null) {
-                        if (PassengerInfoRequest.STATUS_ACCEPTED.equalsIgnoreCase(driverInfoRequest.status)) {
-                            driverInfoRequest.setDriverPhone(user.phone);
-                            driverInfoRequest.setDriverEmail(user.email);
-                        }
-                        driverInfoRequest.setDriverName(user.name);
-                        driverInfoRequest.setDriverPhotoUri(user.photo_uri);
-                        driverInfoRequest.setKey(uid);
-                        view.makeViewsVisible();
-                        view.setDriverInfo(driverInfoRequest, date, hour);
-                        thereIsDriver = true;
-                        currentDriverInfo = driverInfoRequest;
-                        //view.add(driverInfoRequest);
-                    }
-                } catch (DatabaseException e) {
-                    Timber.e(e.getMessage(), e);
-                }
+                processDriverAdditionalInfo(dataSnapshot, driverInfoRequest, uid);
             }
 
             @Override
@@ -115,6 +102,29 @@ public class MyBookingPassengerFragmentPresenter extends BaseFragmentPresenter {
             }
         });
     }
+
+    private void processDriverAdditionalInfo(DataSnapshot dataSnapshot, final DriverInfoRequest driverInfoRequest, final String uid) {
+        try {
+            User user = dataSnapshot.getValue(User.class);
+            if (user != null) {
+                if (PassengerInfoRequest.STATUS_ACCEPTED.equalsIgnoreCase(driverInfoRequest.status)) {
+                    driverInfoRequest.setDriverPhone(user.phone);
+                    driverInfoRequest.setDriverEmail(user.email);
+                }
+                driverInfoRequest.setDriverName(user.name);
+                driverInfoRequest.setDriverPhotoUri(user.photo_uri);
+                driverInfoRequest.setKey(uid);
+                view.makeButtonAndImageVisibles();
+                view.setDriverInfo(driverInfoRequest, date, hour);
+                currentDriverInfo = driverInfoRequest;
+                thereIsDriver = true;
+            }
+        } catch (DatabaseException e) {
+            Timber.e(e.getMessage(), e);
+        }
+    }
+
+    //endregion
 
     public void onCancelBookingClick() {
         String currentUid = getMyUid();
@@ -130,7 +140,9 @@ public class MyBookingPassengerFragmentPresenter extends BaseFragmentPresenter {
     private void refuseDriverRequest() {
         if (currentDriverInfo != null) {
             if (getMapPreferencesWithoutErrorMsg()) {
-                bookingPassengerService.refuseDriverRequest(getRoute(), currentDriverInfo, getMyUid());
+                if (!TextUtils.isEmpty(getMyUid())) {
+                    bookingPassengerService.refuseDriverRequest(getRoute(), currentDriverInfo, getMyUid());
+                }
                 thereIsDriver = false;
                 view.setInitialSearchingDriverInfo();
             }
@@ -139,11 +151,19 @@ public class MyBookingPassengerFragmentPresenter extends BaseFragmentPresenter {
 
     private void cancelMYBooking() {
         if (getMapPreferencesWithoutErrorMsg()) {
-            bookingPassengerService.cancelMyBooking(getRoute(), getMyUid());
-            thereIsDriver = false;
-            putAlreadyDataChoosen(false);
-            view.cleanFragmentView();
-            resetMapPreferencesUsedInMapFragment();
+            if (!TextUtils.isEmpty(getMyUid())) {
+                bookingPassengerService.cancelMyBooking(getRoute(), getMyUid());
+                thereIsDriver = false;
+                putAlreadyDataChoosen(false);
+                view.cleanFragmentView();
+                resetMapPreferencesUsedInMapFragment();
+            }
+        }
+    }
+
+    public void unsuscribeFirebaseListener() {
+        if (bookingPassengerListener != null) {
+            databaseRef.removeEventListener(bookingPassengerListener);
         }
     }
 }

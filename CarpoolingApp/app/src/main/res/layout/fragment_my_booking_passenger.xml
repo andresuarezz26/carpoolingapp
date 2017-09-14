@@ -12,6 +12,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/margin_large"
+        android:contentDescription="@null"
         android:scaleType="fitXY" />
 
     <TextView
@@ -64,7 +65,6 @@
         android:layout_centerHorizontal="true"
         android:textColor="@color/cupos_dark_gray"
         android:textSize="18sp" />
-
 
     <Button
         android:id="@+id/btn_cancel_booking"

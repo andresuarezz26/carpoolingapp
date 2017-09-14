@@ -63,7 +63,6 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
     private UserService userService;
 
     private ValueEventListener quotaPassengerListener;
-    private String currentRole;
 
     private boolean mapWasTouched = false;
     private String currentAddress;
@@ -113,7 +112,7 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
     }
 
     //region DriverServices
-    private void getBookingsAndAddMarkers() {
+    public void getBookingsAndAddMarkers() {
         if (getMapPreferencesWithoutErrorMsg()) {
             getBookingsAndAddMarkers(community, fromOrTo, date, hour);
         }
@@ -176,7 +175,7 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
 
     //region
 
-    public void onDialogResponse(@Nullable PassengerBooking passengerBooking) {
+    public void onClickMarkerDialogResponse(@Nullable PassengerBooking passengerBooking) {
         if (passengerBooking != null) assignBookingToDriverAndPassenger(passengerBooking);
     }
 
@@ -321,7 +320,7 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
         view.goToCurrentLocation(latLng, getCurrentAddressFromLatLng(latLng));
     }
 
-    private void setAutocompleteFragmentText() {
+    public void setAutocompleteFragmentText() {
         currentAddress = getCurrentAddressFromCamera();
         view.setTextAutocompleteFragmentWithCurrentCoord(currentAddress);
     }
@@ -421,7 +420,15 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
         } else {
             view.setButtonHour(StringUtils.formatHour(mapPreference.getHour()));
         }
+        if (mapPreference.getFromOrTo() != null) {
+            view.setSwitchState(MapPreference.TO.equals(mapPreference.getFromOrTo()));
+        }
+    }
 
+    public void cleanMapIfNecessary() {
+        if (mapPreference.getDate() == null || mapPreference.getHour() == null) {
+            view.clearMap();
+        }
     }
 
     private class OnPassengerRequestingBookingObserver extends DisposableObserver<Pair<PassengerBooking, RequestInfo>> {

@@ -4,7 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
-import android.location.Location;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
@@ -48,11 +48,8 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
     private static final String DATE_PICKER = "datePicker";
     private static final String TIME_PICKER = "timePicker";
     private GoogleMap map;
-    LocationRequest mLocationRequest;
-    GoogleApiClient mGoogleApiClient;
-    Location mLastLocation;
-    private static final long MIN_TIME = 400;
-    private static final float MIN_DISTANCE = 1000;
+    private LocationRequest mLocationRequest;
+    private GoogleApiClient mGoogleApiClient;
 
     private static final double LATITUDE_CALI_FIRST = 3.5408;
     private static final double LONGITUDE_CALI_FIRST = -76.5367;
@@ -146,6 +143,12 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
         switchFromTo.setOnCheckedChangeListener(getFragment());
     }
 
+    public void setSwitchState(boolean checked) {
+        switchFromTo.setOnCheckedChangeListener(null);
+        switchFromTo.setChecked(checked);
+        switchFromTo.setOnCheckedChangeListener(getFragment());
+    }
+
     public void setTextLocationText(String text) {
         textLocation.setText(text);
     }
@@ -226,8 +229,13 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
         }
     }
 
+    @Nullable
     public LatLng getCurrentCoordinatesFromCamera() {
-        return map.getCameraPosition().target;
+        LatLng current = null;
+        if(map != null){
+            current = map.getCameraPosition().target;
+        }
+        return current;
     }
 
     public void addPassengerQuotaMarker(PassengerBooking passengerBooking, int id) {

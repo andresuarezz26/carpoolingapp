@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class MyBookingDriverService extends BaseFirebaseService {
 
-
+    @NonNull
     public DatabaseReference getRequestOfTheDriver(@NonNull String comunity,
                                                    @NonNull String origin,
                                                    @NonNull String date,
@@ -42,7 +42,7 @@ public class MyBookingDriverService extends BaseFirebaseService {
                 Map<String, Object> childUpdates = new HashMap<>();
                 childUpdates.put(MY_BOOKING_PASSENGER_SLASH + bookingsRoute + passengerUid + StringUtils.SLASH + currentUid, null);
                 childUpdates.put(MY_BOOKING_DRIVER_SLASH + bookingsRoute + currentUid + StringUtils.SLASH + passengerUid, null);
-                childUpdates.put(bookingsRoute + currentUid + STATUS, PassengerInfoRequest.STATUS_WAITING);
+                childUpdates.put(bookingsRoute + passengerUid + STATUS, PassengerInfoRequest.STATUS_WAITING);
                 databaseReference.updateChildren(childUpdates);
             }
         }
@@ -57,7 +57,7 @@ public class MyBookingDriverService extends BaseFirebaseService {
                 Map<String, Object> childUpdates = new HashMap<>();
                 childUpdates.put(MY_BOOKING_PASSENGER_SLASH + bookingsRoute + passengerUid + StringUtils.SLASH + currentUid, null);
                 childUpdates.put(MY_BOOKING_DRIVER_SLASH + bookingsRoute + currentUid + StringUtils.SLASH + passengerUid, null);
-                childUpdates.put(bookingsRoute + currentUid + STATUS, PassengerInfoRequest.STATUS_ACCEPTED);
+                childUpdates.put(bookingsRoute + passengerUid + STATUS, PassengerInfoRequest.STATUS_ACCEPTED);
                 databaseReference.updateChildren(childUpdates);
             }
         }

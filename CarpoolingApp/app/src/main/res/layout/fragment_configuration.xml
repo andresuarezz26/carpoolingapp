@@ -26,6 +26,17 @@
         android:textAllCaps="false"/>
 
     <Button
+        android:id="@+id/btn_active_user"
+        style="@style/WhiteRectangularButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txt_configuration_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:text="@string/report_issue"
+        android:textAllCaps="false"/>
+
+    <Button
         android:id="@+id/btn_close_session"
         style="@style/RoundedButton"
         android:layout_width="wrap_content"

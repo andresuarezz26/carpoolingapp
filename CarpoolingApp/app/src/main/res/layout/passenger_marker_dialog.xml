@@ -12,8 +12,8 @@
 
     <ImageView
         android:id="@+id/image_facebook"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_gravity="center_horizontal"
         android:background="@color/white"
         android:scaleType="fitXY"
@@ -25,6 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Juana Perez"
+        android:gravity="center"
         android:textColor="@android:color/white"
         android:textSize="22sp" />
 
@@ -33,6 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:gravity="center"
         android:text="Carrera Falsa 123"
         android:textColor="@android:color/white"
         android:textSize="15sp" />
@@ -51,6 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="35dp"
             android:layout_marginTop="20dp"
+            android:gravity="center"
             android:text="@string/accept_quota"
             android:textAllCaps="false" />
 

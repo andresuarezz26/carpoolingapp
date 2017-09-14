@@ -83,11 +83,18 @@
     <style name="MyBookingDriverTextName">
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:maxLength">22</item>
+
         <item name="android:textColor">@color/cupos_dark_gray</item>
     </style>
 
     <style name="MyBookingDriverSubTexts">
         <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/cupos_dark_gray</item>
+    </style>
+
+    <style name="MyBookingDriverSubTextsPhone">
+        <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/cupos_dark_gray</item>
     </style>
 

@@ -52,4 +52,10 @@ public class MyBookingPassengerFragment extends Fragment {
         presenter.onCancelBookingClick();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.unsuscribeFirebaseListener();
+    }
+
 }

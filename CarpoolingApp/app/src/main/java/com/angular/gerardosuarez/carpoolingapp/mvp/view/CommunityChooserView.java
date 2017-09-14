@@ -11,7 +11,7 @@ import butterknife.ButterKnife;
 
 public class CommunityChooserView extends FragmentView<CommunityChooserFragment, Void> {
 
-    BottomNavigationView bottomMenu;
+    private BottomNavigationView bottomMenu;
 
     public CommunityChooserView(CommunityChooserFragment fragment) {
         super(fragment);

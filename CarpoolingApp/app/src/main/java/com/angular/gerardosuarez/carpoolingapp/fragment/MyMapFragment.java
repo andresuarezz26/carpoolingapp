@@ -5,7 +5,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,7 @@ import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference
 import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreferenceImpl;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreference;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreferenceImpl;
+import com.angular.gerardosuarez.carpoolingapp.fragment.base.OnPageSelectedListener;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerBooking;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MyMapFragmentPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyMapView;
@@ -48,7 +48,8 @@ public class MyMapFragment extends Fragment
         GoogleMap.OnMarkerClickListener,
         CompoundButton.OnCheckedChangeListener,
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener,
+        OnPageSelectedListener {
 
     public static final String TAG = "driver_map";
     public static final int PERMISSION_REQUEST_FINE_LOCATION = 1;
@@ -59,17 +60,19 @@ public class MyMapFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if (view != null) {
+       /* if (view != null) {
             ViewGroup parent = (ViewGroup) view.getParent();
             if (parent != null)
                 parent.removeView(view);
-        }
-        try {
-            view = inflater.inflate(R.layout.fragment_my_map, container, false);
-            ButterKnife.bind(this, view);
+        } */
+        View view = inflater.inflate(R.layout.fragment_my_map, container, false);
+        ButterKnife.bind(this, view);
+        /*try {
+
         } catch (InflateException e) {
-        /* map is already there, just return view as it is */
+        /* map is already there, just return view as it is
         }
+        */
 
         return view;
     }
@@ -94,6 +97,30 @@ public class MyMapFragment extends Fragment
 
     }
 
+    @Override
+    public void onPageSelected() {
+        if(presenter != null){
+            presenter.changeViewElements();
+            presenter.cleanMapIfNecessary();
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (presenter != null) {
+            presenter.changeViewElements();
+        }
+    }
+
+    @Override
+    public void setMenuVisibility(boolean menuVisible) {
+        super.setMenuVisibility(menuVisible);
+        if (presenter != null) {
+            presenter.changeViewElements();
+        }
+    }
+
     @OnClick(R.id.btn_hour)
     void onTimeClick() {
         presenter.showTimePickerFragment(new OnTimeSelectedObserver());
@@ -102,7 +129,9 @@ public class MyMapFragment extends Fragment
     //On switch changed
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        presenter.onSwitchChanged(isChecked);
+        if (presenter != null) {
+            presenter.onSwitchChanged(isChecked);
+        }
     }
 
     private class OnTimeSelectedObserver extends DisposableObserver<String> {
@@ -125,8 +154,10 @@ public class MyMapFragment extends Fragment
     @Override
     public void onDestroy() {
         super.onDestroy();
-        presenter.unsubscribeFirebaseListener();
-        presenter.unsubscribeObservers();
+        if (presenter != null) {
+            presenter.unsubscribeFirebaseListener();
+            presenter.unsubscribeObservers();
+        }
     }
 
     @OnClick(R.id.btn_date)
@@ -156,8 +187,11 @@ public class MyMapFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        presenter.setListeners();
-        presenter.changeViewElements();
+        if (presenter != null) {
+            presenter.setListeners();
+            presenter.changeViewElements();
+            presenter.getBookingsAndAddMarkers();
+        }
     }
 
     public void onRoleClicked(boolean newRole) {
@@ -183,7 +217,7 @@ public class MyMapFragment extends Fragment
     public void onMapReady(GoogleMap googleMap) {
         presenter.setMap(googleMap);
         presenter.init();
-        presenter.addMockMarkers();
+        presenter.setAutocompleteFragmentText();
     }
 
     //LocationListener callbacks
@@ -232,7 +266,7 @@ public class MyMapFragment extends Fragment
         @Override
         public void onNext(PassengerBooking passengerBooking) {
 
-            presenter.onDialogResponse(passengerBooking);
+            presenter.onClickMarkerDialogResponse(passengerBooking);
         }
 
         @Override

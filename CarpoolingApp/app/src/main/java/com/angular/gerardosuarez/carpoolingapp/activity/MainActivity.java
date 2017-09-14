@@ -74,7 +74,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        MyMapFragment fragment = navigationManager.getDriverMapFragment();
+        MyMapFragment fragment = navigationManager.getMapFragment();
         if (fragment != null) {
             fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
@@ -83,6 +83,16 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        /* if (navigationManager.isMyProfileFragment() ) {
+            bottomMenu.setVisibility(View.GONE);
+        }else{
+            bottomMenu.setVisibility(View.VISIBLE);
+        }*/
     }
 
     public NavigationManager getNavigationManager() {

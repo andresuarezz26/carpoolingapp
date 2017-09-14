@@ -56,4 +56,10 @@ public class MyBookingDriverFragment extends Fragment {
     void onCancelBooking() {
         presenter.onCancelRoute();
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.unsubscribeFirebaseListener();
+    }
 }

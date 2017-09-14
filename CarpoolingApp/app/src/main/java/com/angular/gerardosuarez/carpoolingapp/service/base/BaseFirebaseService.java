@@ -18,5 +18,4 @@ public abstract class BaseFirebaseService {
     protected BaseFirebaseService() {
         this.databaseReference = FirebaseDatabase.getInstance().getReference();
     }
-
 }

@@ -2,7 +2,8 @@ package com.angular.gerardosuarez.carpoolingapp.navigation;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
@@ -17,7 +18,10 @@ import com.angular.gerardosuarez.carpoolingapp.fragment.MyMapFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyProfileFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.RegisterFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.TermsAndConditionFragment;
+import com.angular.gerardosuarez.carpoolingapp.fragment.base.OnPageSelectedListener;
 import com.angular.gerardosuarez.carpoolingapp.utils.StringUtils;
+
+import java.util.HashMap;
 
 public class NavigationManager {
 
@@ -28,16 +32,59 @@ public class NavigationManager {
     private final static String ROLE_DRIVER = "driver";
     private final static String ROLE_PASSEGNER = "passenger";
 
-    public NavigationManager(FragmentManager fragmentManager, RolePreference rolePreference, MapPreference mapPreference) {
+    private HashMap<String, String> isMenuFragmentMap;
+
+    public NavigationManager(@NonNull FragmentManager fragmentManager, @NonNull RolePreference rolePreference, @NonNull MapPreference mapPreference) {
         this.fragmentManager = fragmentManager;
         this.rolePreference = rolePreference;
         this.mapPreference = mapPreference;
+        initMenuFragmentHas();
+        fragmentManager.addOnBackStackChangedListener(getListener());
     }
 
-    public MyMapFragment getDriverMapFragment() {
-        return (MyMapFragment) fragmentManager.findFragmentByTag(MyMapFragment.TAG);
+    private void initMenuFragmentHas() {
+        isMenuFragmentMap = new HashMap<>();
+        isMenuFragmentMap.put(MyMapFragment.class.getName(), StringUtils.EMPTY_STRING);
+        isMenuFragmentMap.put(MyBookingDriverFragment.class.getName(), StringUtils.EMPTY_STRING);
+        isMenuFragmentMap.put(MyBookingPassengerFragment.class.getName(), StringUtils.EMPTY_STRING);
+        isMenuFragmentMap.put(InformationAppFragment.class.getName(), StringUtils.EMPTY_STRING);
+        isMenuFragmentMap.put(ConfigurationFragment.class.getName(), StringUtils.EMPTY_STRING);
     }
 
+    private FragmentManager.OnBackStackChangedListener getListener()
+    {
+
+        return new FragmentManager.OnBackStackChangedListener()
+        {
+            public void onBackStackChanged()
+            {
+                if (fragmentManager != null)
+                {
+                    selectCurrentVisibleFragment();
+                }
+            }
+        };
+    }
+
+    private void selectCurrentVisibleFragment(){
+        int backStackCount = fragmentManager.getBackStackEntryCount();
+        if(backStackCount > 0 ){
+            int index = backStackCount - 1;
+            FragmentManager.BackStackEntry backEntry = fragmentManager.getBackStackEntryAt(index);
+            String tag = backEntry.getName();
+            Fragment fragment = fragmentManager.findFragmentByTag(tag);
+            onPageSelectedListener(fragment);
+        }
+    }
+
+    @Nullable
+    public MyMapFragment getMapFragment() {
+        Fragment fragment = fragmentManager.findFragmentByTag(MyMapFragment.class.getName());
+        if (fragment != null) {
+            return (MyMapFragment) fragment;
+        }
+        return null;
+    }
 
     public void chooseInitialScreen() {
         if (mapPreference.areTermsAndConditionAccepted()) {
@@ -45,7 +92,7 @@ public class NavigationManager {
                 if (mapPreference.getCommunity() != null) {
                     goToMyProfileFragmentWithoutBackStack();
                 } else {
-                    gotToCommunityChooserFragmentWithotBackStack();
+                    goToCommunityChooserFragment();
                 }
             } else {
                 goToRegisterFragment();
@@ -62,7 +109,6 @@ public class NavigationManager {
     }
 
     private void goToRegisterFragment() {
-        hideMapFragment();
         open(new RegisterFragment());
     }
 
@@ -71,14 +117,9 @@ public class NavigationManager {
         open(new MyProfileFragment());
     }
 
-    private void gotToCommunityChooserFragmentWithotBackStack() {
-        open(new CommunityChooserFragment());
-    }
-
     private void goToMyProfileFragmentWithoutBackStack() {
         popEveryFragment();
-        hideMapFragment();
-        openWithoutBackStack(new MyProfileFragment());
+        open(new MyProfileFragment());
     }
 
     public void goToMapFragment() {
@@ -87,7 +128,6 @@ public class NavigationManager {
             return;
         }
         open(new MyMapFragment());
-        //openMapFragment(new MyMapFragment(), MyMapFragment.TAG);
     }
 
     public void goToCommunityChooserFragment() {
@@ -99,7 +139,6 @@ public class NavigationManager {
     }
 
     public void goToMyBookingsFragment() {
-        hideMapFragment();
         String role = rolePreference.getCurrentRole();
         if (StringUtils.isEmpty(role)) {
             return;
@@ -117,63 +156,46 @@ public class NavigationManager {
 
     //endregion
 
-    private void openMapFragment(Fragment fragment, String tag) {
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        MyMapFragment mapFragment = (MyMapFragment) fragmentManager.findFragmentByTag(MyMapFragment.TAG);
-        if (mapFragment != null) {
-            transaction.show(mapFragment);
-        } else {
-            transaction.add(R.id.main_container, fragment, tag);
-        }
-        transaction.commit();
-    }
-
-    private void open(Fragment fragment) {
+    private void open(@NonNull Fragment fragment) {
         if (fragmentManager == null) return;
-        int backStackCount = fragmentManager.getBackStackEntryCount();
         Fragment currentFragment = fragmentManager.findFragmentById(R.id.main_container);
         if (currentFragment != null) {
             if (!currentFragment.getClass().equals(fragment.getClass())) {
-                addToBackStack(fragment, fragment.getClass().getName());
+                performFragmentTransaction(fragment, fragment.getClass().getName());
             }
         } else {
-            addToBackStack(fragment, fragment.getClass().getName());
+            performFragmentTransaction(fragment, fragment.getClass().getName());
         }
     }
 
-    private void addToBackStack(Fragment fragment, String tag) {
-        boolean addBackStack = isThisFragmentOnNoBackStackGroup(tag);
-        //boolean popFragment = fragmentManager.popBackStackImmediate(tag, 0);
-        //if (!popFragment) {
-        fragmentManager
-                .beginTransaction()
-                .replace(R.id.main_container, fragment)
-                .addToBackStack(null)
-                .commit();
-        //}
-    }
-
-    private boolean isThisFragmentOnNoBackStackGroup(String tag) {
-        return !CommunityChooserFragment.class.getName().equalsIgnoreCase(tag)
-                && !RegisterFragment.class.getName().equalsIgnoreCase(tag);
-    }
-
-    private void openWithoutBackStack(Fragment fragment) {
-        if (fragmentManager != null) {
-            fragmentManager
-                    .beginTransaction()
-                    .replace(R.id.main_container, fragment)
-                    .commit();
+    private void onPageSelectedListener(@NonNull Fragment fragment) {
+        if (fragment instanceof OnPageSelectedListener) {
+            ((OnPageSelectedListener) fragment).onPageSelected();
         }
     }
 
-    private void hideMapFragment() {
-        /*FragmentTransaction transaction = fragmentManager.beginTransaction();
-        MyMapFragment mapFragment = (MyMapFragment) fragmentManager.findFragmentByTag(MyMapFragment.TAG);
-        if (mapFragment != null) {
-            transaction.hide(mapFragment);
+    private void performFragmentTransaction(@NonNull Fragment fragment, @NonNull String fragmentClassName) {
+        boolean popFragment = fragmentManager.popBackStackImmediate(fragmentClassName, 0);
+        if (!popFragment) {
+            if (isAMenuFragment(fragment)) {
+                fragmentManager
+                        .beginTransaction()
+                        .add(R.id.main_container, fragment, fragmentClassName)
+                        .addToBackStack(fragmentClassName)
+                        .commit();
+            } else {
+                fragmentManager
+                        .beginTransaction()
+                        .replace(R.id.main_container, fragment, fragmentClassName)
+                        .addToBackStack(fragmentClassName)
+                        .commit();
+
+            }
         }
-        transaction.commit();*/
+    }
+
+    private boolean isAMenuFragment(@NonNull Fragment fragment) {
+        return isMenuFragmentMap.get(fragment.getClass().getName()) != null;
     }
 
     private void popEveryFragment() {
@@ -187,7 +209,7 @@ public class NavigationManager {
     public void setToPassengerRole() {
         boolean isANewRole = changeRoleLogic(rolePreference.getCurrentRole(), ROLE_PASSEGNER);
         rolePreference.putCurrentRole(ROLE_PASSEGNER);
-        MyMapFragment fragment = getDriverMapFragment();
+        MyMapFragment fragment = getMapFragment();
         if (fragment != null) {
             fragment.onRoleClicked(isANewRole);
         }
@@ -196,7 +218,7 @@ public class NavigationManager {
     public void setToDriverRole() {
         boolean isANewRole = changeRoleLogic(rolePreference.getCurrentRole(), ROLE_DRIVER);
         rolePreference.putCurrentRole(ROLE_DRIVER);
-        MyMapFragment fragment = getDriverMapFragment();
+        MyMapFragment fragment = getMapFragment();
         if (fragment != null) {
             fragment.onRoleClicked(isANewRole);
         }

@@ -1,10 +1,7 @@
 package com.angular.gerardosuarez.carpoolingapp.utils;
 
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.Html;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.Base64;
 
@@ -12,59 +9,28 @@ import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import timber.log.Timber;
 
 public final class StringUtils {
 
-    public static final String ENCODING = "UTF-8";
-    private static final String SPLIT_SEPARATOR = " ";
-    public static final String REGEX_FULL_NAME = "^[a-zA-Z0-9 - ! # $ % & ' * + - / = ? ^ _ ` { | } ~]*$";
-    public static final String REGEX_ONLY_SPACES = "[ ]*";
-    private static final String EMAIL_PATTERN = "^[A-Z0-9_.%+-]+@[A-Z0-9]+\\.[A-Z]{2,6}$";
     private static final String OUTPUT_CHARSET = "UTF-8";
     private static final String ERROR_ENCODING_STRING = "error encoding String";
     private static final String ERROR_DECODING_STRING = "error decoding String";
-    private static final String DECIMAL_FORMAT_WITH_CENTS = "###,###,##0.00";
-    private static final String DECIMAL_FORMAT_WITHOUT_CENTS = "###,###,##0.##";
-    public static final String LINE_SEPARATOR = "\n";
     public static final String EMPTY_STRING = "\u200B";
-    public static final String HORIZONTAL_ELLIPSIS = "%s\u2026";
-    public static final String DOUBLE_BREAK = "\n\n";
-    public static final String COLON = ",";
-    public static final String DOUBLE_POINT = ":";
     private static final String ZERO_STRING = "0";
     private static final int INT_TEN = 10;
-    private static final String DATE_PATTERN = "dd/mm/yyyy";
     public static final String SLASH = "/";
+    private static final String TODAY_STRING = "Hoy";
+    private static final String FROM = "Inicio:";
+    private static final String TO = "Destino:";
 
     private StringUtils() {
 
     }
 
-    public static boolean applyRegex(@NonNull final String regex, @NonNull final String value) {
-        final Pattern p = Pattern.compile(regex);
-        final Matcher m = p.matcher(value);
-        return m.matches();
-    }
-
-    @SuppressWarnings("deprecation")
-    public static Spanned fromHtml(String htmlFormattedString) {
-        if (TextUtils.isEmpty(htmlFormattedString)) {
-            return null;
-        }
-
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
-            return Html.fromHtml(htmlFormattedString, Html.FROM_HTML_MODE_COMPACT);
-        } else {
-            return Html.fromHtml(htmlFormattedString);
-        }
-    }
-
     public static String buildRoute(String community, String fromOrTo, String date, String hour) {
-        return fromOrTo + "-" + community + "/" + date + "/" + hour + "/";
+        return fromOrTo + "-" + community + SLASH + date + SLASH + hour + SLASH;
     }
 
     public static String addZeroToStart(int number) {
@@ -77,35 +43,6 @@ public final class StringUtils {
         return formatNumber;
     }
 
-    public static boolean isValidEmail(String email) {
-        Pattern validEmailAddressRegex = Pattern.compile(EMAIL_PATTERN, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = validEmailAddressRegex.matcher(email);
-        return matcher.find();
-    }
-
-    public static String capitalizeAllWords(final String value) {
-        if (TextUtils.isEmpty(value)) {
-            return null;
-        }
-
-        final StringBuilder builder = new StringBuilder();
-        final String[] values = value.split(SPLIT_SEPARATOR);
-        for (int i = 0; i < values.length; i++) {
-            String v = values[i];
-            if (TextUtils.isEmpty(v)) {
-                continue;
-            }
-            if (i > 0) {
-                builder.append(SPLIT_SEPARATOR);
-            }
-            builder.append(v.substring(0, 1).toUpperCase());
-            builder.append(v.substring(1).toLowerCase());
-        }
-        if (value.endsWith(SPLIT_SEPARATOR)) {
-            builder.append(SPLIT_SEPARATOR);
-        }
-        return builder.toString();
-    }
 
     public static String encodeString(String string) {
         if (TextUtils.isEmpty(string)) {
@@ -145,9 +82,9 @@ public final class StringUtils {
         if (date != null && date.length() != 9) return EMPTY_STRING;
         if (TextUtils.isEmpty(date)) return EMPTY_STRING;
         return date.substring(0, 2) +
-                "/" +
+                SLASH +
                 date.substring(3, 5) +
-                "/" +
+                SLASH +
                 date.substring(5, date.length());
     }
 
@@ -162,10 +99,10 @@ public final class StringUtils {
         String monthString = addZeroToStart(month);
         String finalDate = dayString + monthString + year;
         if (dateString.equalsIgnoreCase(finalDate)) {
-            return "Hoy";
+            return TODAY_STRING;
         } else {
             monthString = addZeroToStart(month + 1);
-            return dayString + "/" + monthString;
+            return dayString + SLASH + monthString;
         }
     }
 
@@ -180,9 +117,9 @@ public final class StringUtils {
         if (TextUtils.isEmpty(fromOrTo) || TextUtils.isEmpty(community)) return EMPTY_STRING;
         else {
             if (MapPreference.FROM.equalsIgnoreCase(fromOrTo)) {
-                return "Inicio: \n" + community;
+                return FROM + " \n" + community;
             } else {
-                return "Destino: \n" + community;
+                return TO + " \n" + community;
             }
         }
     }

@@ -3,6 +3,7 @@ package com.angular.gerardosuarez.carpoolingapp.fragment;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +11,14 @@ import android.view.ViewGroup;
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.activity.MainActivity;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreferenceImpl;
+import com.angular.gerardosuarez.carpoolingapp.fragment.base.OnPageSelectedListener;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MyProfilePresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyProfileView;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MyProfileFragment extends Fragment {
+public class MyProfileFragment extends Fragment implements OnPageSelectedListener{
 
     public static final String TAG = "my_profile";
     private MyProfilePresenter presenter;
@@ -27,6 +29,13 @@ public class MyProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_my_profile, container, false);
         ButterKnife.bind(this, view);
         return view;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        Log.e("setUserVisibleHint", "isVisibleToUser " + isVisibleToUser);
+
     }
 
     @Override
@@ -65,5 +74,12 @@ public class MyProfileFragment extends Fragment {
             return;
         }
         activity.getNavigationManager().goToCommunityChooserFragment();
+    }
+
+    @Override
+    public void onPageSelected() {
+        if(presenter != null){
+            presenter.hideMenu();
+        }
     }
 }

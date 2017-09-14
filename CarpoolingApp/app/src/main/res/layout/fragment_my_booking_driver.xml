@@ -9,7 +9,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_my_booking_driver"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="350dp"
         android:layout_marginEnd="@dimen/margin_normal"
         android:layout_marginStart="@dimen/margin_normal"
         android:layout_marginTop="@dimen/margin_large" />

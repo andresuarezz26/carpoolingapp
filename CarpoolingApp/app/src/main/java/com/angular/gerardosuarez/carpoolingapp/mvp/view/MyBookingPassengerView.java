@@ -46,7 +46,7 @@ public class MyBookingPassengerView extends FragmentView<MyBookingPassengerFragm
         if (activity == null) {
             return;
         }
-        textDriverDate.setText(StringUtils.formatDate(date));
+        textDriverDate.setText(StringUtils.formatDateWithTodayLogic(date));
         textDriverHour.setText(StringUtils.formatHour(hour));
     }
 
@@ -80,16 +80,16 @@ public class MyBookingPassengerView extends FragmentView<MyBookingPassengerFragm
         textDriverAddress.setText(StringUtils.EMPTY_STRING);
         textDriverDate.setText(StringUtils.EMPTY_STRING);
         textDriverHour.setText(StringUtils.EMPTY_STRING);
-        makeViewsInvisible();
+        makeButtonAndImageInvisibles();
 
     }
 
-    public void makeViewsVisible() {
+    public void makeButtonAndImageVisibles() {
         btnCancelButton.setVisibility(View.VISIBLE);
         imagePhoto.setVisibility(View.VISIBLE);
     }
 
-    private void makeViewsInvisible() {
+    private void makeButtonAndImageInvisibles() {
         btnCancelButton.setVisibility(View.INVISIBLE);
         imagePhoto.setVisibility(View.INVISIBLE);
     }
