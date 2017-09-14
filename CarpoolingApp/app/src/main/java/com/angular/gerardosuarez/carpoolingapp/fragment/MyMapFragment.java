@@ -105,22 +105,6 @@ public class MyMapFragment extends Fragment
         }
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (presenter != null) {
-            presenter.changeViewElements();
-        }
-    }
-
-    @Override
-    public void setMenuVisibility(boolean menuVisible) {
-        super.setMenuVisibility(menuVisible);
-        if (presenter != null) {
-            presenter.changeViewElements();
-        }
-    }
-
     @OnClick(R.id.btn_hour)
     void onTimeClick() {
         presenter.showTimePickerFragment(new OnTimeSelectedObserver());
@@ -189,7 +173,6 @@ public class MyMapFragment extends Fragment
         super.onResume();
         if (presenter != null) {
             presenter.setListeners();
-            presenter.changeViewElements();
             presenter.getBookingsAndAddMarkers();
         }
     }

@@ -34,6 +34,8 @@ public class TermsAndConditionView extends FragmentView<TermsAndConditionFragmen
     @BindView(R.id.radio_button_container)
     LinearLayout radioButtonContainer;
 
+    private WebView webView;
+
 
     public TermsAndConditionView(TermsAndConditionFragment fragment) {
         super(fragment);
@@ -50,11 +52,12 @@ public class TermsAndConditionView extends FragmentView<TermsAndConditionFragmen
             progressBar.setVisibility(View.VISIBLE);
             btnContinue.setVisibility(View.GONE);
             radioButtonContainer.setVisibility(View.GONE);
-            WebView webView = (WebView) activity.findViewById(R.id.webview);
+            webView = (WebView) activity.findViewById(R.id.webview);
             webView.getSettings().setJavaScriptEnabled(true);
             webView.getSettings().setDomStorageEnabled(true);
             webView.setWebViewClient(new SSLTolerentWebViewClient());
             webView.loadUrl(TERMS_AND_CONDITION_URL);
+            webView.setVisibility(View.GONE);
             hideMenu();
         }
     }
@@ -80,6 +83,7 @@ public class TermsAndConditionView extends FragmentView<TermsAndConditionFragmen
             progressBar.setVisibility(View.GONE);
             btnContinue.setVisibility(View.VISIBLE);
             radioButtonContainer.setVisibility(View.VISIBLE);
+            webView.setVisibility(View.VISIBLE);
         }
 
         @Override
