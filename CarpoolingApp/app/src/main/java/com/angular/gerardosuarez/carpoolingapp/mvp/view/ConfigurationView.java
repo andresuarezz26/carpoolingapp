@@ -15,6 +15,7 @@ import butterknife.ButterKnife;
 public class ConfigurationView extends FragmentView<ConfigurationFragment, Void> {
 
     private static final String REPORT_ISSUE_URL = "https://www.miscupos.com/reportarusuarioapp";
+    private static final String ACTIVATE_USER_URL = "https://www.miscupos.com/certificarusuario";
     private BottomNavigationView bottomMenu;
 
     public ConfigurationView(ConfigurationFragment fragment) {
@@ -53,5 +54,14 @@ public class ConfigurationView extends FragmentView<ConfigurationFragment, Void>
             activity.startActivity(i);
         }
 
+    }
+
+    public void goToActiveUserWebPage() {
+        final BaseActivity activity = getActivity();
+        if (activity != null) {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(ACTIVATE_USER_URL));
+            activity.startActivity(i);
+        }
     }
 }

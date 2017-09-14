@@ -86,4 +86,5 @@
     <string name="car_color">Color</string>
     <string name="car_model">Modelo</string>
     <string name="are_your_driver">Eres conductor?</string>
+    <string name="certificate_user">Certificar Usuario</string>
 </resources>

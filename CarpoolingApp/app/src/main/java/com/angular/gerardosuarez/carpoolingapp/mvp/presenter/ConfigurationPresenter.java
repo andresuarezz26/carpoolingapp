@@ -36,4 +36,8 @@ public class ConfigurationPresenter extends BaseFragmentPresenter {
     public void goToReportIssueWebPage() {
         view.goToReportIssueWebPage();
     }
+
+    public void goToActivateUser() {
+        view.goToActiveUserWebPage();
+    }
 }

@@ -4,14 +4,21 @@ import android.net.http.SslError;
 import android.support.design.widget.BottomNavigationView;
 import android.view.View;
 import android.webkit.SslErrorHandler;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.activity.BaseActivity;
 import com.angular.gerardosuarez.carpoolingapp.fragment.TermsAndConditionFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.base.FragmentView;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class TermsAndConditionView extends FragmentView<TermsAndConditionFragment, Void> {
@@ -19,6 +26,14 @@ public class TermsAndConditionView extends FragmentView<TermsAndConditionFragmen
     private static final String TERMS_AND_CONDITION_URL = "https://www.miscupos.com/terminosycondiciones-tratdedatos";
 
     private BottomNavigationView bottomMenu;
+
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
+    @BindView(R.id.btn_continue)
+    Button btnContinue;
+    @BindView(R.id.radio_button_container)
+    LinearLayout radioButtonContainer;
+
 
     public TermsAndConditionView(TermsAndConditionFragment fragment) {
         super(fragment);
@@ -32,6 +47,9 @@ public class TermsAndConditionView extends FragmentView<TermsAndConditionFragmen
     public void init() {
         final BaseActivity activity = getActivity();
         if (activity != null) {
+            progressBar.setVisibility(View.VISIBLE);
+            btnContinue.setVisibility(View.GONE);
+            radioButtonContainer.setVisibility(View.GONE);
             WebView webView = (WebView) activity.findViewById(R.id.webview);
             webView.getSettings().setJavaScriptEnabled(true);
             webView.getSettings().setDomStorageEnabled(true);
@@ -56,5 +74,19 @@ public class TermsAndConditionView extends FragmentView<TermsAndConditionFragmen
             handler.proceed(); // Ignore SSL certificate errors
         }
 
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            progressBar.setVisibility(View.GONE);
+            btnContinue.setVisibility(View.VISIBLE);
+            radioButtonContainer.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+            super.onReceivedError(view, request, error);
+            progressBar.setVisibility(View.GONE);
+            Toast.makeText(getContext(), "No se puede conectar ahora. Intente más tarde", Toast.LENGTH_LONG).show();
+        }
     }
 }

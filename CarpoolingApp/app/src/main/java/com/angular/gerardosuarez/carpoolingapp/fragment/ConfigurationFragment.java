@@ -51,4 +51,9 @@ public class ConfigurationFragment extends Fragment {
     void onReportIssue() {
         presenter.goToReportIssueWebPage();
     }
+
+    @OnClick(R.id.btn_active_user)
+    void onActiveUserClick() {
+        presenter.goToActivateUser();
+    }
 }

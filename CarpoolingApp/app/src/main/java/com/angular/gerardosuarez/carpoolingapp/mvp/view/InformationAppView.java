@@ -4,14 +4,19 @@ import android.net.http.SslError;
 import android.support.design.widget.BottomNavigationView;
 import android.view.View;
 import android.webkit.SslErrorHandler;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.activity.BaseActivity;
 import com.angular.gerardosuarez.carpoolingapp.fragment.InformationAppFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.base.FragmentView;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class InformationAppView extends FragmentView<InformationAppFragment, Void> {
@@ -19,6 +24,9 @@ public class InformationAppView extends FragmentView<InformationAppFragment, Voi
     private static final String TERMS_AND_CONDITION_URL = "https://www.miscupos.com/infoapp";
 
     private BottomNavigationView bottomMenu;
+
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
 
     public InformationAppView(InformationAppFragment fragment) {
         super(fragment);
@@ -32,6 +40,7 @@ public class InformationAppView extends FragmentView<InformationAppFragment, Voi
     public void init() {
         final BaseActivity activity = getActivity();
         if (activity != null) {
+            progressBar.setVisibility(View.VISIBLE);
             WebView webView = (WebView) activity.findViewById(R.id.webview);
             webView.getSettings().setJavaScriptEnabled(true);
             webView.getSettings().setDomStorageEnabled(true);
@@ -55,5 +64,20 @@ public class InformationAppView extends FragmentView<InformationAppFragment, Voi
             handler.proceed(); // Ignore SSL certificate errors
         }
 
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            progressBar.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+            super.onReceivedError(view, request, error);
+            progressBar.setVisibility(View.GONE);
+            Toast.makeText(getContext(), "No se puede conectar ahora. Intente más tarde", Toast.LENGTH_LONG).show();
+        }
+
     }
+
+
 }
