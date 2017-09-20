@@ -1,7 +1,7 @@
 package com.angular.gerardosuarez.carpoolingapp.mvp.presenter;
 
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
+import android.support.annotation.Nullable;
 
 import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
 import com.angular.gerardosuarez.carpoolingapp.mvp.base.BaseFragmentPresenter;
@@ -13,8 +13,6 @@ import com.angular.gerardosuarez.carpoolingapp.utils.StringUtils;
 public class MyProfilePresenter extends BaseFragmentPresenter {
 
     private MyProfileView view;
-    private MapPreference mapPreference;
-    private UserService userService;
 
     public MyProfilePresenter(MyProfileView view, MapPreference mapPreference, UserService userService) {
         super(mapPreference, view, userService);
@@ -22,23 +20,33 @@ public class MyProfilePresenter extends BaseFragmentPresenter {
     }
 
     public void init() {
+        setCurrentRoute();
         setCommunity();
         view.hideMenu();
     }
 
-    private void setCommunity() {
-        if (!areAllMapPreferencesNonnull()) {
-            String name = getCurrentUserName();
-            if (!TextUtils.isEmpty(name)) {
-                setCurrentRouteTexts(name, mapPreference.getDate(), StringUtils.EMPTY_STRING, mapPreference.getHour());
-            } else {
-                setCurrentRouteEmptyTexts();
-            }
+    private void setCurrentRoute() {
+        if (areAllMapPreferenceNonnull()) {
+            validateUserAndSetRouteTexts();
         } else {
             setCurrentRouteEmptyTexts();
         }
     }
 
+    private void validateUserAndSetRouteTexts() {
+        validateUserAndSetRouteTexts(
+                StringUtils.changeNullByEmpty(mapPreference.getDate()),
+                StringUtils.EMPTY_STRING,
+                StringUtils.changeNullByEmpty(mapPreference.getHour()));
+    }
+
+
+    private void setCommunity() {
+        String community = mapPreference.getCommunity();
+        view.setCommunityText(community);
+    }
+
+    @NonNull
     private String getCurrentUserName() {
         String username = StringUtils.EMPTY_STRING;
         User user = getCurrentUser();
@@ -50,18 +58,36 @@ public class MyProfilePresenter extends BaseFragmentPresenter {
         return username;
     }
 
-    private void setCurrentRouteTexts(@NonNull String name, @NonNull String date, @NonNull String address, @NonNull String hour) {
-        view.setTextName(name);
-        view.setTextDate(date);
-        view.setTextHour(hour);
-        view.setTextAddress(address);
+    @NonNull
+    private String getImageUrl() {
+        String imageUrl = StringUtils.EMPTY_STRING;
+        User user = getCurrentUser();
+        if (user != null) {
+            if (user.name != null) {
+                imageUrl = user.photo_uri;
+            }
+        }
+        return imageUrl;
+    }
+
+    private void validateUserAndSetRouteTexts(@Nullable String date, @Nullable String address, @Nullable String hour) {
+        setUsernameText();
+        view.setTextDate(StringUtils.formatDateWithTodayLogic(StringUtils.changeNullByEmpty(date)));
+        view.setTextHour(StringUtils.formatHour(StringUtils.changeNullByEmpty(hour)));
+        view.setTextAddress(StringUtils.changeNullByEmpty(address));
+        view.setImagePhoto(getImageUrl());
     }
 
     private void setCurrentRouteEmptyTexts() {
-        view.setTextName(StringUtils.EMPTY_STRING);
+        setUsernameText();
         view.setTextDate(StringUtils.EMPTY_STRING);
         view.setTextHour(StringUtils.EMPTY_STRING);
         view.setTextAddress(StringUtils.EMPTY_STRING);
+        view.setImagePhoto(getImageUrl());
+    }
+
+    private void setUsernameText() {
+        view.setTextName(getCurrentUserName());
     }
 
     public void hideMenu() {

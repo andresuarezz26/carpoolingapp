@@ -1,6 +1,5 @@
 package com.angular.gerardosuarez.carpoolingapp.fragment;
 
-import android.app.Fragment;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,15 +10,13 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
-import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
-import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreferenceImpl;
-import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreference;
-import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreferenceImpl;
+import com.angular.gerardosuarez.carpoolingapp.fragment.base.BaseMapPreferenceFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.base.OnPageSelectedListener;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerBooking;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MyMapFragmentPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyMapView;
 import com.angular.gerardosuarez.carpoolingapp.service.DriverMapService;
+import com.angular.gerardosuarez.carpoolingapp.service.MyBookingDriverService;
 import com.angular.gerardosuarez.carpoolingapp.service.PassengerMapService;
 import com.angular.gerardosuarez.carpoolingapp.service.UserService;
 import com.google.android.gms.common.ConnectionResult;
@@ -37,7 +34,7 @@ import butterknife.OnClick;
 import io.reactivex.observers.DisposableObserver;
 import timber.log.Timber;
 
-public class MyMapFragment extends Fragment
+public class MyMapFragment extends BaseMapPreferenceFragment
         implements
         OnMapReadyCallback,
         LocationListener,
@@ -60,35 +57,22 @@ public class MyMapFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-       /* if (view != null) {
-            ViewGroup parent = (ViewGroup) view.getParent();
-            if (parent != null)
-                parent.removeView(view);
-        } */
         View view = inflater.inflate(R.layout.fragment_my_map, container, false);
         ButterKnife.bind(this, view);
-        /*try {
-
-        } catch (InflateException e) {
-        /* map is already there, just return view as it is
-        }
-        */
-
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        MapPreference mapPreference = new MapPreferenceImpl(getActivity(), MapPreferenceImpl.NAME);
-        RolePreference rolePreference = new RolePreferenceImpl(getActivity(), RolePreferenceImpl.NAME);
         presenter = new MyMapFragmentPresenter(
                 new MyMapView(this),
                 new DriverMapService(),
                 new PassengerMapService(),
                 rolePreference,
                 mapPreference,
-                new UserService());
+                new UserService(),
+                new MyBookingDriverService());
         if (presenter.googleServicesAvailable()) {
             presenter.initMap();
         }
@@ -99,7 +83,7 @@ public class MyMapFragment extends Fragment
 
     @Override
     public void onPageSelected() {
-        if(presenter != null){
+        if (presenter != null) {
             presenter.changeViewElements();
             presenter.cleanMapIfNecessary();
         }

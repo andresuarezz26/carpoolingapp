@@ -51,24 +51,20 @@ public class NavigationManager {
         isMenuFragmentMap.put(ConfigurationFragment.class.getName(), StringUtils.EMPTY_STRING);
     }
 
-    private FragmentManager.OnBackStackChangedListener getListener()
-    {
+    private FragmentManager.OnBackStackChangedListener getListener() {
 
-        return new FragmentManager.OnBackStackChangedListener()
-        {
-            public void onBackStackChanged()
-            {
-                if (fragmentManager != null)
-                {
+        return new FragmentManager.OnBackStackChangedListener() {
+            public void onBackStackChanged() {
+                if (fragmentManager != null) {
                     selectCurrentVisibleFragment();
                 }
             }
         };
     }
 
-    private void selectCurrentVisibleFragment(){
+    private void selectCurrentVisibleFragment() {
         int backStackCount = fragmentManager.getBackStackEntryCount();
-        if(backStackCount > 0 ){
+        if (backStackCount > 0) {
             int index = backStackCount - 1;
             FragmentManager.BackStackEntry backEntry = fragmentManager.getBackStackEntryAt(index);
             String tag = backEntry.getName();
@@ -227,10 +223,6 @@ public class NavigationManager {
     private boolean changeRoleLogic(String lastRole, String currentRole) {
         if (!TextUtils.isEmpty(rolePreference.getCurrentRole())) {
             if (!lastRole.equalsIgnoreCase(currentRole)) {
-                mapPreference.putAlreadyDataChoosen(false);
-                mapPreference.putTime(null);
-                mapPreference.putFromOrTo(MapPreference.FROM);
-                mapPreference.putDate(null);
                 return true;
             }
         }

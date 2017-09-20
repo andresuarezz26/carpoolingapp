@@ -44,7 +44,7 @@ public class MyBookingPassengerFragmentPresenter extends BaseFragmentPresenter {
     }
 
     public void init() {
-        if (!getMapPreferencesWithoutErrorMsg()) {
+        if (!areAllMapPreferenceNonnull()) {
             view.cleanFragmentView();
             thereAreData = false;
         } else {
@@ -139,7 +139,7 @@ public class MyBookingPassengerFragmentPresenter extends BaseFragmentPresenter {
 
     private void refuseDriverRequest() {
         if (currentDriverInfo != null) {
-            if (getMapPreferencesWithoutErrorMsg()) {
+            if (areAllMapPreferenceNonnull()) {
                 if (!TextUtils.isEmpty(getMyUid())) {
                     bookingPassengerService.refuseDriverRequest(getRoute(), currentDriverInfo, getMyUid());
                 }
@@ -150,7 +150,7 @@ public class MyBookingPassengerFragmentPresenter extends BaseFragmentPresenter {
     }
 
     private void cancelMYBooking() {
-        if (getMapPreferencesWithoutErrorMsg()) {
+        if (areAllMapPreferenceNonnull()) {
             if (!TextUtils.isEmpty(getMyUid())) {
                 bookingPassengerService.cancelMyBooking(getRoute(), getMyUid());
                 thereIsDriver = false;

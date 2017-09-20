@@ -1,6 +1,5 @@
 package com.angular.gerardosuarez.carpoolingapp.fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -8,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
-import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreferenceImpl;
+import com.angular.gerardosuarez.carpoolingapp.fragment.base.BaseMapPreferenceFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MyBookingPassengerFragmentPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyBookingPassengerView;
 import com.angular.gerardosuarez.carpoolingapp.service.MyBookingPassengerService;
@@ -17,7 +16,7 @@ import com.angular.gerardosuarez.carpoolingapp.service.UserService;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MyBookingPassengerFragment extends Fragment {
+public class MyBookingPassengerFragment extends BaseMapPreferenceFragment {
 
     public static final String TAG = "my_booking_passenger";
     private MyBookingPassengerFragmentPresenter presenter;
@@ -37,7 +36,7 @@ public class MyBookingPassengerFragment extends Fragment {
                 new MyBookingPassengerView(this),
                 new MyBookingPassengerService(),
                 new UserService(),
-                new MapPreferenceImpl(getActivity(), MapPreferenceImpl.NAME));
+                mapPreference);
         presenter.init();
     }
 

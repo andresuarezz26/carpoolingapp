@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
-import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreferenceImpl;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreferencePassengerImpl;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.InformationAppPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.InformationAppView;
 
@@ -17,7 +17,6 @@ import butterknife.ButterKnife;
 
 public class InformationAppFragment extends Fragment {
 
-    public static final String TAG = "information_app_fragment";
     private InformationAppPresenter presenter;
 
     @Override
@@ -31,7 +30,7 @@ public class InformationAppFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        MapPreference mapPreference = new MapPreferenceImpl(getActivity(), MapPreferenceImpl.NAME);
+        MapPreference mapPreference = new MapPreferencePassengerImpl(getActivity(), MapPreferencePassengerImpl.NAME);
         presenter = new InformationAppPresenter(
                 mapPreference,
                 new InformationAppView(this)

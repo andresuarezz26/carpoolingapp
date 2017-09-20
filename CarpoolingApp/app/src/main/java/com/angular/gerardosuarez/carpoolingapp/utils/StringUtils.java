@@ -29,6 +29,11 @@ public final class StringUtils {
 
     }
 
+    @NonNull
+    public static String changeNullByEmpty(@Nullable String text) {
+        return text == null ? EMPTY_STRING : text;
+    }
+
     public static String buildRoute(String community, String fromOrTo, String date, String hour) {
         return fromOrTo + "-" + community + SLASH + date + SLASH + hour + SLASH;
     }

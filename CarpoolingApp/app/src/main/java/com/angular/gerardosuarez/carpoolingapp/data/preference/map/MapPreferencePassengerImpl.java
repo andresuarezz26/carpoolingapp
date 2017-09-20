@@ -4,21 +4,21 @@ import android.content.Context;
 
 import com.angular.gerardosuarez.carpoolingapp.data.preference.BasePreferenceImpl;
 
-public class MapPreferenceImpl extends BasePreferenceImpl implements MapPreference {
+public class MapPreferencePassengerImpl extends BasePreferenceImpl implements MapPreference {
 
-    private final static String CURRENT_ROLE = "role";
-    public final static String NAME = "role_preference";
-    private static final String DATE = "DATE";
-    private static final String TIME = "TIME";
-    private static final String COMUNITY = "COMUNITY";
-    private static final String FROM_OR_TO = "FROM_OR_TO";
-    private static final String ALREADY_REGISTERED = "ALREADY_REGISTERED";
-    private static final String ALREADY_DATA_CHOOSEN = "ALREADY_DATA_CHOOSEN";
-    private static final String IS_DATE_SELECTED = "IS_DATE_SELECTED";
-    private static final String IS_TIME_SELECTED = "IS_TIME_SELECTED";
+    public final static String NAME = "role_preference_passenger";
+    private static final String DATE = "DATE_PASSENGER";
+    private static final String TIME = "TIME_PASSENGER";
+    private static final String FROM_OR_TO = "FROM_OR_TO_PASSENGER";
+    private static final String ALREADY_DATA_CHOOSEN = "ALREADY_DATA_CHOOSEN_PASSENGER";
+    private static final String IS_DATE_SELECTED = "IS_DATE_SELECTED_PASSENGER";
+    private static final String IS_TIME_SELECTED = "IS_TIME_SELECTED_PASSENGER";
+    //These have the same name as driver because it doesnt matter the role
     private static final String ARE_TERMS_AND_CONDITIONS_ACCEPTED = "ARE_TERMS_AND_CONDITIONS_ACCEPTED";
+    private static final String COMUNITY = "COMUNITY";
+    private static final String ALREADY_REGISTERED = "ALREADY";
 
-    public MapPreferenceImpl(Context context, String name) {
+    public MapPreferencePassengerImpl(Context context, String name) {
         super(context, name);
     }
 

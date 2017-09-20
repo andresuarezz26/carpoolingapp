@@ -25,6 +25,8 @@ public class BaseFragmentPresenter {
     private UserService userService;
     private FirebaseAuth firebaseAuth;
 
+    protected User currentUser;
+
     protected BaseFragmentPresenter(MapPreference mapPreference, FragmentView view, UserService userService) {
         this.databaseRef = FirebaseDatabase.getInstance().getReference();
         this.mapPreference = mapPreference;
@@ -33,7 +35,7 @@ public class BaseFragmentPresenter {
         firebaseAuth = FirebaseAuth.getInstance();
     }
 
-    protected boolean areAllMapPreferencesNonnull() {
+    protected boolean areAllMapPreferencesNonnullWithMessage() {
         community = mapPreference.getCommunity();
         if (TextUtils.isEmpty(community)) {
             view.showToast(R.string.error_empty_community);
@@ -57,7 +59,7 @@ public class BaseFragmentPresenter {
         return true;
     }
 
-    protected boolean getMapPreferencesWithoutErrorMsg() {
+    protected boolean areAllMapPreferenceNonnull() {
         community = mapPreference.getCommunity();
         if (TextUtils.isEmpty(community)) {
             return false;
@@ -84,7 +86,7 @@ public class BaseFragmentPresenter {
 
     @Nullable
     protected RequestInfo getRequestInfo() {
-        if (getMapPreferencesWithoutErrorMsg()) {
+        if (areAllMapPreferenceNonnull()) {
             RequestInfo requestInfo = new RequestInfo();
             requestInfo.setDate(mapPreference.getDate());
             requestInfo.setHour(mapPreference.getHour());
@@ -117,6 +119,9 @@ public class BaseFragmentPresenter {
         mapPreference.putDate(null);
         mapPreference.putTime(null);
         mapPreference.putFromOrTo(MapPreference.FROM);
+        mapPreference.putDateSelected(false);
+        mapPreference.putTimeSelected(false);
+        mapPreference.putAlreadyDataChoosen(false);
     }
 
     protected void resetAllMapPreferences() {

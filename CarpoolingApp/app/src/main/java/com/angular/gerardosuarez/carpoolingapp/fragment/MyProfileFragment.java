@@ -1,24 +1,23 @@
 package com.angular.gerardosuarez.carpoolingapp.fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.activity.MainActivity;
-import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreferenceImpl;
+import com.angular.gerardosuarez.carpoolingapp.fragment.base.BaseMapPreferenceFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.base.OnPageSelectedListener;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MyProfilePresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyProfileView;
+import com.angular.gerardosuarez.carpoolingapp.service.UserService;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MyProfileFragment extends Fragment implements OnPageSelectedListener{
+public class MyProfileFragment extends BaseMapPreferenceFragment implements OnPageSelectedListener {
 
     public static final String TAG = "my_profile";
     private MyProfilePresenter presenter;
@@ -32,16 +31,11 @@ public class MyProfileFragment extends Fragment implements OnPageSelectedListene
     }
 
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        Log.e("setUserVisibleHint", "isVisibleToUser " + isVisibleToUser);
-
-    }
-
-    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter = new MyProfilePresenter(new MyProfileView(this), new MapPreferenceImpl(getActivity(), MapPreferenceImpl.NAME));
+        presenter = new MyProfilePresenter(new MyProfileView(this),
+                mapPreference,
+                new UserService());
         presenter.init();
     }
 
@@ -78,7 +72,7 @@ public class MyProfileFragment extends Fragment implements OnPageSelectedListene
 
     @Override
     public void onPageSelected() {
-        if(presenter != null){
+        if (presenter != null) {
             presenter.hideMenu();
         }
     }
