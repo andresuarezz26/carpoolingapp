@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,86 +8,129 @@
     android:background="@color/cupos_soft_gray"
     android:orientation="horizontal">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_large"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/photo_user"
+            android:layout_width="120dp"
+            android:layout_height="120dp" />
+
+        <TextView
+            android:id="@+id/txt_my_profile_name"
+            style="@style/GrayBigTextTitles"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nombre pasajero" />
+
+        <TextView
+            android:id="@+id/txt_my_profile_description"
+            style="@style/MyBookingDriverTextName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/txt_route_description"
+            android:textColor="@color/cupos_blue" />
+
+        <TextView
+            android:id="@+id/txt_my_profile_address"
+            style="@style/MyBookingDriverTextName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="address" />
+
+        <TextView
+            android:id="@+id/txt_my_profile_date"
+            style="@style/MyBookingDriverTextName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="date" />
+
+        <TextView
+            android:id="@+id/txt_my_profile_hour"
+            style="@style/MyBookingDriverTextName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="hour" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/container_my_profile_community"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/cupos_blue"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txt_community_my_profile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="0dp"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:paddingBottom="@dimen/margin_small"
+            android:paddingTop="@dimen/margin_small"
+            android:text="Comunidad Icesi"
+            android:textColor="@color/white"
+            android:textSize="@dimen/big_text_size" />
+
+        <Button
+            android:id="@+id/btn_community"
+            android:layout_width="31dp"
+            android:layout_height="29dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/margin_normal"
+            android:layout_weight="0"
+            android:background="@drawable/icon_choose_comunity"
+            android:paddingBottom="@dimen/margin_normal" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txt_btn_passenger"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/container_my_profile_community"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:layout_marginEnd="@dimen/margin_large"
+        android:text="@string/text_i_am_passenger" />
+
+    <TextView
+        android:id="@+id/txt_button_driver"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/container_my_profile_community"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:layout_marginStart="@dimen/margin_large"
+        android:text="@string/text_i_am_drvier"
+        app:layout_constraintTop_toBottomOf="@+id/btn_driver" />
+
     <ImageButton
         android:id="@+id/btn_driver"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_above="@id/txt_button_driver"
         android:layout_marginStart="@dimen/margin_large"
         android:background="@drawable/my_profile_car"
-        android:contentDescription="@null"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="94dp"
-        android:layout_marginLeft="40dp" />
-
+        android:contentDescription="@null" />
 
     <ImageButton
         android:id="@+id/btn_passenger"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginBottom="94dp"
+        android:layout_above="@id/txt_btn_passenger"
+        android:layout_alignParentEnd="true"
         android:layout_marginEnd="@dimen/margin_large"
         android:background="@drawable/my_profile_driver"
-        android:contentDescription="@null"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginRight="32dp" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="@string/text_i_am_passenger"
-        android:layout_marginEnd="@dimen/margin_large"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/btn_passenger" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_large"
-        android:gravity="center_horizontal"
-        android:text="@string/text_i_am_drvier"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/btn_driver" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="-81dp" />
-
-    <TextView
-        android:id="@+id/txt_community_my_profile"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginBottom="0dp"
-        android:gravity="center"
-        android:background="@color/cupos_blue"
-        android:textColor="@color/white"
-        android:text="Comunidad Icesi"
-        android:textSize="@dimen/big_text_size"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
-    <Button
-        android:id="@+id/btn_community"
-        android:layout_width="31dp"
-        android:layout_height="29dp"
-        android:background="@drawable/icon_choose_comunity"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginEnd="@dimen/margin_normal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintTop_toTopOf="@+id/txt_community_my_profile"
-        android:layout_marginTop="8dp"
-        app:layout_constraintVertical_bias="0.7" />
+        android:contentDescription="@null" />
 
 
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>

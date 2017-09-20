@@ -23,9 +23,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/margin_normal"
         android:text="@string/my_booking_passenger_searching"
-        android:textColor="@color/cupos_dark_gray"
-        android:textSize="30sp"
-        android:textStyle="bold" />
+        style="@style/GrayBigTextTitles"/>
 
     <TextView
         android:id="@+id/txt_driver_phone"

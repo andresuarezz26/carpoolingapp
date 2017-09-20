@@ -80,6 +80,14 @@
     </style>
 
     <!--MyBookingDriver -->
+    <style name="GrayBigTextTitles">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/cupos_dark_gray</item>
+    </style>
+
+
+    <!--MyBookingDriver -->
     <style name="MyBookingDriverTextName">
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>

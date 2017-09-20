@@ -87,4 +87,5 @@
     <string name="car_model">Modelo</string>
     <string name="are_your_driver">Eres conductor?</string>
     <string name="certificate_user">Certificar Usuario</string>
+    <string name="txt_route_description">Último Viaje Programado</string>
 </resources>

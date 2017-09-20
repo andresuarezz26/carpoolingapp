@@ -43,6 +43,40 @@
         android:hint="@string/register_phone"
         android:inputType="number" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:text="@string/are_your_driver"
+        android:textColor="@color/white" />
+
+    <EditText
+        android:id="@+id/edit_car_plate"
+        style="@style/RegisterText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/car_plate"
+        android:inputType="textCapWords"
+        android:lines="1" />
+
+    <EditText
+        android:id="@+id/edit_car_color"
+        style="@style/RegisterText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/car_color"
+        android:inputType="textAutoComplete"
+        android:lines="1" />
+
+    <EditText
+        android:id="@+id/edit_car_model"
+        style="@style/RegisterText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/car_model"
+        android:inputType="text"
+        android:lines="1" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dip"

@@ -33,7 +33,7 @@ public class BaseFragmentPresenter {
         firebaseAuth = FirebaseAuth.getInstance();
     }
 
-    protected boolean getMapPreferences() {
+    protected boolean areAllMapPreferencesNonnull() {
         community = mapPreference.getCommunity();
         if (TextUtils.isEmpty(community)) {
             view.showToast(R.string.error_empty_community);

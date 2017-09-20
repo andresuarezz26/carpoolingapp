@@ -26,6 +26,7 @@ import com.angular.gerardosuarez.carpoolingapp.mvp.model.RequestInfo;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.User;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyMapView;
 import com.angular.gerardosuarez.carpoolingapp.service.DriverMapService;
+import com.angular.gerardosuarez.carpoolingapp.service.MyBookingDriverService;
 import com.angular.gerardosuarez.carpoolingapp.service.PassengerMapService;
 import com.angular.gerardosuarez.carpoolingapp.service.UserService;
 import com.angular.gerardosuarez.carpoolingapp.utils.NetworkUtils;
@@ -61,6 +62,7 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
     private PassengerMapService passengerMapService;
     private RolePreference rolePreference;
     private UserService userService;
+    private MyBookingDriverService myBookingDriverService;
 
     private ValueEventListener quotaPassengerListener;
 
@@ -75,13 +77,15 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
                                   PassengerMapService passengerMapService,
                                   RolePreference rolePreference,
                                   MapPreference mapPreference,
-                                  UserService userService) {
+                                  UserService userService,
+                                  MyBookingDriverService myBookingDriverService) {
         super(mapPreference, view, userService);
         this.view = view;
         this.driverMapService = driverMapService;
         this.passengerMapService = passengerMapService;
         this.rolePreference = rolePreference;
         this.userService = userService;
+        this.myBookingDriverService = myBookingDriverService;
     }
 
     public void init() {
