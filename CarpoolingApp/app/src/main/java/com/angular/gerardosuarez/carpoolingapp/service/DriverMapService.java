@@ -17,6 +17,8 @@ public class DriverMapService extends BaseFirebaseService {
         super();
     }
 
+    public static Map<String, String> passengersSelectedByDriver = new HashMap<>();
+
     public DatabaseReference getQuotasPerCommunityOriginDateAndHour(@NonNull String comunity, @NonNull String origin, @NonNull String date, @NonNull String hour) {
         return databaseReference.child(origin + "-" + comunity).child(date).child(hour);
     }

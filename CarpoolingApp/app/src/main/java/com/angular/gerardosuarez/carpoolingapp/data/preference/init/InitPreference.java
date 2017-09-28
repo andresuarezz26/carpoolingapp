@@ -10,4 +10,12 @@ public interface InitPreference {
 
     void putWasTermsAndCondictionsAccepted(boolean value);
 
+    boolean isAlreadyRegistered();
+
+    void putAlreadyRegistered(boolean value);
+
+    boolean wasComunityChoosed();
+
+    void putCommunityChoosed(boolean value);
+
 }

@@ -3,7 +3,7 @@ package com.angular.gerardosuarez.carpoolingapp.mvp.presenter;
 import android.text.TextUtils;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
-import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.init.InitPreference;
 import com.angular.gerardosuarez.carpoolingapp.mvp.base.BaseFragmentPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.User;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.RegisterView;
@@ -20,11 +20,13 @@ public class RegisterPresenter extends BaseFragmentPresenter {
 
     private RegisterView view;
     private UserService userService;
+    private InitPreference initPreference;
 
-    public RegisterPresenter(MapPreference mapPreference, RegisterView view, UserService userService) {
-        super(mapPreference, view, userService);
+    public RegisterPresenter(RegisterView view, UserService userService, InitPreference initPreference) {
+        super(view, userService);
         this.view = view;
         this.userService = userService;
+        this.initPreference = initPreference;
     }
 
 
@@ -71,10 +73,10 @@ public class RegisterPresenter extends BaseFragmentPresenter {
             if (getMyUid() != null) {
                 user.setKey(getMyUid());
                 userService.createOrUpdateUser(user);
-                mapPreference.putAlreadyRegister(true);
+                initPreference.putAlreadyRegistered(true);
                 return true;
             } else {
-                mapPreference.putAlreadyRegister(false);
+                initPreference.putAlreadyRegistered(false);
                 return false;
             }
         } else {

@@ -1,14 +1,15 @@
 package com.angular.gerardosuarez.carpoolingapp.mvp.view;
 
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
+import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
+import com.angular.gerardosuarez.carpoolingapp.customviews.dialog.views.RoundedImageView;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyProfileFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.base.FragmentView;
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -18,16 +19,18 @@ public class MyProfileView extends FragmentView<MyProfileFragment, Void> {
 
     private static final String COMMUNITY_TEXT = "Comunidad ";
 
-    private BottomNavigationView bottomMenu;
+    private BottomNavigationViewEx bottomMenu;
 
     @BindView(R.id.photo_user)
-    ImageView imagePhoto;
+    RoundedImageView imagePhoto;
     @BindView(R.id.txt_community_my_profile)
     TextView textCommunity;
     @BindView(R.id.txt_my_profile_name)
     TextView textName;
-    @BindView(R.id.txt_my_profile_address)
-    TextView textAddress;
+    @BindView(R.id.txt_my_profile_departure)
+    TextView textDeparture;
+    @BindView(R.id.txt_my_profile_arrival)
+    TextView textArrival;
     @BindView(R.id.txt_my_profile_date)
     TextView textDate;
     @BindView(R.id.txt_my_profile_hour)
@@ -37,7 +40,7 @@ public class MyProfileView extends FragmentView<MyProfileFragment, Void> {
         super(fragment);
         if (fragment.getView() != null) {
             ButterKnife.bind(this, fragment.getView());
-            bottomMenu = (BottomNavigationView) getActivity().findViewById(R.id.bottom_navigation);
+            bottomMenu = (BottomNavigationViewEx) getActivity().findViewById(R.id.bottom_navigation);
         }
     }
 
@@ -57,8 +60,13 @@ public class MyProfileView extends FragmentView<MyProfileFragment, Void> {
         textName.setText(name);
     }
 
-    public void setTextAddress(String address) {
-        textAddress.setText(address);
+    public void setTextArrivalAndDeparture(String arrival, String departure) {
+        if (!TextUtils.isEmpty(arrival)) {
+            textDeparture.setText("Origen: " + arrival);
+        }
+        if (!TextUtils.isEmpty(departure)) {
+            textArrival.setText("Destino: " + departure);
+        }
     }
 
     public void setTextDate(String date) {

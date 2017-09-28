@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <fragment
+    <FrameLayout
         android:id="@+id/place_autocomplete_fragment"
         android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
         android:layout_width="match_parent"
@@ -59,15 +59,14 @@
         android:layout_height="match_parent"
         android:layout_below="@id/linear_from_to">
 
-        <fragment
-            android:id="@+id/map_fragment"
-            android:name="com.google.android.gms.maps.MapFragment"
+        <FrameLayout
+            android:id="@+id/map_fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
         <android.support.design.widget.FloatingActionButton
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             app:backgroundTint="@color/cupos_blue" />

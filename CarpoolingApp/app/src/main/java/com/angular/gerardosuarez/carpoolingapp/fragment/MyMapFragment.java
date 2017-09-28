@@ -57,6 +57,17 @@ public class MyMapFragment extends BaseMapPreferenceFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        /*if (view != null) {
+            ViewGroup parent = (ViewGroup) view.getParent();
+            if (parent != null)
+                parent.removeView(view);
+        }
+        try {
+            view = inflater.inflate(R.layout.fragment_my_map, container, false);
+            ButterKnife.bind(this, view);
+        } catch (InflateException e) {
+        /* map is already there, just return view as it is
+        } */
         View view = inflater.inflate(R.layout.fragment_my_map, container, false);
         ButterKnife.bind(this, view);
         return view;
@@ -78,7 +89,6 @@ public class MyMapFragment extends BaseMapPreferenceFragment
         }
         presenter.initView();
         presenter.setAutocompleteFragment();
-
     }
 
     @Override

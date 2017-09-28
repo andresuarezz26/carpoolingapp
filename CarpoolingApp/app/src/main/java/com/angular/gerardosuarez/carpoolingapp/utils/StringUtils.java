@@ -17,7 +17,7 @@ public final class StringUtils {
     private static final String OUTPUT_CHARSET = "UTF-8";
     private static final String ERROR_ENCODING_STRING = "error encoding String";
     private static final String ERROR_DECODING_STRING = "error decoding String";
-    public static final String EMPTY_STRING = "\u200B";
+    public static final String EMPTY_STRING = "";
     private static final String ZERO_STRING = "0";
     private static final int INT_TEN = 10;
     public static final String SLASH = "/";
@@ -100,15 +100,24 @@ public final class StringUtils {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int month = calendar.get(Calendar.MONTH);
         int year = calendar.get(Calendar.YEAR);
+        month++;
         String dayString = addZeroToStart(day);
         String monthString = addZeroToStart(month);
         String finalDate = dayString + monthString + year;
         if (dateString.equalsIgnoreCase(finalDate)) {
             return TODAY_STRING;
         } else {
-            monthString = addZeroToStart(month + 1);
-            return dayString + SLASH + monthString;
+
+            return formatString(dateString);
         }
+    }
+
+    private static String formatString(@NonNull String date) {
+        if (date.length() != 8) return EMPTY_STRING;
+        if (StringUtils.isEmpty(date)) return EMPTY_STRING;
+        return date.substring(0, 2) +
+                SLASH +
+                date.substring(2, 4);
     }
 
     public static String formatHour(@Nullable String hour) {
@@ -127,5 +136,9 @@ public final class StringUtils {
                 return TO + " \n" + community;
             }
         }
+    }
+
+    public static String removeNonPrintableCharacters(@NonNull String input) {
+        return input.replaceAll("\\p{C}", "?");
     }
 }

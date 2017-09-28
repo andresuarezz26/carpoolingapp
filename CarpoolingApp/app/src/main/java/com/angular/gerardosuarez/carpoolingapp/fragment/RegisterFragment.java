@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.activity.MainActivity;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.init.InitPreferenceImpl;
 import com.angular.gerardosuarez.carpoolingapp.fragment.base.BaseMapPreferenceFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.RegisterPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.RegisterView;
@@ -32,10 +33,9 @@ public class RegisterFragment extends BaseMapPreferenceFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         presenter = new RegisterPresenter(
-                mapPreference,
                 new RegisterView(this),
-                new UserService()
-
+                new UserService(),
+                new InitPreferenceImpl(getActivity(), InitPreferenceImpl.NAME)
         );
         presenter.init();
 

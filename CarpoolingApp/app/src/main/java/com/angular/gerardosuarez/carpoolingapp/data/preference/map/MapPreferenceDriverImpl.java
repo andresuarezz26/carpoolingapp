@@ -13,10 +13,11 @@ public class MapPreferenceDriverImpl extends BasePreferenceImpl implements MapPr
     private static final String ALREADY_DATA_CHOOSEN = "ALREADY_DATA_CHOOSEN_DRIVER";
     private static final String IS_DATE_SELECTED = "IS_DATE_SELECTED_DRIVER";
     private static final String IS_TIME_SELECTED = "IS_TIME_SELECTED_DRIVER";
+    private static final String ADDRESS = "ADDRESS_DRIVER";
     //These have the same name as passenger because it doesnt matter the role
     private static final String ARE_TERMS_AND_CONDITIONS_ACCEPTED = "ARE_TERMS_AND_CONDITIONS_ACCEPTED";
     private static final String ALREADY_REGISTERED = "ALREADY_REGISTERED";
-    private static final String COMUNITY = "COMUNITY";
+    private static final String COMUNITY = "COMMUNITY";
 
     public MapPreferenceDriverImpl(Context context, String name) {
         super(context, name);
@@ -60,6 +61,16 @@ public class MapPreferenceDriverImpl extends BasePreferenceImpl implements MapPr
     @Override
     public String getFromOrTo() {
         return getString(FROM_OR_TO);
+    }
+
+    @Override
+    public String getAddress() {
+        return getString(ADDRESS);
+    }
+
+    @Override
+    public void putAddress(String value) {
+        put(ADDRESS, value);
     }
 
     @Override

@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
-import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreference;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.init.InitPreferenceImpl;
 import com.angular.gerardosuarez.carpoolingapp.fragment.base.BaseMapPreferenceFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.ConfigurationPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.ConfigurationView;
@@ -19,7 +19,6 @@ import butterknife.OnClick;
 public class ConfigurationFragment extends BaseMapPreferenceFragment {
 
     private ConfigurationPresenter presenter;
-    private RolePreference rolePreference;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,9 +32,9 @@ public class ConfigurationFragment extends BaseMapPreferenceFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         presenter = new ConfigurationPresenter(
-                mapPreference,
                 new ConfigurationView(this),
-                new UserService()
+                new UserService(),
+                new InitPreferenceImpl(getActivity(), InitPreferenceImpl.NAME)
         );
         presenter.init();
     }
@@ -48,6 +47,11 @@ public class ConfigurationFragment extends BaseMapPreferenceFragment {
     @OnClick(R.id.btn_report_issue)
     void onReportIssue() {
         presenter.goToReportIssueWebPage();
+    }
+
+    @OnClick(R.id.btn_report_user)
+    void onReportUser() {
+        presenter.goToReportUserWebPage();
     }
 
     @OnClick(R.id.btn_active_user)

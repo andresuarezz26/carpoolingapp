@@ -13,6 +13,8 @@ import java.util.Calendar;
 public class DatePickerFragment extends BaseDialogFragment<Integer>
         implements DatePickerDialog.OnDateSetListener {
 
+    private static final int CORRECTION_ZERO_INDEX_ARRAY_FOR_MONTHS = 1;
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Calendar c = Calendar.getInstance();
@@ -25,7 +27,7 @@ public class DatePickerFragment extends BaseDialogFragment<Integer>
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        publishSubject.onNext(StringUtils.addZeroToStart(dayOfMonth) + "" + StringUtils.addZeroToStart(month) + "" + year);
+        publishSubject.onNext(StringUtils.addZeroToStart(dayOfMonth) + "" + StringUtils.addZeroToStart(month + CORRECTION_ZERO_INDEX_ARRAY_FOR_MONTHS) + "" + year);
         unsubscribeToDialogFragment();
     }
 }

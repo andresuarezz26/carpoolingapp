@@ -13,13 +13,13 @@
     <string name="text_menu_my_quota">Mis Cupos</string>
     <string name="text_menu_map">Mapa</string>
     <string name="text_menu_information_app">Info</string>
-    <string name="text_menu_configuration">Configuración</string>
+    <string name="text_menu_configuration">Config</string>
 
     <string name="text_start_travel">Iniciar Recorrido</string>
     <string name="my_profile_driver">Conductor</string>
     <string name="text_community">Destino:Universidad Icesi</string>
-    <string name="accept_quota">Aceptar Cupo</string>
-    <string name="cancel_quota">No, Gracias</string>
+    <string name="request_booking_text">Solicitar Cupo</string>
+    <string name="cancel_booking_text">No, Gracias</string>
     <string name="hour_map">"Hora \n Llegada"</string>
     <string name="date_map">"Dia \n Viaje"</string>
     <!--- facebook -->
@@ -78,7 +78,9 @@
         nulla pariatur. Excepteur sint occaecat cupidatat non proident,sunt in culpa qui officia deserunt mollit anim id est
         laborum.
         "</string>
-    <string name="terms_and_condition_accept">Acepto los términos y\ncondiciones y política \nde tratamiento de  \ndatos personales</string>
+    <string name="terms_and_condition_accept">
+        Autorizo el tratamiento de mis datos personales,\ny he leído y estoy de acuerdo con los términos\ny condiciones y política de tratamiento de datos.
+</string>
     <string name="close_sesion">Cerrar Sesión</string>
     <string name="report_issue">Reportar un problema</string>
     <string name="btn_copy_text">copiar</string>
@@ -88,4 +90,13 @@
     <string name="are_your_driver">Eres conductor?</string>
     <string name="certificate_user">Certificar Usuario</string>
     <string name="txt_route_description">Último Viaje Programado</string>
+    <string name="text_configuration">Configuración</string>
+    <string name="btn_cancel_driver">Cancelar Conductor</string>
+    <string name="departure_date_message">Fecha</string>
+    <string name="arrival_date_message">Fecha</string>
+    <string name="departure_hour_message">Hora\nSalida</string>
+    <string name="arrival_hour_message">Hora\nllegada</string>
+    <string name="close_facebook">Desvincular cuenta de Facebook</string>
+    <string name="accept_booking_text">Aceptar Cupo</string>
+    <string name="report_user">Reportar Usuario</string>
 </resources>

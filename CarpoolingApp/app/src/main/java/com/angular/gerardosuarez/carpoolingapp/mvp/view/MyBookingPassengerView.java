@@ -1,14 +1,13 @@
 package com.angular.gerardosuarez.carpoolingapp.mvp.view;
 
-import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
+import com.angular.gerardosuarez.carpoolingapp.customviews.dialog.views.RoundedImageView;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyBookingPassengerFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.base.FragmentView;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.DriverInfoRequest;
@@ -24,14 +23,16 @@ public class MyBookingPassengerView extends FragmentView<MyBookingPassengerFragm
     TextView textDriverName;
     @BindView(R.id.txt_driver_phone)
     TextView textDriverPhone;
-    @BindView(R.id.txt_driver_address)
-    TextView textDriverAddress;
+    @BindView(R.id.txt_driver_departure)
+    TextView textDriverDeparture;
+    @BindView(R.id.txt_driver_arrival)
+    TextView textDriverArrival;
     @BindView(R.id.txt_driver_date)
     TextView textDriverDate;
     @BindView(R.id.txt_driver_hour)
     TextView textDriverHour;
     @BindView(R.id.image_photo)
-    ImageView imagePhoto;
+    RoundedImageView imagePhoto;
     @BindView(R.id.btn_cancel_booking)
     Button btnCancelButton;
 
@@ -42,12 +43,10 @@ public class MyBookingPassengerView extends FragmentView<MyBookingPassengerFragm
     }
 
     public void init(String date, String hour) {
-        final Activity activity = getActivity();
-        if (activity == null) {
-            return;
-        }
         textDriverDate.setText(StringUtils.formatDateWithTodayLogic(date));
         textDriverHour.setText(StringUtils.formatHour(hour));
+        imagePhoto.setImageResource(R.drawable.searching_driver_image);
+
     }
 
     public void setDriverInfo(@NonNull DriverInfoRequest driverInfo, @NonNull String date, @NonNull String hour) {
@@ -62,26 +61,39 @@ public class MyBookingPassengerView extends FragmentView<MyBookingPassengerFragm
             textDriverPhone.setText(driverInfo.getDriverPhone());
         }
         if (TextUtils.isEmpty(driverInfo.address)) {
-            textDriverAddress.setText(StringUtils.EMPTY_STRING);
+            textDriverDeparture.setText(StringUtils.EMPTY_STRING);
         } else {
-            textDriverAddress.setText(driverInfo.address);
+            textDriverDeparture.setText(driverInfo.address);
         }
         if (!TextUtils.isEmpty(driverInfo.getDriverPhotoUri())) {
             Picasso.with(getActivity()).load(driverInfo.getDriverPhotoUri()).into(imagePhoto);
         }
-        textDriverDate.setText(date);
-        textDriverHour.setText(hour);
+        textDriverDate.setText(StringUtils.formatDateWithTodayLogic(date));
+        textDriverHour.setText(StringUtils.formatHour(hour));
+        btnCancelButton.setText(R.string.btn_cancel_driver);
+    }
+
+    public void setArrivalText(String arrival) {
+        if (!TextUtils.isEmpty(arrival)) {
+            textDriverArrival.setText("Destino: " + arrival);
+        }
+    }
+
+    public void setDepartureText(String departure) {
+        if (!TextUtils.isEmpty(departure)) {
+            textDriverDeparture.setText("Origen: " + departure);
+        }
     }
 
     public void cleanFragmentView() {
         if (getActivity() == null) return;
         textDriverName.setText(StringUtils.EMPTY_STRING);
         textDriverPhone.setText(getActivity().getResources().getText(R.string.my_booking_passenger_not_selected_values));
-        textDriverAddress.setText(StringUtils.EMPTY_STRING);
+        textDriverDeparture.setText(StringUtils.EMPTY_STRING);
         textDriverDate.setText(StringUtils.EMPTY_STRING);
         textDriverHour.setText(StringUtils.EMPTY_STRING);
+        textDriverArrival.setText(StringUtils.EMPTY_STRING);
         makeButtonAndImageInvisibles();
-
     }
 
     public void makeButtonAndImageVisibles() {
@@ -95,15 +107,13 @@ public class MyBookingPassengerView extends FragmentView<MyBookingPassengerFragm
     }
 
     public void setInitialSearchingDriverInfo() {
-        if (getActivity() == null) return;
         textDriverName.setText(getActivity().getResources().getText(R.string.my_booking_passenger_searching));
         textDriverPhone.setText(StringUtils.EMPTY_STRING);
-        textDriverAddress.setText(getActivity().getResources().getText(R.string.my_booking_passenger_description));
+        textDriverDeparture.setText(getActivity().getResources().getText(R.string.my_booking_passenger_description));
         textDriverDate.setText(StringUtils.EMPTY_STRING);
         textDriverHour.setText(StringUtils.EMPTY_STRING);
-        btnCancelButton.setVisibility(View.VISIBLE);
-        btnCancelButton.setText(getActivity().getResources().getText(R.string.my_booking_passenger_button_cancel_booking));
-        //TODO: change this by the right resource
-        imagePhoto.setImageResource(R.drawable.rounded_button_background);
+        btnCancelButton.setText(R.string.my_booking_passenger_button_cancel_booking);
+        imagePhoto.setImageResource(R.drawable.searching_driver_image);
+        makeButtonAndImageVisibles();
     }
 }

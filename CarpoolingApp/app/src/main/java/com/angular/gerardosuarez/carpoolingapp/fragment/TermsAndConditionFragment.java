@@ -9,6 +9,7 @@ import android.widget.RadioButton;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.activity.MainActivity;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.init.InitPreferenceImpl;
 import com.angular.gerardosuarez.carpoolingapp.fragment.base.BaseMapPreferenceFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.TermsAndConditionPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.TermsAndConditionView;
@@ -37,7 +38,7 @@ public class TermsAndConditionFragment extends BaseMapPreferenceFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         presenter = new TermsAndConditionPresenter(
-                mapPreference,
+                new InitPreferenceImpl(getActivity(), InitPreferenceImpl.NAME),
                 new TermsAndConditionView(this)
         );
         presenter.init();

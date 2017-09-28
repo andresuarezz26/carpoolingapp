@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import io.reactivex.observers.DisposableObserver;
 import timber.log.Timber;
@@ -56,6 +57,7 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
     private final static String ROLE_DRIVER = "driver";
     private final static String ROLE_PASSEGNER = "passenger";
     private static final int FIRST_POSITION = 0;
+    public static final int MININUM_NUMBER_OF_PASSENGERS_LESS_ONE = 3;
 
     private MyMapView view;
     private DriverMapService driverMapService;
@@ -70,7 +72,7 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
     private String currentAddress;
     private LatLng currentCoordinates;
 
-    private LinkedHashMap<String, PassengerBooking> passengerBookingMap = new LinkedHashMap<>();
+    private Map<String, PassengerBooking> passengerBookingMap = new LinkedHashMap<>();
 
     public MyMapFragmentPresenter(MyMapView view,
                                   DriverMapService driverMapService,
@@ -130,14 +132,13 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
                         String role = rolePreference.getCurrentRole();
                         if (role != null && role.equalsIgnoreCase(ROLE_DRIVER)) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                view.clearMap();
                                 snapshot.getKey();
                                 try {
-                                    view.clearMap();
                                     PassengerBooking passengerBooking = snapshot.getValue(PassengerBooking.class);
-                                    if (!PassengerInfoRequest.STATUS_ACCEPTED.equalsIgnoreCase(passengerBooking.status)) {
+                                    if (!PassengerInfoRequest.STATUS_CANCELED.equalsIgnoreCase(passengerBooking.status)) {
                                         setPassengerBookingAditionalInfo(snapshot.getKey(), passengerBooking);
                                     }
-
                                 } catch (DatabaseException e) {
                                     Timber.e(e.getMessage(), e);
                                 }
@@ -163,7 +164,8 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
                         passengerBooking.setKey(uid);
                         passengerBookingMap.put(passengerBooking.getKey(), passengerBooking);
                         int position = new ArrayList<>(passengerBookingMap.keySet()).indexOf(passengerBooking.getKey());
-                        view.addPassengerQuotaMarker(passengerBooking, position);
+                        view.addMarkerForNoChoosenPassenger(passengerBooking, position);
+                        addMarker(passengerBooking, position);
                     }
                 } catch (DatabaseException e) {
                     Timber.e(e.getMessage(), e);
@@ -177,7 +179,54 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
         });
     }
 
-    //region
+    //FIXME: find the way of reuse the passengerSelectedByDriver
+    private void addMarker(@NonNull PassengerBooking passengerBooking, int position) {
+        /*if (passengersSelectedByDriver.size() != 0) {
+            chooseNoChooseOrAlreadyChooseMarker(passengerBooking, position);
+        } else {*/
+        queryCurrentChoosenPassengersByDriver(passengerBooking, position);
+        //}
+    }
+
+    private void queryCurrentChoosenPassengersByDriver(@NonNull final PassengerBooking passengerBooking, final int position) {
+        myBookingDriverService.getRequestOfTheDriver(community, fromOrTo, date, hour, getMyUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        int numberOfPasengers = 0;
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            try {
+                                numberOfPasengers++;
+                                PassengerInfoRequest passengerInfoRequest = snapshot.getValue(PassengerInfoRequest.class);
+                                if (passengerInfoRequest != null) {
+                                    DriverMapService.passengersSelectedByDriver.put(snapshot.getKey(), snapshot.getKey());
+                                    chooseNoChooseOrAlreadyChooseMarker(passengerBooking, position);
+                                }
+                            } catch (DatabaseException e) {
+                                Timber.e(e.getMessage(), e);
+                            }
+                        }
+                        if (numberOfPasengers == 0) {
+                            view.addMarkerForNoChoosenPassenger(passengerBooking, position);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Timber.e(databaseError.toString(), databaseError);
+                    }
+                });
+    }
+
+    private void chooseNoChooseOrAlreadyChooseMarker(@NonNull PassengerBooking passengerBooking, int position) {
+        if (DriverMapService.passengersSelectedByDriver.get(passengerBooking.getKey()) == null) {
+            view.addMarkerForNoChoosenPassenger(passengerBooking, position);
+        } else {
+            view.addMarkerForAlreadyChoosenByDriverPassenger(passengerBooking, position);
+        }
+    }
+
+    //endregion
 
     public void onClickMarkerDialogResponse(@Nullable PassengerBooking passengerBooking) {
         if (passengerBooking != null) assignBookingToDriverAndPassenger(passengerBooking);
@@ -186,6 +235,7 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
     private void onPassengerRequestingBookingDialogResponse(Pair<PassengerBooking, RequestInfo> pair) {
         if (pair != null) {
             putBooking();
+            mapPreference.putAddress(currentAddress);
             putAlreadyDataChoosen(true);
         }
     }
@@ -363,6 +413,7 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
     }
 
     public void onTimeSelected(String time) {
+        currentAddress = getCurrentAddressFromCamera();
         if (time != null) {
             mapPreference.putTimeSelected(true);
             view.setButtonHour(StringUtils.formatHour(time));
@@ -370,7 +421,7 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
             if (mapPreference.isDateSelected()) {
                 String role = rolePreference.getCurrentRole();
                 if (role != null && role.equalsIgnoreCase(ROLE_DRIVER)) {
-                    getBookingsAndAddMarkers();
+                    onDriverRouteAccepted();
                 } else {
                     startDialogToPutPassengerBooking();
                 }
@@ -381,7 +432,15 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
         }
     }
 
+    private void onDriverRouteAccepted() {
+        getBookingsAndAddMarkers();
+        putAlreadyDataChoosen(true);
+        view.setSwitchIsClickable(false);
+        mapPreference.putAddress(currentAddress);
+    }
+
     public void onDateSelected(String date) {
+        currentAddress = getCurrentAddressFromCamera();
         if (!StringUtils.isEmpty(date)) {
             mapPreference.putDateSelected(true);
             view.setButtonDate(StringUtils.formatDateWithTodayLogic(date));
@@ -389,8 +448,7 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
             if (mapPreference.isTimeSelected()) {
                 String role = rolePreference.getCurrentRole();
                 if (role != null && role.equalsIgnoreCase(ROLE_DRIVER)) {
-                    getBookingsAndAddMarkers();
-                    putAlreadyDataChoosen(true);
+                    onDriverRouteAccepted();
                 } else {
                     startDialogToPutPassengerBooking();
                 }
@@ -415,17 +473,37 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
                 mapPreference.getFromOrTo() == null ? MapPreference.FROM : mapPreference.getFromOrTo(),
                 mapPreference.getCommunity()));
         if (mapPreference.getDate() == null) {
-            view.setButtonDate("Fecha");
+            if (MapPreference.FROM.equalsIgnoreCase(mapPreference.getFromOrTo())) {
+                view.setButtonDate(R.string.departure_date_message);
+            } else {
+                view.setButtonDate(R.string.arrival_date_message);
+            }
         } else {
             view.setButtonDate(StringUtils.formatDateWithTodayLogic(mapPreference.getDate()));
         }
-        if (mapPreference.getHour() == null) {
-            view.setButtonHour("Hora");
-        } else {
-            view.setButtonHour(StringUtils.formatHour(mapPreference.getHour()));
-        }
+
+        setButtonHourText();
+
         if (mapPreference.getFromOrTo() != null) {
             view.setSwitchState(MapPreference.TO.equals(mapPreference.getFromOrTo()));
+        }
+
+        if (mapPreference.isAlreadyDataChoosen()) {
+            view.setSwitchIsClickable(false);
+        } else {
+            view.setSwitchIsClickable(true);
+        }
+    }
+
+    private void setButtonHourText() {
+        if (mapPreference.getHour() == null) {
+            if (MapPreference.FROM.equalsIgnoreCase(mapPreference.getFromOrTo())) {
+                view.setButtonHour(R.string.departure_hour_message);
+            } else {
+                view.setButtonHour(R.string.arrival_hour_message);
+            }
+        } else {
+            view.setButtonHour(StringUtils.formatHour(mapPreference.getHour()));
         }
     }
 
@@ -488,8 +566,10 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
     }
 
     public void initView() {
-        mapPreference.putFromOrTo(MapPreference.FROM);
-        String community = mapPreference.getCommunity();
+        if (mapPreference.getFromOrTo() == null) {
+            mapPreference.putFromOrTo(MapPreference.FROM);
+        }
+        community = mapPreference.getCommunity();
         view.initViews();
     }
 
@@ -498,13 +578,12 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
             mapPreference.putFromOrTo(MapPreference.TO);
             view.setTextLocationText(StringUtils.getFromOrToFormattedText(
                     MapPreference.TO, mapPreference.getCommunity()));
-
         } else {
             mapPreference.putFromOrTo(MapPreference.FROM);
             view.setTextLocationText(StringUtils.getFromOrToFormattedText(
                     MapPreference.FROM, mapPreference.getCommunity()));
-
         }
+        setButtonHourText();
     }
 
     public void setLocationRequest() {
@@ -512,7 +591,12 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
     }
 
     public void showClickMarkerDialog(DisposableObserver<PassengerBooking> observer, Marker marker) {
-        view.showDialogQuota(observer, passengerBookingMap.get(marker.getTitle()));
+        if (marker != null && marker.getTitle() != null) {
+            if (DriverMapService.passengersSelectedByDriver.get(marker.getTitle()) == null &&
+                    DriverMapService.passengersSelectedByDriver.size() <= MININUM_NUMBER_OF_PASSENGERS_LESS_ONE) {
+                view.showDialogQuota(observer, passengerBookingMap.get(marker.getTitle()));
+            }
+        }
     }
 
     public void showTimePickerFragment(DisposableObserver<String> observer) {

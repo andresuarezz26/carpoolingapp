@@ -19,17 +19,23 @@ public class BaseFragmentPresenter {
     protected String fromOrTo;
     protected String date;
     protected String hour;
+    protected String choosenAddress;
     protected DatabaseReference databaseRef;
     protected MapPreference mapPreference;
     protected FragmentView view;
     private UserService userService;
     private FirebaseAuth firebaseAuth;
 
-    protected User currentUser;
-
     protected BaseFragmentPresenter(MapPreference mapPreference, FragmentView view, UserService userService) {
         this.databaseRef = FirebaseDatabase.getInstance().getReference();
         this.mapPreference = mapPreference;
+        this.view = view;
+        this.userService = userService;
+        firebaseAuth = FirebaseAuth.getInstance();
+    }
+
+    protected BaseFragmentPresenter(FragmentView view, UserService userService) {
+        this.databaseRef = FirebaseDatabase.getInstance().getReference();
         this.view = view;
         this.userService = userService;
         firebaseAuth = FirebaseAuth.getInstance();
@@ -124,16 +130,36 @@ public class BaseFragmentPresenter {
         mapPreference.putAlreadyDataChoosen(false);
     }
 
-    protected void resetAllMapPreferences() {
-        mapPreference.putDate(null);
-        mapPreference.putTime(null);
-        mapPreference.putFromOrTo(MapPreference.FROM);
-        mapPreference.putAlreadyDataChoosen(false);
-        mapPreference.putCommunity(null);
-        mapPreference.putAlreadyRegister(false);
-        mapPreference.putTermsAndConditionAccepted(false);
-        mapPreference.putDateSelected(false);
-        mapPreference.putTimeSelected(false);
+
+    protected void resetAllMapPreferences(MapPreference mapPreferenceParameter) {
+        mapPreferenceParameter.putDate(null);
+        mapPreferenceParameter.putTime(null);
+        mapPreferenceParameter.putFromOrTo(MapPreference.FROM);
+        mapPreferenceParameter.putAlreadyDataChoosen(false);
+        mapPreferenceParameter.putDateSelected(false);
+        mapPreferenceParameter.putTimeSelected(false);
     }
+
+
+    @Nullable
+    protected String selectDeparture() {
+        if (mapPreference.getFromOrTo() == null) return null;
+        if (mapPreference.getFromOrTo().equalsIgnoreCase(MapPreference.FROM)) {
+            return mapPreference.getCommunity();
+        } else {
+            return mapPreference.getAddress();
+        }
+    }
+
+    @Nullable
+    protected String selectArrival() {
+        if (mapPreference.getFromOrTo() == null) return null;
+        if (mapPreference.getFromOrTo().equalsIgnoreCase(MapPreference.TO)) {
+            return mapPreference.getCommunity();
+        } else {
+            return mapPreference.getAddress();
+        }
+    }
+
 
 }

@@ -5,10 +5,10 @@
     android:layout_centerHorizontal="true"
     android:background="@color/cupos_soft_gray">
 
-    <ImageView
+    <com.angular.gerardosuarez.carpoolingapp.customviews.dialog.views.RoundedImageView
         android:id="@+id/image_photo"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/margin_large"
@@ -17,13 +17,13 @@
 
     <TextView
         android:id="@+id/txt_driver_name"
+        style="@style/GrayBigTextTitles"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/image_photo"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/margin_normal"
-        android:text="@string/my_booking_passenger_searching"
-        style="@style/GrayBigTextTitles"/>
+        android:text="@string/my_booking_passenger_searching" />
 
     <TextView
         android:id="@+id/txt_driver_phone"
@@ -37,12 +37,23 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/txt_driver_address"
+        android:id="@+id/txt_driver_departure"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/txt_driver_phone"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/margin_normal"
+        android:gravity="center"
+        android:textColor="@color/cupos_dark_gray"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/txt_driver_arrival"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_driver_departure"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
         android:textColor="@color/cupos_dark_gray"
         android:textSize="18sp" />
 
@@ -50,8 +61,9 @@
         android:id="@+id/txt_driver_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txt_driver_address"
+        android:layout_below="@+id/txt_driver_arrival"
         android:layout_centerHorizontal="true"
+        android:gravity="center"
         android:textColor="@color/cupos_dark_gray"
         android:textSize="18sp" />
 
@@ -61,6 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/txt_driver_date"
         android:layout_centerHorizontal="true"
+        android:gravity="center"
         android:textColor="@color/cupos_dark_gray"
         android:textSize="18sp" />
 

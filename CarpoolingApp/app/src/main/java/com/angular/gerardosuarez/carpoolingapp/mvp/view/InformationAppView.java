@@ -1,9 +1,6 @@
 package com.angular.gerardosuarez.carpoolingapp.mvp.view;
 
-import android.net.http.SslError;
-import android.support.design.widget.BottomNavigationView;
 import android.view.View;
-import android.webkit.SslErrorHandler;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -15,6 +12,7 @@ import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.activity.BaseActivity;
 import com.angular.gerardosuarez.carpoolingapp.fragment.InformationAppFragment;
 import com.angular.gerardosuarez.carpoolingapp.mvp.base.FragmentView;
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,7 +21,7 @@ public class InformationAppView extends FragmentView<InformationAppFragment, Voi
 
     private static final String TERMS_AND_CONDITION_URL = "https://www.miscupos.com/infoapp";
 
-    private BottomNavigationView bottomMenu;
+    private BottomNavigationViewEx bottomMenu;
 
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
@@ -33,7 +31,7 @@ public class InformationAppView extends FragmentView<InformationAppFragment, Voi
         if (fragment.getView() != null) {
             ButterKnife.bind(this, fragment.getView());
             if (getActivity() != null)
-                bottomMenu = (BottomNavigationView) getActivity().findViewById(R.id.bottom_navigation);
+                bottomMenu = (BottomNavigationViewEx) getActivity().findViewById(R.id.bottom_navigation);
         }
     }
 
@@ -58,11 +56,6 @@ public class InformationAppView extends FragmentView<InformationAppFragment, Voi
     }
 
     private class SSLTolerentWebViewClient extends WebViewClient {
-
-        @Override
-        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-            handler.proceed(); // Ignore SSL certificate errors
-        }
 
         @Override
         public void onPageFinished(WebView view, String url) {

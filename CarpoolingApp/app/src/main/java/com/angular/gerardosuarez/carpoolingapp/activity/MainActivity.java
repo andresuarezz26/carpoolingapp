@@ -6,8 +6,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.view.MenuItem;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
-import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
-import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreferencePassengerImpl;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.init.InitPreferenceImpl;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreference;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreferenceImpl;
 import com.angular.gerardosuarez.carpoolingapp.fragment.MyMapFragment;
@@ -21,6 +20,8 @@ import butterknife.ButterKnife;
 
 
 public class MainActivity extends BaseActivity {
+
+    private static final int ZERO_FRAGMENTS = 0;
 
     @BindView(R.id.bottom_navigation)
     BottomNavigationViewEx bottomMenu;
@@ -64,9 +65,12 @@ public class MainActivity extends BaseActivity {
 
     private void initNavigationManager() {
         final RolePreference rolePreference = new RolePreferenceImpl(this, RolePreferenceImpl.NAME);
-        final MapPreference mapPreference = new MapPreferencePassengerImpl(this, MapPreferencePassengerImpl.NAME);
-        navigationManager = new NavigationManager(getFragmentManager(), rolePreference, mapPreference);
+        navigationManager = new NavigationManager(getFragmentManager(), rolePreference, new InitPreferenceImpl(this, InitPreferenceImpl.NAME));
         navigationManager.chooseInitialScreen();
+        setBottomMenuProperties();
+    }
+
+    private void setBottomMenuProperties() {
         bottomMenu.enableShiftingMode(false);
         bottomMenu.enableItemShiftingMode(false);
     }
@@ -88,11 +92,9 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        /* if (navigationManager.isMyProfileFragment() ) {
-            bottomMenu.setVisibility(View.GONE);
-        }else{
-            bottomMenu.setVisibility(View.VISIBLE);
-        }*/
+        if (navigationManager.getBackStackEntryCount() <= ZERO_FRAGMENTS) {
+            finish();
+        }
     }
 
     public NavigationManager getNavigationManager() {

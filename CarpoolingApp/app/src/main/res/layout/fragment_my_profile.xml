@@ -16,7 +16,7 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <ImageView
+        <com.angular.gerardosuarez.carpoolingapp.customviews.dialog.views.RoundedImageView
             android:id="@+id/photo_user"
             android:layout_width="120dp"
             android:layout_height="120dp"
@@ -26,8 +26,7 @@
             android:id="@+id/txt_my_profile_name"
             style="@style/GrayBigTextTitles"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Nombre pasajero" />
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/txt_my_profile_description"
@@ -38,25 +37,28 @@
             android:textColor="@color/cupos_blue" />
 
         <TextView
-            android:id="@+id/txt_my_profile_address"
-            style="@style/MyBookingDriverTextName"
+            android:id="@+id/txt_my_profile_departure"
+            style="@style/MyBookingDriverArrivalAndDeparture"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="address" />
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/txt_my_profile_arrival"
+            style="@style/MyBookingDriverArrivalAndDeparture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/txt_my_profile_date"
             style="@style/MyBookingDriverTextName"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="date" />
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/txt_my_profile_hour"
             style="@style/MyBookingDriverTextName"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="hour" />
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
@@ -102,6 +104,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="@dimen/margin_large"
         android:layout_marginEnd="@dimen/margin_large"
+        android:gravity="center"
         android:text="@string/text_i_am_passenger" />
 
     <TextView
@@ -111,6 +114,7 @@
         android:layout_above="@id/container_my_profile_community"
         android:layout_marginBottom="@dimen/margin_large"
         android:layout_marginStart="@dimen/margin_large"
+        android:gravity="center"
         android:text="@string/text_i_am_drvier"
         app:layout_constraintTop_toBottomOf="@+id/btn_driver" />
 

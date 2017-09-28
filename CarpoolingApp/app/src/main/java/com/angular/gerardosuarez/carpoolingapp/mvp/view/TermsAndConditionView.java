@@ -1,9 +1,7 @@
 package com.angular.gerardosuarez.carpoolingapp.mvp.view;
 
-import android.net.http.SslError;
 import android.support.design.widget.BottomNavigationView;
 import android.view.View;
-import android.webkit.SslErrorHandler;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -71,11 +69,6 @@ public class TermsAndConditionView extends FragmentView<TermsAndConditionFragmen
     }
 
     private class SSLTolerentWebViewClient extends WebViewClient {
-
-        @Override
-        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-            handler.proceed(); // Ignore SSL certificate errors
-        }
 
         @Override
         public void onPageFinished(WebView view, String url) {

@@ -3,11 +3,18 @@ package com.angular.gerardosuarez.carpoolingapp.mvp.view;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -35,6 +42,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,19 +81,26 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
     Button btnDate;
 
     private PlaceAutocompleteFragment autocompleteFragment;
+    private BottomNavigationViewEx bottomMenu;
 
     public MyMapView(MyMapFragment fragment) {
         super(fragment);
         if (fragment.getView() != null) {
             ButterKnife.bind(this, fragment.getView());
+            if (getActivity() != null) {
+                bottomMenu = (BottomNavigationViewEx) getActivity().findViewById(R.id.bottom_navigation);
+            }
         }
+    }
+
+    public void showMenu() {
+        bottomMenu.setVisibility(View.VISIBLE);
     }
 
     public void setAutocompleteFragment() {
         if (getFragment() == null) return;
-        if (getFragment().getChildFragmentManager() == null) return;
-        autocompleteFragment = (PlaceAutocompleteFragment) getFragment().
-                getChildFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        //if (getFragment().getChildFragmentManager() == null) return;
+        autocompleteFragment = initPlaceAutocompleteFragment(getFragment());
         autocompleteFragment.setBoundsBias(new LatLngBounds(
                 new LatLng(LATITUDE_CALI_SECOND, LONGITUDE_CALI_SECOND),
                 new LatLng(LATITUDE_CALI_FIRST, LONGITUDE_CALI_FIRST)
@@ -93,6 +108,48 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
 
         autocompleteFragment.setOnPlaceSelectedListener(getFragment());
     }
+
+    @Nullable
+    private PlaceAutocompleteFragment initPlaceAutocompleteFragment(@NonNull Fragment fragment) {
+        PlaceAutocompleteFragment mapFragment = null;
+        if (fragment.getChildFragmentManager() != null) {
+            FragmentManager fm = getFragmentManager(getFragment());
+            mapFragment = (PlaceAutocompleteFragment) fm.findFragmentByTag("autocomplete_fragment");
+            if (mapFragment == null) {
+                mapFragment = new PlaceAutocompleteFragment();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.add(R.id.place_autocomplete_fragment, mapFragment, "autocomplete_fragment");
+                ft.commit();
+                fm.executePendingTransactions();
+            }
+        }
+        return mapFragment;
+    }
+
+    private PlaceAutocompleteFragment getAutocompleteMapFragment(Fragment fragment) {
+        FragmentManager fm;
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            fm = fragment.getFragmentManager();
+        } else {
+            fm = fragment.getChildFragmentManager();
+        }
+
+        return (PlaceAutocompleteFragment) fm.findFragmentById(R.id.place_autocomplete_fragment);
+    }
+
+    private FragmentManager getFragmentManager(Fragment fragment) {
+        FragmentManager fm;
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            fm = fragment.getChildFragmentManager();
+        } else {
+            fm = fragment.getChildFragmentManager();
+        }
+
+        return fm;
+    }
+
 
     private void setTextAutocompleteFragmentWithText(String text) {
         try {
@@ -102,7 +159,6 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
         } catch (NullPointerException e) {
             Timber.e(e, e.getMessage());
         }
-
     }
 
     public void setTextAutocompleteFragmentWithCurrentCoord(String currentLocation) {
@@ -117,9 +173,40 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
 
     public void initMap() {
         if (getFragment() == null) return;
-        if (getFragment().getChildFragmentManager() == null) return;
-        MapFragment mapFragment = (MapFragment) getFragment().getChildFragmentManager().findFragmentById(R.id.map_fragment);
-        mapFragment.getMapAsync(getFragment());
+        //if (getFragment().getChildFragmentManager() == null) return;
+        MapFragment mapFragment = initMapFragment(getFragment());
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(getFragment());
+        }
+    }
+
+   /* private MapFragment getMapFragment(Fragment fragment) {
+        FragmentManager fm;
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            fm = fragment.getFragmentManager();
+        } else {
+            fm = fragment.getChildFragmentManager();
+        }
+
+        return (MapFragment) fm.findFragmentById(R.id.map_fragment);
+    }*/
+
+    @Nullable
+    private MapFragment initMapFragment(@NonNull Fragment fragment) {
+        MapFragment mapFragment = null;
+        if (fragment.getChildFragmentManager() != null) {
+            FragmentManager fm = getFragmentManager(getFragment());
+            mapFragment = (MapFragment) fm.findFragmentByTag("mapFragment");
+            if (mapFragment == null) {
+                mapFragment = new MapFragment();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.add(R.id.map_fragment_container, mapFragment, "mapFragment");
+                ft.commit();
+                fm.executePendingTransactions();
+            }
+        }
+        return mapFragment;
     }
 
     public synchronized void buildGoogleApiClient() {
@@ -149,6 +236,10 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
         switchFromTo.setOnCheckedChangeListener(getFragment());
     }
 
+    public void setSwitchIsClickable(boolean value) {
+        switchFromTo.setClickable(value);
+    }
+
     public void setTextLocationText(String text) {
         textLocation.setText(text);
     }
@@ -167,7 +258,7 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), INITIAL_ZOOM));
     }
 
-    private void setMarker(LatLng latLng, String title, int id) {
+    private void setNotChoosedRedMarker(LatLng latLng, String title, int id) {
         BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.custom_marker);
         map.addMarker(new MarkerOptions()
                 .position(latLng)
@@ -177,7 +268,17 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
         ;
     }
 
-    private void setMarker(LatLng latLng, String title) {
+    private void setChoosedByDriverGreenMarker(LatLng latLng, String title, int id) {
+        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.green_marker);
+        map.addMarker(new MarkerOptions()
+                .position(latLng)
+                .icon(icon)
+                .title(title))
+                .setTag(id)
+        ;
+    }
+
+    private void setNotChoosedRedMarker(LatLng latLng, String title) {
         map.addMarker(new MarkerOptions()
                 .position(latLng)
                 .title(title));
@@ -232,14 +333,18 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
     @Nullable
     public LatLng getCurrentCoordinatesFromCamera() {
         LatLng current = null;
-        if(map != null){
+        if (map != null) {
             current = map.getCameraPosition().target;
         }
         return current;
     }
 
-    public void addPassengerQuotaMarker(PassengerBooking passengerBooking, int id) {
-        setMarker(new LatLng(passengerBooking.latitude, passengerBooking.longitude), passengerBooking.getKey(), id);
+    public void addMarkerForNoChoosenPassenger(PassengerBooking passengerBooking, int id) {
+        setNotChoosedRedMarker(new LatLng(passengerBooking.latitude, passengerBooking.longitude), passengerBooking.getKey(), id);
+    }
+
+    public void addMarkerForAlreadyChoosenByDriverPassenger(PassengerBooking passengerBooking, int id) {
+        setChoosedByDriverGreenMarker(new LatLng(passengerBooking.latitude, passengerBooking.longitude), passengerBooking.getKey(), id);
     }
 
     public void showDialogQuota(DisposableObserver<PassengerBooking> observer, PassengerBooking passengerBooking) {
@@ -307,8 +412,16 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
         btnHour.setText(hour);
     }
 
-    public void setButtonDate(String date) {
-        btnDate.setText(date);
+    public void setButtonHour(@StringRes int resId) {
+        btnHour.setText(resId);
+    }
+
+    public void setButtonDate(@StringRes int resId) {
+        btnDate.setText(resId);
+    }
+
+    public void setButtonDate(String text) {
+        btnDate.setText(text);
     }
 
     public void clearMap() {

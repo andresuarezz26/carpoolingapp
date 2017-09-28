@@ -1,14 +1,14 @@
 package com.angular.gerardosuarez.carpoolingapp.mvp.presenter;
 
-import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.init.InitPreference;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.TermsAndConditionView;
 
 public class TermsAndConditionPresenter {
     private TermsAndConditionView view;
-    private MapPreference mapPreference;
+    private InitPreference initPreference;
 
-    public TermsAndConditionPresenter(MapPreference mapPreference, TermsAndConditionView view) {
-        this.mapPreference = mapPreference;
+    public TermsAndConditionPresenter(InitPreference initPreference, TermsAndConditionView view) {
+        this.initPreference = initPreference;
         this.view = view;
     }
 
@@ -17,6 +17,6 @@ public class TermsAndConditionPresenter {
     }
 
     public void setTermsAndConditionAccepted() {
-        mapPreference.putTermsAndConditionAccepted(true);
+        initPreference.putWasTermsAndCondictionsAccepted(true);
     }
 }

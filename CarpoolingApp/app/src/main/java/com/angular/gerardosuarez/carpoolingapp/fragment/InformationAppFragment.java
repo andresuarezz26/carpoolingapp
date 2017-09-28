@@ -8,8 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
-import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
-import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreferencePassengerImpl;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.InformationAppPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.InformationAppView;
 
@@ -30,9 +28,7 @@ public class InformationAppFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        MapPreference mapPreference = new MapPreferencePassengerImpl(getActivity(), MapPreferencePassengerImpl.NAME);
         presenter = new InformationAppPresenter(
-                mapPreference,
                 new InformationAppView(this)
         );
         presenter.init();

@@ -18,7 +18,7 @@ public class UserService extends BaseFirebaseService {
     }
 
     public void createAuxUserNode(String nameAndUid) {
-        databaseReference.child(AUX_USERS).setValue(nameAndUid);
+        databaseReference.child(AUX_USERS).child(nameAndUid).child(nameAndUid).setValue(true);
     }
 
     public DatabaseReference getUserByUid(String uid) {

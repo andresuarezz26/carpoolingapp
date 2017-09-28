@@ -13,9 +13,10 @@ public class MapPreferencePassengerImpl extends BasePreferenceImpl implements Ma
     private static final String ALREADY_DATA_CHOOSEN = "ALREADY_DATA_CHOOSEN_PASSENGER";
     private static final String IS_DATE_SELECTED = "IS_DATE_SELECTED_PASSENGER";
     private static final String IS_TIME_SELECTED = "IS_TIME_SELECTED_PASSENGER";
+    private static final String ADDRESS = "ADDRESS_PASSENGER";
     //These have the same name as driver because it doesnt matter the role
     private static final String ARE_TERMS_AND_CONDITIONS_ACCEPTED = "ARE_TERMS_AND_CONDITIONS_ACCEPTED";
-    private static final String COMUNITY = "COMUNITY";
+    private static final String COMUNITY = "COMMUNITY";
     private static final String ALREADY_REGISTERED = "ALREADY";
 
     public MapPreferencePassengerImpl(Context context, String name) {
@@ -60,6 +61,16 @@ public class MapPreferencePassengerImpl extends BasePreferenceImpl implements Ma
     @Override
     public String getFromOrTo() {
         return getString(FROM_OR_TO);
+    }
+
+    @Override
+    public String getAddress() {
+        return getString(ADDRESS);
+    }
+
+    @Override
+    public void putAddress(String value) {
+        put(ADDRESS, value);
     }
 
     @Override

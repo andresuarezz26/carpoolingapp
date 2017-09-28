@@ -23,6 +23,10 @@ public interface MapPreference {
 
     String getFromOrTo();
 
+    String getAddress();
+
+    void putAddress(String value);
+
     void putAlreadyRegister(boolean value);
 
     boolean isAlreadyRegister();

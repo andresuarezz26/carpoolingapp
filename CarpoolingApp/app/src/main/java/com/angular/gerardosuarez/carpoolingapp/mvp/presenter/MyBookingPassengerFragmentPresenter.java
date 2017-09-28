@@ -1,5 +1,6 @@
 package com.angular.gerardosuarez.carpoolingapp.mvp.presenter;
 
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
@@ -50,6 +51,8 @@ public class MyBookingPassengerFragmentPresenter extends BaseFragmentPresenter {
         } else {
             thereAreData = true;
             view.init(date, hour);
+            view.setArrivalText(selectArrival());
+            view.setDepartureText(selectDeparture());
         }
     }
 
@@ -116,11 +119,23 @@ public class MyBookingPassengerFragmentPresenter extends BaseFragmentPresenter {
                 driverInfoRequest.setKey(uid);
                 view.makeButtonAndImageVisibles();
                 view.setDriverInfo(driverInfoRequest, date, hour);
+                chooseArrivalAndDepartureDriver(driverInfoRequest.address, mapPreference.getCommunity());
                 currentDriverInfo = driverInfoRequest;
                 thereIsDriver = true;
             }
         } catch (DatabaseException e) {
             Timber.e(e.getMessage(), e);
+        }
+    }
+
+    private void chooseArrivalAndDepartureDriver(@Nullable String address, @Nullable String community) {
+        if (TextUtils.isEmpty(address) || TextUtils.isEmpty(community)) return;
+        if (mapPreference.getFromOrTo().equalsIgnoreCase(MapPreference.FROM)) {
+            view.setDepartureText(community);
+            view.setArrivalText(address);
+        } else {
+            view.setDepartureText(address);
+            view.setArrivalText(community);
         }
     }
 
@@ -145,6 +160,8 @@ public class MyBookingPassengerFragmentPresenter extends BaseFragmentPresenter {
                 }
                 thereIsDriver = false;
                 view.setInitialSearchingDriverInfo();
+                view.setArrivalText(selectArrival());
+                view.setDepartureText(selectDeparture());
             }
         }
     }

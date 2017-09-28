@@ -9,6 +9,7 @@ import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerInfoRequest;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.User;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.rx.DefaultPresenterObserver;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyBookingDriverView;
+import com.angular.gerardosuarez.carpoolingapp.service.DriverMapService;
 import com.angular.gerardosuarez.carpoolingapp.service.MyBookingDriverService;
 import com.angular.gerardosuarez.carpoolingapp.service.UserService;
 import com.angular.gerardosuarez.carpoolingapp.utils.StringUtils;
@@ -118,17 +119,8 @@ public class MyBookingDriverFragmentPresenter extends BaseFragmentPresenter {
         });
     }
 
-    public void onStartTravel() {
-        String myUid = getMyUid();
-        if (!TextUtils.isEmpty(myUid)) {
-            if (areAllMapPreferenceNonnull()) {
-                bookingDriverService.startRoute(getRoute(), view.getPassengerList(), myUid);
-                resetMapPreferencesUsedInMapFragment();
-            }
-        }
-    }
-
     public void onCancelRoute() {
+        DriverMapService.passengersSelectedByDriver.clear();
         String myUid = getMyUid();
         if (!TextUtils.isEmpty(myUid)) {
             if (areAllMapPreferenceNonnull()) {
@@ -152,6 +144,7 @@ public class MyBookingDriverFragmentPresenter extends BaseFragmentPresenter {
                 if (passengerInfoRequest != null) {
                     String currentUid = getMyUid();
                     if (currentUid != null) {
+                        DriverMapService.passengersSelectedByDriver.put(currentUid, null);
                         bookingDriverService.cancelPassengerBooking(StringUtils.buildRoute(community, fromOrTo, date, hour), passengerInfoRequest, currentUid);
                     }
                 }

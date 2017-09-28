@@ -36,10 +36,10 @@ public class MyProfilePresenter extends BaseFragmentPresenter {
     private void validateUserAndSetRouteTexts() {
         validateUserAndSetRouteTexts(
                 StringUtils.changeNullByEmpty(mapPreference.getDate()),
-                StringUtils.EMPTY_STRING,
+                selectDeparture(),
+                selectArrival(),
                 StringUtils.changeNullByEmpty(mapPreference.getHour()));
     }
-
 
     private void setCommunity() {
         String community = mapPreference.getCommunity();
@@ -70,11 +70,11 @@ public class MyProfilePresenter extends BaseFragmentPresenter {
         return imageUrl;
     }
 
-    private void validateUserAndSetRouteTexts(@Nullable String date, @Nullable String address, @Nullable String hour) {
+    private void validateUserAndSetRouteTexts(@Nullable String date, @Nullable String arrival, @Nullable String departure, @Nullable String hour) {
         setUsernameText();
         view.setTextDate(StringUtils.formatDateWithTodayLogic(StringUtils.changeNullByEmpty(date)));
         view.setTextHour(StringUtils.formatHour(StringUtils.changeNullByEmpty(hour)));
-        view.setTextAddress(StringUtils.changeNullByEmpty(address));
+        view.setTextArrivalAndDeparture(StringUtils.changeNullByEmpty(arrival), StringUtils.changeNullByEmpty(departure));
         view.setImagePhoto(getImageUrl());
     }
 
@@ -82,7 +82,7 @@ public class MyProfilePresenter extends BaseFragmentPresenter {
         setUsernameText();
         view.setTextDate(StringUtils.EMPTY_STRING);
         view.setTextHour(StringUtils.EMPTY_STRING);
-        view.setTextAddress(StringUtils.EMPTY_STRING);
+        view.setTextArrivalAndDeparture(StringUtils.EMPTY_STRING, StringUtils.EMPTY_STRING);
         view.setImagePhoto(getImageUrl());
     }
 

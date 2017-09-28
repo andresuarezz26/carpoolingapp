@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
-import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.init.InitPreference;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreference;
 import com.angular.gerardosuarez.carpoolingapp.fragment.CommunityChooserFragment;
 import com.angular.gerardosuarez.carpoolingapp.fragment.ConfigurationFragment;
@@ -27,17 +27,18 @@ public class NavigationManager {
 
     private FragmentManager fragmentManager;
     private RolePreference rolePreference;
-    private MapPreference mapPreference;
+    private InitPreference initPreference;
+
 
     private final static String ROLE_DRIVER = "driver";
     private final static String ROLE_PASSEGNER = "passenger";
 
     private HashMap<String, String> isMenuFragmentMap;
 
-    public NavigationManager(@NonNull FragmentManager fragmentManager, @NonNull RolePreference rolePreference, @NonNull MapPreference mapPreference) {
+    public NavigationManager(@NonNull FragmentManager fragmentManager, @NonNull RolePreference rolePreference, @NonNull InitPreference initPreference) {
         this.fragmentManager = fragmentManager;
         this.rolePreference = rolePreference;
-        this.mapPreference = mapPreference;
+        this.initPreference = initPreference;
         initMenuFragmentHas();
         fragmentManager.addOnBackStackChangedListener(getListener());
     }
@@ -83,9 +84,9 @@ public class NavigationManager {
     }
 
     public void chooseInitialScreen() {
-        if (mapPreference.areTermsAndConditionAccepted()) {
-            if (mapPreference.isAlreadyRegister()) {
-                if (mapPreference.getCommunity() != null) {
+        if (initPreference.wasTermsAndConditionsAccepted()) {
+            if (initPreference.isAlreadyRegistered()) {
+                if (initPreference.wasComunityChoosed()) {
                     goToMyProfileFragmentWithoutBackStack();
                 } else {
                     goToCommunityChooserFragment();
@@ -96,6 +97,10 @@ public class NavigationManager {
         } else {
             goToTermsAndConditionFragment();
         }
+    }
+
+    public int getBackStackEntryCount() {
+        return fragmentManager.getBackStackEntryCount();
     }
 
     //region GotoFragments

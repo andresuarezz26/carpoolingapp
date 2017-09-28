@@ -45,11 +45,6 @@ public class MyBookingDriverFragment extends BaseMapPreferenceFragment {
         presenter.getRequestsOfDriver();
     }
 
-    @OnClick(R.id.btn_start_travel)
-    void onStartTravelClick() {
-        presenter.onStartTravel();
-    }
-
     @OnClick(R.id.btn_cancel_route)
     void onCancelBooking() {
         presenter.onCancelRoute();

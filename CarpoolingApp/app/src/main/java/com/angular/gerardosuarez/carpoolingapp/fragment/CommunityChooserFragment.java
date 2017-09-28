@@ -1,5 +1,6 @@
 package com.angular.gerardosuarez.carpoolingapp.fragment;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -8,15 +9,17 @@ import android.view.ViewGroup;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.activity.MainActivity;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.init.InitPreferenceImpl;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
-import com.angular.gerardosuarez.carpoolingapp.fragment.base.BaseMapPreferenceFragment;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreferenceDriverImpl;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreferencePassengerImpl;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.CommunityChooserPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.CommunityChooserView;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CommunityChooserFragment extends BaseMapPreferenceFragment {
+public class CommunityChooserFragment extends Fragment {
 
     private CommunityChooserPresenter presenter;
 
@@ -31,12 +34,15 @@ public class CommunityChooserFragment extends BaseMapPreferenceFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        MapPreference driverMapPreference = new MapPreferenceDriverImpl(getActivity(), MapPreferenceDriverImpl.NAME);
+        MapPreference passengerMapPreference = new MapPreferencePassengerImpl(getActivity(), MapPreferencePassengerImpl.NAME);
         presenter = new CommunityChooserPresenter(
                 new CommunityChooserView(this),
-                mapPreference
+                driverMapPreference,
+                passengerMapPreference,
+                new InitPreferenceImpl(getActivity(), InitPreferenceImpl.NAME)
         );
         presenter.init();
-
     }
 
     @OnClick(R.id.btn_icesi)
