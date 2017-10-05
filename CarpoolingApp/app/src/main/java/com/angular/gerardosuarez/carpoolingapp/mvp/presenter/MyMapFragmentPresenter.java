@@ -57,7 +57,7 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
     private final static String ROLE_DRIVER = "driver";
     private final static String ROLE_PASSEGNER = "passenger";
     private static final int FIRST_POSITION = 0;
-    public static final int MININUM_NUMBER_OF_PASSENGERS_LESS_ONE = 3;
+    private static final int MININUM_NUMBER_OF_PASSENGERS_LESS_ONE = 3;
 
     private MyMapView view;
     private DriverMapService driverMapService;
@@ -131,8 +131,9 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         String role = rolePreference.getCurrentRole();
                         if (role != null && role.equalsIgnoreCase(ROLE_DRIVER)) {
+                            view.clearMap();
+                            DriverMapService.passengersSelectedByDriver.clear();
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                view.clearMap();
                                 snapshot.getKey();
                                 try {
                                     PassengerBooking passengerBooking = snapshot.getValue(PassengerBooking.class);
@@ -627,7 +628,5 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
             view.showToast(res);
         }
     }
-
-
 }
 

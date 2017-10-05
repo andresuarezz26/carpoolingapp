@@ -31,7 +31,6 @@ public class RegisterView extends FragmentView<RegisterFragment, Void> {
     @BindView(R.id.edit_car_model)
     EditText editCarModel;
 
-
     public RegisterView(RegisterFragment fragment) {
         super(fragment);
         if (fragment.getView() != null) {
@@ -82,7 +81,6 @@ public class RegisterView extends FragmentView<RegisterFragment, Void> {
             editCarModel.setText(carModel);
         }
     }
-
 
     @NonNull
     public User createUserFromForm() {

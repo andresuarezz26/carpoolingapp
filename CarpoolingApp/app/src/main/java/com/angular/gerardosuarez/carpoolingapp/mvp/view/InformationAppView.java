@@ -71,6 +71,4 @@ public class InformationAppView extends FragmentView<InformationAppFragment, Voi
         }
 
     }
-
-
 }

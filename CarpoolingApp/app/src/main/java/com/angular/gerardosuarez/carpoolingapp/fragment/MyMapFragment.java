@@ -48,26 +48,12 @@ public class MyMapFragment extends BaseMapPreferenceFragment
         GoogleApiClient.OnConnectionFailedListener,
         OnPageSelectedListener {
 
-    public static final String TAG = "driver_map";
     public static final int PERMISSION_REQUEST_FINE_LOCATION = 1;
-    private static View view;
-
     private MyMapFragmentPresenter presenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        /*if (view != null) {
-            ViewGroup parent = (ViewGroup) view.getParent();
-            if (parent != null)
-                parent.removeView(view);
-        }
-        try {
-            view = inflater.inflate(R.layout.fragment_my_map, container, false);
-            ButterKnife.bind(this, view);
-        } catch (InflateException e) {
-        /* map is already there, just return view as it is
-        } */
         View view = inflater.inflate(R.layout.fragment_my_map, container, false);
         ButterKnife.bind(this, view);
         return view;
@@ -256,7 +242,6 @@ public class MyMapFragment extends BaseMapPreferenceFragment
         }
     }
 
-
     //GoogleApiClient.ConnectionCallbacks,
     //GoogleApiClient.OnConnectionFailedListener
     @Override
@@ -273,6 +258,4 @@ public class MyMapFragment extends BaseMapPreferenceFragment
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Timber.i("failed");
     }
-
-
 }

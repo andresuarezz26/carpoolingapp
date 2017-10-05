@@ -21,5 +21,4 @@ public class MainPresenter {
         }
         view.init();
     }
-
 }

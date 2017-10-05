@@ -3,7 +3,6 @@ package com.angular.gerardosuarez.carpoolingapp.mvp.base;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.RequestInfo;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.User;
@@ -39,30 +38,6 @@ public class BaseFragmentPresenter {
         this.view = view;
         this.userService = userService;
         firebaseAuth = FirebaseAuth.getInstance();
-    }
-
-    protected boolean areAllMapPreferencesNonnullWithMessage() {
-        community = mapPreference.getCommunity();
-        if (TextUtils.isEmpty(community)) {
-            view.showToast(R.string.error_empty_community);
-            return false;
-        }
-        fromOrTo = mapPreference.getFromOrTo();
-        if (TextUtils.isEmpty(fromOrTo)) {
-            view.showToast(R.string.error_empty_from_or_to);
-            return false;
-        }
-        date = mapPreference.getDate();
-        if (TextUtils.isEmpty(date)) {
-            view.showToast(R.string.error_empty_date);
-            return false;
-        }
-        hour = mapPreference.getHour();
-        if (TextUtils.isEmpty(hour)) {
-            view.showToast(R.string.error_empty_hour);
-            return false;
-        }
-        return true;
     }
 
     protected boolean areAllMapPreferenceNonnull() {
@@ -130,7 +105,6 @@ public class BaseFragmentPresenter {
         mapPreference.putAlreadyDataChoosen(false);
     }
 
-
     protected void resetAllMapPreferences(MapPreference mapPreferenceParameter) {
         mapPreferenceParameter.putDate(null);
         mapPreferenceParameter.putTime(null);
@@ -139,7 +113,6 @@ public class BaseFragmentPresenter {
         mapPreferenceParameter.putDateSelected(false);
         mapPreferenceParameter.putTimeSelected(false);
     }
-
 
     @Nullable
     protected String selectDeparture() {
@@ -160,6 +133,4 @@ public class BaseFragmentPresenter {
             return mapPreference.getAddress();
         }
     }
-
-
 }

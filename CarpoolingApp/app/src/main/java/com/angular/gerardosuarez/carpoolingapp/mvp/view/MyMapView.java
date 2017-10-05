@@ -7,7 +7,11 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -55,6 +59,8 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
     private static final int INITIAL_ZOOM = 11;
     private static final String DATE_PICKER = "datePicker";
     private static final String TIME_PICKER = "timePicker";
+    private static final int BITMAP_MARKER_WIDTH = 106;
+    private static final int BITMAP_MARKER_HEIGTH = 120;
     private GoogleMap map;
     private LocationRequest mLocationRequest;
     private GoogleApiClient mGoogleApiClient;
@@ -180,18 +186,6 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
         }
     }
 
-   /* private MapFragment getMapFragment(Fragment fragment) {
-        FragmentManager fm;
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            fm = fragment.getFragmentManager();
-        } else {
-            fm = fragment.getChildFragmentManager();
-        }
-
-        return (MapFragment) fm.findFragmentById(R.id.map_fragment);
-    }*/
-
     @Nullable
     private MapFragment initMapFragment(@NonNull Fragment fragment) {
         MapFragment mapFragment = null;
@@ -259,23 +253,34 @@ public class MyMapView extends FragmentView<MyMapFragment, Void> {
     }
 
     private void setNotChoosedRedMarker(LatLng latLng, String title, int id) {
-        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.custom_marker);
+        if (getContext() == null) return;
+        Bitmap scaledBitmap = getScaledBitmap(R.drawable.custom_marker, getContext().getResources());
+        BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(scaledBitmap);
+        scaledBitmap.recycle();
         map.addMarker(new MarkerOptions()
                 .position(latLng)
                 .icon(icon)
                 .title(title))
-                .setTag(id)
-        ;
+                .setTag(id);
     }
 
     private void setChoosedByDriverGreenMarker(LatLng latLng, String title, int id) {
-        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.green_marker);
+        if (getContext() == null) return;
+        Bitmap scaledBitmap = getScaledBitmap(R.drawable.green_marker, getContext().getResources());
+        BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(scaledBitmap);
+        scaledBitmap.recycle();
         map.addMarker(new MarkerOptions()
                 .position(latLng)
                 .icon(icon)
                 .title(title))
-                .setTag(id)
-        ;
+                .setTag(id);
+    }
+
+    private Bitmap getScaledBitmap(@DrawableRes int resId, @NonNull Resources resources) {
+        Bitmap bitmap = BitmapFactory.decodeResource(resources, resId);
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, BITMAP_MARKER_WIDTH, BITMAP_MARKER_HEIGTH, false);
+        bitmap.recycle();
+        return scaledBitmap;
     }
 
     private void setNotChoosedRedMarker(LatLng latLng, String title) {

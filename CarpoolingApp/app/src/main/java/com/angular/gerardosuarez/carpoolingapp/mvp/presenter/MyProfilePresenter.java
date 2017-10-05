@@ -97,5 +97,4 @@ public class MyProfilePresenter extends BaseFragmentPresenter {
     public void showMenu() {
         view.showMenu();
     }
-
 }

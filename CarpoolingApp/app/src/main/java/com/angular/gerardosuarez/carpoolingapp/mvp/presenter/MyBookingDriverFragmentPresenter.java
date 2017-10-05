@@ -152,6 +152,4 @@ public class MyBookingDriverFragmentPresenter extends BaseFragmentPresenter {
             }
         }
     }
-
-
 }

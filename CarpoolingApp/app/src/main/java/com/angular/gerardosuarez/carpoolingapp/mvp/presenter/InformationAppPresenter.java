@@ -12,5 +12,4 @@ public class InformationAppPresenter {
     public void init() {
         view.init();
     }
-
 }

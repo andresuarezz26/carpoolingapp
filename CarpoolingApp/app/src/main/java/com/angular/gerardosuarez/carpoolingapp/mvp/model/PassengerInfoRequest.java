@@ -75,5 +75,4 @@ public class PassengerInfoRequest {
     public void setPassengerPhotoUri(String passengerPhotoUri) {
         this.passengerPhotoUri = passengerPhotoUri;
     }
-
 }

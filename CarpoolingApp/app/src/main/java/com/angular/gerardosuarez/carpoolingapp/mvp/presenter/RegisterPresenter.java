@@ -29,7 +29,6 @@ public class RegisterPresenter extends BaseFragmentPresenter {
         this.initPreference = initPreference;
     }
 
-
     public void init() {
         User currentUser = getCurrentUser();
         if (currentUser != null) {
@@ -43,14 +42,18 @@ public class RegisterPresenter extends BaseFragmentPresenter {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 try {
-                    User user = dataSnapshot.getValue(User.class);
-                    view.setInitialTexts(
-                            user.name,
-                            user.email,
-                            user.phone,
-                            user.car_plate,
-                            user.car_color,
-                            user.car_model);
+                    if (dataSnapshot != null) {
+                        User user = dataSnapshot.getValue(User.class);
+                        if (user != null) {
+                            view.setInitialTexts(
+                                    user.name,
+                                    user.email,
+                                    user.phone,
+                                    user.car_plate,
+                                    user.car_color,
+                                    user.car_model);
+                        }
+                    }
                 } catch (DatabaseException e) {
                     Timber.e(e.getMessage(), e);
                 }
@@ -83,7 +86,6 @@ public class RegisterPresenter extends BaseFragmentPresenter {
             return false;
         }
     }
-
 
     private boolean validatePhoneNumber(User user) {
         if (TextUtils.isEmpty(user.phone)) {

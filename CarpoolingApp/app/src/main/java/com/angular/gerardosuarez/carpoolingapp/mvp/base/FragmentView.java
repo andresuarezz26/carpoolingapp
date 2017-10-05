@@ -50,6 +50,6 @@ public class FragmentView<T extends Fragment, AO> {
     }
 
     public boolean isNetworkAvailable() {
-        return NetworkUtils.isNetworkAvailable(getActivity());
+        return getActivity() != null && NetworkUtils.isNetworkAvailable(getActivity());
     }
 }

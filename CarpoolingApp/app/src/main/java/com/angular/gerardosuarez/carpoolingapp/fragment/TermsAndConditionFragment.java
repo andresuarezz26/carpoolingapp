@@ -20,7 +20,6 @@ import butterknife.OnClick;
 
 public class TermsAndConditionFragment extends BaseMapPreferenceFragment {
 
-    public static final String TAG = "terms_and_condition_fragment";
     private TermsAndConditionPresenter presenter;
 
     @BindView(R.id.radio_button_terms_and_condition)
@@ -54,6 +53,5 @@ public class TermsAndConditionFragment extends BaseMapPreferenceFragment {
             if (activity.getNavigationManager() == null) return;
             activity.getNavigationManager().chooseInitialScreen();
         }
-
     }
 }

@@ -56,5 +56,4 @@ public class MyBookingPassengerFragment extends BaseMapPreferenceFragment {
         super.onDestroy();
         presenter.unsuscribeFirebaseListener();
     }
-
 }
