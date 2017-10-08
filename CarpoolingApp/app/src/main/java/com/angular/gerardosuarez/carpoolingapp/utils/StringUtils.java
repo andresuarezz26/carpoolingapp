@@ -1,108 +1,53 @@
 package com.angular.gerardosuarez.carpoolingapp.utils;
 
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.text.Html;
-import android.text.Spanned;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Base64;
 
-import java.text.DecimalFormat;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
+
+import java.util.Calendar;
+import java.util.Date;
 
 import timber.log.Timber;
 
 public final class StringUtils {
 
-    public static final String ENCODING = "UTF-8";
-    public static final String SPLIT_SEPARATOR = " ";
-    public static final String REGEX_FULL_NAME = "^[a-zA-Z0-9 - ! # $ % & ' * + - / = ? ^ _ ` { | } ~]*$";
-    public static final String REGEX_ONLY_SPACES = "[ ]*";
-    private static final String EMAIL_PATTERN = "^[A-Z0-9_.%+-]+@[A-Z0-9]+\\.[A-Z]{2,6}$";
     private static final String OUTPUT_CHARSET = "UTF-8";
     private static final String ERROR_ENCODING_STRING = "error encoding String";
     private static final String ERROR_DECODING_STRING = "error decoding String";
-    private static final String DECIMAL_FORMAT_WITH_CENTS = "###,###,##0.00";
-    private static final String DECIMAL_FORMAT_WITHOUT_CENTS = "###,###,##0.##";
-    public static final String LINE_SEPARATOR = "\n";
-    public static final String EMPTY_STRING = "\u200B";
-    public static final String HORIZONTAL_ELLIPSIS = "%s\u2026";
-    public static final String DOUBLE_BREAK = "\n\n";
-    public static final String COLON = ",";
-    public static final String DOUBLE_POINT = ":";
+    public static final String EMPTY_STRING = "";
+    private static final String ZERO_STRING = "0";
+    private static final int INT_TEN = 10;
+    public static final String SLASH = "/";
+    private static final String TODAY_STRING = "Hoy";
+    private static final String FROM = "Inicio:";
+    private static final String TO = "Destino:";
 
     private StringUtils() {
 
     }
 
-    public static boolean applyRegex(@NonNull final String regex, @NonNull final String value) {
-        final Pattern p = Pattern.compile(regex);
-        final Matcher m = p.matcher(value);
-        return m.matches();
+    @NonNull
+    public static String changeNullByEmpty(@Nullable String text) {
+        return text == null ? EMPTY_STRING : text;
     }
 
-    @SuppressWarnings("deprecation")
-    public static Spanned fromHtml(String htmlFormattedString) {
-        if (TextUtils.isEmpty(htmlFormattedString)) {
-            return null;
-        }
+    public static String buildRoute(String community, String fromOrTo, String date, String hour) {
+        return fromOrTo + "-" + community + SLASH + date + SLASH + hour + SLASH;
+    }
 
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
-            return Html.fromHtml(htmlFormattedString, Html.FROM_HTML_MODE_COMPACT);
+    public static String addZeroToStart(int number) {
+        String formatNumber;
+        if (number < INT_TEN) {
+            formatNumber = ZERO_STRING + number;
         } else {
-            return Html.fromHtml(htmlFormattedString);
+            formatNumber = number + EMPTY_STRING;
         }
+        return formatNumber;
     }
 
-    public static String getPriceFormatted(float price) {
-        DecimalFormat decimalFormat;
-        if (price - (int) price > 0) {
-            decimalFormat = new DecimalFormat(DECIMAL_FORMAT_WITH_CENTS);
-            return decimalFormat.format((double) price);
-        }
-        decimalFormat = new DecimalFormat(DECIMAL_FORMAT_WITHOUT_CENTS);
-        return decimalFormat.format((int) price);
-    }
-
-    public static boolean isValidEmail(String email) {
-        Pattern validEmailAddressRegex = Pattern.compile(EMAIL_PATTERN, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = validEmailAddressRegex.matcher(email);
-        return matcher.find();
-    }
-
-    public static String removeBarreled(String value) {
-        if (TextUtils.isEmpty(value)) {
-            return null;
-        }
-        return value.replace("-", " ");
-
-    }
-
-    public static String capitalizeAllWords(final String value) {
-        if (TextUtils.isEmpty(value)) {
-            return null;
-        }
-
-        final StringBuilder builder = new StringBuilder();
-        final String[] values = value.split(SPLIT_SEPARATOR);
-        for (int i = 0; i < values.length; i++) {
-            String v = values[i];
-            if (TextUtils.isEmpty(v)) {
-                continue;
-            }
-            if (i > 0) {
-                builder.append(SPLIT_SEPARATOR);
-            }
-            builder.append(v.substring(0, 1).toUpperCase());
-            builder.append(v.substring(1).toLowerCase());
-        }
-        if (value.endsWith(SPLIT_SEPARATOR)) {
-            builder.append(SPLIT_SEPARATOR);
-        }
-        return builder.toString();
-
-    }
 
     public static String encodeString(String string) {
         if (TextUtils.isEmpty(string)) {
@@ -133,26 +78,66 @@ public final class StringUtils {
         return stringExtra;
     }
 
-    public static String getCharPerLineString(String text, int charSizePerLine) {
-        String tenCharPerLineString = EMPTY_STRING;
-        while (text.length() > charSizePerLine) {
-            String buffer = text.substring(0, charSizePerLine);
-            tenCharPerLineString = tenCharPerLineString + buffer + LINE_SEPARATOR;
-            text = text.substring(charSizePerLine);
-        }
-        tenCharPerLineString = tenCharPerLineString + text.substring(0);
-        return tenCharPerLineString;
-    }
-
-    public static String addEllipsisEndToText(String text, int charLimit) {
-        if (text.length() < charLimit) {
-            return text;
-        } else {
-            return String.format(HORIZONTAL_ELLIPSIS, text.substring(0, charLimit));
-        }
-    }
 
     public static boolean isEmpty(String string) {
         return string == null || string.isEmpty() || EMPTY_STRING.equals(string);
+    }
+
+    public static String formatDate(@Nullable String date) {
+        if (date != null && date.length() != 9) return EMPTY_STRING;
+        if (TextUtils.isEmpty(date)) return EMPTY_STRING;
+        return date.substring(0, 2) +
+                SLASH +
+                date.substring(3, 5) +
+                SLASH +
+                date.substring(5, date.length());
+    }
+
+    public static String formatDateWithTodayLogic(@NonNull String dateString) {
+        Calendar calendar = Calendar.getInstance();
+        Date date = new Date();
+        calendar.setTimeInMillis(date.getTime());
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
+        month++;
+        String dayString = addZeroToStart(day);
+        String monthString = addZeroToStart(month);
+        String finalDate = dayString + monthString + year;
+        if (dateString.equalsIgnoreCase(finalDate)) {
+            return TODAY_STRING;
+        } else {
+            return formatString(dateString);
+        }
+    }
+
+    private static String formatString(@NonNull String date) {
+        if (date.length() != 8) return EMPTY_STRING;
+        if (StringUtils.isEmpty(date)) return EMPTY_STRING;
+        return date.substring(0, 2) +
+                SLASH +
+                date.substring(2, 4);
+    }
+
+    public static String formatHour(@Nullable String hour) {
+        if (TextUtils.isEmpty(hour)) return EMPTY_STRING;
+        return hour.substring(0, 2) +
+                ":" +
+                hour.substring(2, hour.length());
+    }
+
+    public static String getFromOrToFormattedText(@Nullable String fromOrTo, @Nullable String community) {
+        if (TextUtils.isEmpty(fromOrTo) || TextUtils.isEmpty(community)) return EMPTY_STRING;
+        else {
+            if (MapPreference.FROM.equalsIgnoreCase(fromOrTo)) {
+                return FROM + " \n" + community;
+            } else {
+                return TO + " \n" + community;
+            }
+        }
+    }
+
+    public static String removeNonPrintableCharacters(@NonNull String input) {
+        return input.replaceAll("\\p{C}", "?");
     }
 }

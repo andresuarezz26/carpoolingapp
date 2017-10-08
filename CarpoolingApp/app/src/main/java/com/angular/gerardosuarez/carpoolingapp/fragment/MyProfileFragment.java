@@ -1,6 +1,5 @@
 package com.angular.gerardosuarez.carpoolingapp.fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -9,15 +8,17 @@ import android.view.ViewGroup;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
 import com.angular.gerardosuarez.carpoolingapp.activity.MainActivity;
+import com.angular.gerardosuarez.carpoolingapp.fragment.base.BaseMapPreferenceFragment;
+import com.angular.gerardosuarez.carpoolingapp.fragment.base.OnPageSelectedListener;
 import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MyProfilePresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyProfileView;
+import com.angular.gerardosuarez.carpoolingapp.service.UserService;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MyProfileFragment extends Fragment {
+public class MyProfileFragment extends BaseMapPreferenceFragment implements OnPageSelectedListener {
 
-    public static final String TAG = "my_profile";
     private MyProfilePresenter presenter;
 
     @Override
@@ -31,7 +32,9 @@ public class MyProfileFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter = new MyProfilePresenter(new MyProfileView(this));
+        presenter = new MyProfilePresenter(new MyProfileView(this),
+                mapPreference,
+                new UserService());
         presenter.init();
     }
 
@@ -55,5 +58,21 @@ public class MyProfileFragment extends Fragment {
         presenter.showMenu();
         activity.getNavigationManager().setToPassengerRole();
         activity.getNavigationManager().goToMapFragment();
+    }
+
+    @OnClick(R.id.btn_community)
+    void onCommunityChooserClick() {
+        MainActivity activity = (MainActivity) getActivity();
+        if (activity == null) {
+            return;
+        }
+        activity.getNavigationManager().goToCommunityChooserFragment();
+    }
+
+    @Override
+    public void onPageSelected() {
+        if (presenter != null) {
+            presenter.hideMenu();
+        }
     }
 }

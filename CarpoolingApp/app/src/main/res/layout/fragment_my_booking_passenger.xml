@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerHorizontal="true"
+    android:background="@color/cupos_soft_gray">
+
+    <com.angular.gerardosuarez.carpoolingapp.customviews.dialog.views.RoundedImageView
+        android:id="@+id/image_photo"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_large"
+        android:contentDescription="@null"
+        android:scaleType="fitXY" />
+
+    <TextView
+        android:id="@+id/txt_driver_name"
+        style="@style/GrayBigTextTitles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/image_photo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:text="@string/my_booking_passenger_searching" />
+
+    <TextView
+        android:id="@+id/txt_driver_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_driver_name"
+        android:layout_centerHorizontal="true"
+        android:lines="2"
+        android:text="@string/my_booking_passenger_description"
+        android:textColor="@color/cupos_dark_gray"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/txt_driver_departure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_driver_phone"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:gravity="center"
+        android:textColor="@color/cupos_dark_gray"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/txt_driver_arrival"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_driver_departure"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textColor="@color/cupos_dark_gray"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/txt_driver_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_driver_arrival"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textColor="@color/cupos_dark_gray"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/txt_driver_hour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_driver_date"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textColor="@color/cupos_dark_gray"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/btn_cancel_booking"
+        style="@style/RoundedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/margin_super_extra_large"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:text="@string/text_cancel_booking" />
+
+</RelativeLayout>

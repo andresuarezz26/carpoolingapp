@@ -1,20 +1,20 @@
 package com.angular.gerardosuarez.carpoolingapp.dialogfragment.base;
 
 import android.app.DialogFragment;
+import android.support.annotation.NonNull;
 
-import java.lang.ref.WeakReference;
-
-import io.reactivex.Observer;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.subjects.PublishSubject;
 
 public class BaseDialogFragment<O> extends DialogFragment {
 
-    protected WeakReference<Observer<O>> observerRef;
+    protected PublishSubject<String> publishSubject = PublishSubject.create();
 
-    protected BaseDialogFragment(Observer<O> observer) {
-        this.observerRef = new WeakReference<>(observer);
+    public void subscribeToDialogFragment(@NonNull DisposableObserver<String> observer) {
+        publishSubject.subscribe(observer);
     }
 
-    protected Observer<O> getObserver() {
-        return observerRef.get();
+    public void unsubscribeToDialogFragment() {
+        publishSubject.onComplete();
     }
 }

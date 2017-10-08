@@ -1,37 +1,38 @@
 package com.angular.gerardosuarez.carpoolingapp.service;
 
-import com.angular.gerardosuarez.carpoolingapp.mvp.model.User;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import android.support.annotation.NonNull;
 
-public class UserService {
-    private DatabaseReference databaseRef;
+import com.angular.gerardosuarez.carpoolingapp.mvp.model.User;
+import com.angular.gerardosuarez.carpoolingapp.service.base.BaseFirebaseService;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+
+public class UserService extends BaseFirebaseService {
 
     public UserService() {
-        this.databaseRef = FirebaseDatabase.getInstance().getReference();
+        super();
     }
 
-    public void createUser(User user) {
-        if (user.getPhoto_url() == null) {
-            user.setPhoto_url("NOT");
+    public void createOrUpdateUser(User user) {
+        databaseReference.child(USERS).child(user.getKey()).setValue(user);
+    }
+
+    public void createAuxUserNode(String nameAndUid) {
+        databaseReference.child(AUX_USERS).child(nameAndUid).child(nameAndUid).setValue(true);
+    }
+
+    public DatabaseReference getUserByUid(String uid) {
+        return databaseReference.child("users").child(uid);
+    }
+
+    public User mapFirebaseUserToUser(@NonNull FirebaseUser user) {
+        User appUser = new User();
+        appUser.setKey(user.getUid());
+        appUser.name = user.getDisplayName();
+        if (user.getPhotoUrl() != null) {
+            appUser.photo_uri = user.getPhotoUrl().toString();
         }
-        databaseRef.child("users").child(user.getUid()).setValue(user);
-        databaseRef.child("usernames").child(user.getUsername()).setValue(user);
-    }
-
-    public DatabaseReference getUser(String userUid) {
-        return databaseRef.child("users").child(userUid);
-    }
-
-    public DatabaseReference getUserByUsername(String username) {
-        return databaseRef.child("usernames").child(username);
-    }
-
-    public void updateUser(User user) {
-
-    }
-
-    public void deleteUser(String key) {
-
+        appUser.email = user.getEmail();
+        return appUser;
     }
 }

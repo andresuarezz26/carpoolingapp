@@ -1,92 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_alignParentBottom="true"
-    android:layout_marginEnd="@dimen/margin_large"
-    android:layout_marginStart="@dimen/margin_large"
+    android:background="@color/cupos_soft_gray"
     android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_super_large"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <com.angular.gerardosuarez.carpoolingapp.customviews.dialog.views.RoundedImageView
+            android:id="@+id/photo_user"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/txt_my_profile_name"
+            style="@style/GrayBigTextTitles"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/txt_my_profile_description"
+            style="@style/MyBookingDriverTextName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/txt_route_description"
+            android:textColor="@color/cupos_blue" />
+
+        <TextView
+            android:id="@+id/txt_my_profile_departure"
+            style="@style/MyBookingDriverArrivalAndDeparture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/txt_my_profile_arrival"
+            style="@style/MyBookingDriverArrivalAndDeparture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/txt_my_profile_date"
+            style="@style/MyBookingDriverTextName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/txt_my_profile_hour"
+            style="@style/MyBookingDriverTextName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/container_my_profile_community"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/cupos_blue"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txt_community_my_profile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="0dp"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:paddingBottom="@dimen/margin_small"
+            android:paddingTop="@dimen/margin_small"
+            android:text="Comunidad Icesi"
+            android:textColor="@color/white"
+            android:textSize="@dimen/big_text_size" />
+
+        <Button
+            android:id="@+id/btn_community"
+            android:layout_width="31dp"
+            android:layout_height="29dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/margin_normal"
+            android:layout_weight="0"
+            android:background="@drawable/icon_choose_comunity"
+            android:paddingBottom="@dimen/margin_normal" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txt_btn_passenger"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/container_my_profile_community"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:layout_marginEnd="@dimen/margin_large"
+        android:gravity="center"
+        android:text="@string/text_i_am_passenger" />
+
+    <TextView
+        android:id="@+id/txt_button_driver"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/container_my_profile_community"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:layout_marginStart="@dimen/margin_large"
+        android:gravity="center"
+        android:text="@string/text_i_am_drvier"
+        app:layout_constraintTop_toBottomOf="@+id/btn_driver" />
 
     <ImageButton
         android:id="@+id/btn_driver"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="354dp"
+        android:layout_above="@id/txt_button_driver"
+        android:layout_marginStart="@dimen/margin_large"
         android:background="@drawable/my_profile_car"
-        android:contentDescription="@null"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/btn_passenger"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        android:contentDescription="@null" />
 
     <ImageButton
         android:id="@+id/btn_passenger"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginBottom="13dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_above="@id/txt_btn_passenger"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/margin_large"
         android:background="@drawable/my_profile_driver"
-        android:contentDescription="@null"
-        app:layout_constraintBottom_toTopOf="@+id/textView2"
-        app:layout_constraintRight_toRightOf="parent" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="101dp"
-        android:layout_height="34dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:gravity="center_horizontal"
-        android:text="Pasajero"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_driver"
-        app:layout_constraintVertical_bias="0.14" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="101dp"
-        android:layout_height="34dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:gravity="center_horizontal"
-        android:text="Conductor"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_driver"
-        app:layout_constraintVertical_bias="0.023" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="20dp"
-        tools:layout_editor_absoluteX="-302dp"
-        tools:layout_editor_absoluteY="0dp" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:gravity="center_horizontal"
-        android:text="Comunidad Icesi"
-        android:textSize="@dimen/big_text_size"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        android:contentDescription="@null" />
 
 
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>

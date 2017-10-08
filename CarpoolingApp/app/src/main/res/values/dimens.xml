@@ -4,8 +4,23 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="margin_large">40dp</dimen>
+    <dimen name="margin_super_large">70dp</dimen>
+    <dimen name="margin_super_extra_large">100dp</dimen>
     <dimen name="my_profile_button_dimen">100dp</dimen>
-    <dimen name="big_text_size">25sp</dimen>
+
     <dimen name="big_min_text_size">22sp</dimen>
+    <dimen name="community_chooser_side">110dp</dimen>
+    <dimen name="margin_register">50dp</dimen>
+    <dimen name="margin_normal">20dp</dimen>
+    <dimen name="margin_small">10dp</dimen>
+
+    <!-- Text Sizes-->
+    <dimen name="big_text_size">25sp</dimen>
+    <dimen name="title_text_size">20sp</dimen>
+    <dimen name="content_text_size">18sp</dimen>
+    <dimen name="small_text_size">14sp</dimen>
+    <dimen name="super_small_text_size">11sp</dimen>
+    <dimen name="scroll_view_heigth">400dp</dimen>
+
 
 </resources>

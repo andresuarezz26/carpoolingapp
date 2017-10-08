@@ -1,45 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/cupos_blue"
     android:fitsSystemWindows="true"
-    android:orientation="vertical"
     tools:context="com.angular.gerardosuarez.carpoolingapp.activity.AuthActivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/txt_title"
+        style="@style/TextLoginTitle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_large"
+        android:text="@string/txt_app_title" />
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+    <TextView
+        style="@style/TextLoginSlogan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txt_title"
+        android:layout_centerHorizontal="true"
+        android:text="@string/txt_app_slogan" />
 
-    </android.support.design.widget.AppBarLayout>
 
     <EditText
         android:id="@+id/edit_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="tester@tester.com" />
+        android:text="tester@tester.com"
+        android:visibility="gone" />
 
     <EditText
         android:id="@+id/edit_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="tester" />
+        android:text="tester"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/button_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Login" />
+        android:text="Login"
+        android:visibility="gone" />
+
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/loginButton"
+        style="@style/FacebookLoginButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
 
 
-</LinearLayout>
+</RelativeLayout>

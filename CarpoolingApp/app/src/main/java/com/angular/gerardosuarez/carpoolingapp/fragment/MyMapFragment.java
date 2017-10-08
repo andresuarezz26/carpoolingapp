@@ -1,9 +1,6 @@
 package com.angular.gerardosuarez.carpoolingapp.fragment;
 
-import android.app.DialogFragment;
-import android.app.Fragment;
 import android.location.Location;
-import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,16 +10,19 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
-import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreference;
-import com.angular.gerardosuarez.carpoolingapp.data.preference.map.MapPreferenceImpl;
-import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreference;
-import com.angular.gerardosuarez.carpoolingapp.data.preference.role.RolePreferenceImpl;
-import com.angular.gerardosuarez.carpoolingapp.dialogfragment.DatePickerFragment;
-import com.angular.gerardosuarez.carpoolingapp.dialogfragment.TimePickerFragment;
-import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MyMapPresenter;
+import com.angular.gerardosuarez.carpoolingapp.fragment.base.BaseMapPreferenceFragment;
+import com.angular.gerardosuarez.carpoolingapp.fragment.base.OnPageSelectedListener;
+import com.angular.gerardosuarez.carpoolingapp.mvp.model.PassengerBooking;
+import com.angular.gerardosuarez.carpoolingapp.mvp.presenter.MyMapFragmentPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.MyMapView;
 import com.angular.gerardosuarez.carpoolingapp.service.DriverMapService;
+import com.angular.gerardosuarez.carpoolingapp.service.MyBookingDriverService;
+import com.angular.gerardosuarez.carpoolingapp.service.PassengerMapService;
+import com.angular.gerardosuarez.carpoolingapp.service.UserService;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.GoogleMap;
@@ -31,11 +31,10 @@ import com.google.android.gms.maps.model.Marker;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
 import timber.log.Timber;
 
-public class MyMapFragment extends Fragment
+public class MyMapFragment extends BaseMapPreferenceFragment
         implements
         OnMapReadyCallback,
         LocationListener,
@@ -44,17 +43,18 @@ public class MyMapFragment extends Fragment
         GoogleMap.OnCameraMoveStartedListener,
         GoogleMap.OnCameraIdleListener,
         GoogleMap.OnMarkerClickListener,
-        CompoundButton.OnCheckedChangeListener{
+        CompoundButton.OnCheckedChangeListener,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        OnPageSelectedListener {
 
-    public static final String TAG = "driver_map";
     public static final int PERMISSION_REQUEST_FINE_LOCATION = 1;
-
-    private MyMapPresenter presenter;
+    private MyMapFragmentPresenter presenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_driver_map, container, false);
+        View view = inflater.inflate(R.layout.fragment_my_map, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -62,42 +62,47 @@ public class MyMapFragment extends Fragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        MapPreference mapPreference = new MapPreferenceImpl(getActivity(), MapPreferenceImpl.NAME);
-        RolePreference rolePreference = new RolePreferenceImpl(getActivity(), RolePreferenceImpl.NAME);
-        presenter = new MyMapPresenter(
+        presenter = new MyMapFragmentPresenter(
                 new MyMapView(this),
                 new DriverMapService(),
+                new PassengerMapService(),
                 rolePreference,
-                mapPreference);
+                mapPreference,
+                new UserService(),
+                new MyBookingDriverService());
         if (presenter.googleServicesAvailable()) {
             presenter.initMap();
         }
-        presenter.setAutocompleteFragment();
         presenter.initView();
+        presenter.setAutocompleteFragment();
+    }
+
+    @Override
+    public void onPageSelected() {
+        if (presenter != null) {
+            presenter.changeViewElements();
+            presenter.cleanMapIfNecessary();
+        }
     }
 
     @OnClick(R.id.btn_hour)
     void onTimeClick() {
-        DialogFragment timePickerFragment = new TimePickerFragment(new OnTimeSelectedObserver());
-        timePickerFragment.show(getFragmentManager(), "timePicker");
+        presenter.showTimePickerFragment(new OnTimeSelectedObserver());
     }
 
     //On switch changed
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        presenter.onSwitchChanged(isChecked);
+        if (presenter != null) {
+            presenter.onSwitchChanged(isChecked);
+        }
     }
 
-    private class OnTimeSelectedObserver implements Observer<Integer> {
+    private class OnTimeSelectedObserver extends DisposableObserver<String> {
 
         @Override
-        public void onSubscribe(Disposable d) {
-
-        }
-
-        @Override
-        public void onNext(Integer integer) {
-            presenter.onTimeSelected(integer);
+        public void onNext(String time) {
+            presenter.onTimeSelected(time);
         }
 
         @Override
@@ -107,32 +112,29 @@ public class MyMapFragment extends Fragment
 
         @Override
         public void onComplete() {
-
         }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        presenter.unsubscribeFirebaseListener();
+        if (presenter != null) {
+            presenter.unsubscribeFirebaseListener();
+            presenter.unsubscribeObservers();
+        }
     }
 
     @OnClick(R.id.btn_date)
     void onDateClick() {
-        DialogFragment newFragment = new DatePickerFragment(new OnDateSelectedObserver());
-        newFragment.show(getFragmentManager(), "datePicker");
+        presenter.showDatePickerFragment(new OnDateSelectedObserver());
     }
 
-    private class OnDateSelectedObserver implements Observer<Integer> {
+    private class OnDateSelectedObserver extends DisposableObserver<String> {
+
 
         @Override
-        public void onSubscribe(Disposable d) {
-
-        }
-
-        @Override
-        public void onNext(Integer integer) {
-            presenter.onDateSelected(integer);
+        public void onNext(String s) {
+            presenter.onDateSelected(s);
         }
 
         @Override
@@ -149,8 +151,14 @@ public class MyMapFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        presenter.setListeners();
-        presenter.getRole();
+        if (presenter != null) {
+            presenter.setListeners();
+            presenter.getBookingsAndAddMarkers();
+        }
+    }
+
+    public void onRoleClicked(boolean newRole) {
+        presenter.onRoleChanged(newRole);
     }
 
     @Override
@@ -172,28 +180,13 @@ public class MyMapFragment extends Fragment
     public void onMapReady(GoogleMap googleMap) {
         presenter.setMap(googleMap);
         presenter.init();
-        presenter.addMockMarkers();
+        presenter.setAutocompleteFragmentText();
     }
 
     //LocationListener callbacks
     @Override
     public void onLocationChanged(Location location) {
         presenter.onLocationChanged(location);
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
     }
 
     //Autocomplete Fragment callbacks
@@ -227,6 +220,42 @@ public class MyMapFragment extends Fragment
     //GoogleMap.OnMarkerClickListener callback
     @Override
     public boolean onMarkerClick(Marker marker) {
-        return presenter.onMarkerClick(marker);
+        presenter.showClickMarkerDialog(new OnClickMarkerDialogResponseObserver(), marker);
+        return true;
+    }
+
+    private class OnClickMarkerDialogResponseObserver extends DisposableObserver<PassengerBooking> {
+
+        @Override
+        public void onNext(PassengerBooking passengerBooking) {
+
+            presenter.onClickMarkerDialogResponse(passengerBooking);
+        }
+
+        @Override
+        public void onError(Throwable e) {
+
+        }
+
+        @Override
+        public void onComplete() {
+        }
+    }
+
+    //GoogleApiClient.ConnectionCallbacks,
+    //GoogleApiClient.OnConnectionFailedListener
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        presenter.setLocationRequest();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Timber.i("suspended");
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Timber.i("failed");
     }
 }

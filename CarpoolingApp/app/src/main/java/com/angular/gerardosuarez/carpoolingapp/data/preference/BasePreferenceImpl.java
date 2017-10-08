@@ -26,27 +26,27 @@ public class BasePreferenceImpl {
     }
 
     protected void put(@NonNull String key, String value) {
-        preferences.edit().putString(key, StringUtils.encodeString(value)).commit();
+        preferences.edit().putString(key, StringUtils.encodeString(value)).apply();
     }
 
     protected void put(@NonNull String key, boolean value) {
-        preferences.edit().putBoolean(key, value).commit();
+        preferences.edit().putBoolean(key, value).apply();
     }
 
     protected void put(@NonNull String key, float value) {
-        preferences.edit().putFloat(key, value).commit();
+        preferences.edit().putFloat(key, value).apply();
     }
 
     protected void put(@NonNull String key, int value) {
-        preferences.edit().putInt(key, value).commit();
+        preferences.edit().putInt(key, value).apply();
     }
 
     protected void put(@NonNull String key, long value) {
-        preferences.edit().putLong(key, value).commit();
+        preferences.edit().putLong(key, value).apply();
     }
 
     protected void put(@NonNull String key, Set<String> values) {
-        preferences.edit().putStringSet(key, values).commit();
+        preferences.edit().putStringSet(key, values).apply();
     }
 
     protected String getString(@NonNull String key) {
