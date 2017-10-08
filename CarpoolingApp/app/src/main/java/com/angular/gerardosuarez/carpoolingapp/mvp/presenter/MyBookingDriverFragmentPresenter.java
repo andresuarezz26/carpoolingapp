@@ -32,6 +32,8 @@ public class MyBookingDriverFragmentPresenter extends BaseFragmentPresenter {
     private MyBookingDriverService bookingDriverService;
     private UserService userService;
 
+    private boolean wasFinishRoutePressed = false;
+
     private List<PassengerInfoRequest> passengerInfoRequestList;
 
     public MyBookingDriverFragmentPresenter(MyBookingDriverView view,
@@ -66,18 +68,20 @@ public class MyBookingDriverFragmentPresenter extends BaseFragmentPresenter {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             view.removeAll();
-                            passengerInfoRequestList.clear();
-                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                try {
-                                    PassengerInfoRequest passengerInfoRequest = snapshot.getValue(PassengerInfoRequest.class);
-                                    if (passengerInfoRequest != null) {
-                                        passengerInfoRequest.setKey(snapshot.getKey());
-                                        if (!PassengerInfoRequest.STATUS_CANCELED.equalsIgnoreCase(passengerInfoRequest.status)) {
-                                            setPassengerAditionalInfo(snapshot.getKey(), passengerInfoRequest);
+                            if (!wasFinishRoutePressed) {
+                                passengerInfoRequestList.clear();
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    try {
+                                        PassengerInfoRequest passengerInfoRequest = snapshot.getValue(PassengerInfoRequest.class);
+                                        if (passengerInfoRequest != null) {
+                                            passengerInfoRequest.setKey(snapshot.getKey());
+                                            if (!PassengerInfoRequest.STATUS_CANCELED.equalsIgnoreCase(passengerInfoRequest.status)) {
+                                                setPassengerAditionalInfo(snapshot.getKey(), passengerInfoRequest);
+                                            }
                                         }
+                                    } catch (DatabaseException e) {
+                                        Timber.e(e.getMessage(), e);
                                     }
-                                } catch (DatabaseException e) {
-                                    Timber.e(e.getMessage(), e);
                                 }
                             }
                         }
@@ -120,12 +124,14 @@ public class MyBookingDriverFragmentPresenter extends BaseFragmentPresenter {
     }
 
     public void onCancelRoute() {
+        wasFinishRoutePressed = true;
         DriverMapService.passengersSelectedByDriver.clear();
         String myUid = getMyUid();
         if (!TextUtils.isEmpty(myUid)) {
             if (areAllMapPreferenceNonnull()) {
                 bookingDriverService.cancelCurrentRoute(getRoute(), view.getPassengerList(), myUid);
                 resetMapPreferencesUsedInMapFragment();
+                view.removeAll();
             }
         }
     }

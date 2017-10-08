@@ -32,7 +32,6 @@ public class MyBookingPassengerFragmentPresenter extends BaseFragmentPresenter {
     private boolean thereAreData;
     private DriverInfoRequest currentDriverInfo;
 
-
     public MyBookingPassengerFragmentPresenter(MyBookingPassengerView view,
                                                MyBookingPassengerService bookingPassengerService,
                                                UserService userService,
@@ -45,15 +44,25 @@ public class MyBookingPassengerFragmentPresenter extends BaseFragmentPresenter {
     }
 
     public void init() {
+        validateIfThereAreDataSelected();
+    }
+
+    private void validateIfThereAreDataSelected() {
         if (!areAllMapPreferenceNonnull()) {
             view.cleanFragmentView();
             thereAreData = false;
         } else {
-            thereAreData = true;
-            view.init(date, hour);
-            view.setArrivalText(selectArrival());
-            view.setDepartureText(selectDeparture());
+            putViewInWaitingForDriverState();
         }
+    }
+
+    private void putViewInWaitingForDriverState() {
+        thereAreData = true;
+        view.setDateAndHourSelected(date, hour);
+        view.setArrivalText(selectArrival());
+        view.setDepartureText(selectDeparture());
+        view.setTextDriverNameBySearching();
+        view.setTextDriverPhonebySearchingMessage();
     }
 
     //region MyDriverRequest
@@ -77,6 +86,9 @@ public class MyBookingPassengerFragmentPresenter extends BaseFragmentPresenter {
     }
 
     private void processDriverInfoRequest(DataSnapshot dataSnapshot) {
+        if (dataSnapshot.getValue() == null) {
+            validateIfThereAreDataSelected();
+        }
         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
             try {
                 view.cleanFragmentView();
@@ -85,6 +97,8 @@ public class MyBookingPassengerFragmentPresenter extends BaseFragmentPresenter {
                     if (!DriverInfoRequest.STATUS_CANCELED.equalsIgnoreCase(driverInfoRequest.status)) {
                         setDriverAditionalInfoQuery(snapshot.getKey(), driverInfoRequest);
                     }
+                } else {
+                    validateIfThereAreDataSelected();
                 }
             } catch (DatabaseException e) {
                 Timber.e(e.getMessage(), e);

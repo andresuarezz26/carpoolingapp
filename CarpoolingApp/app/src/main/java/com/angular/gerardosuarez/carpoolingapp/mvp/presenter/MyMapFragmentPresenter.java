@@ -137,7 +137,8 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
                                 snapshot.getKey();
                                 try {
                                     PassengerBooking passengerBooking = snapshot.getValue(PassengerBooking.class);
-                                    if (!PassengerInfoRequest.STATUS_CANCELED.equalsIgnoreCase(passengerBooking.status)) {
+                                    if (!PassengerInfoRequest.STATUS_CANCELED.equalsIgnoreCase(passengerBooking.status)
+                                            ) {
                                         setPassengerBookingAditionalInfo(snapshot.getKey(), passengerBooking);
                                     }
                                 } catch (DatabaseException e) {
@@ -165,7 +166,7 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
                         passengerBooking.setKey(uid);
                         passengerBookingMap.put(passengerBooking.getKey(), passengerBooking);
                         int position = new ArrayList<>(passengerBookingMap.keySet()).indexOf(passengerBooking.getKey());
-                        view.addMarkerForNoChoosenPassenger(passengerBooking, position);
+                        //view.addMarkerForNoChoosenPassenger(passengerBooking, position);
                         addMarker(passengerBooking, position);
                     }
                 } catch (DatabaseException e) {
@@ -190,6 +191,7 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
     }
 
     private void queryCurrentChoosenPassengersByDriver(@NonNull final PassengerBooking passengerBooking, final int position) {
+        if (getMyUid() == null) return;
         myBookingDriverService.getRequestOfTheDriver(community, fromOrTo, date, hour, getMyUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -208,7 +210,7 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
                             }
                         }
                         if (numberOfPasengers == 0) {
-                            view.addMarkerForNoChoosenPassenger(passengerBooking, position);
+                            addMarkerNoChoosenPassenger(passengerBooking, position);
                         }
                     }
 
@@ -221,9 +223,15 @@ public class MyMapFragmentPresenter extends BaseFragmentPresenter {
 
     private void chooseNoChooseOrAlreadyChooseMarker(@NonNull PassengerBooking passengerBooking, int position) {
         if (DriverMapService.passengersSelectedByDriver.get(passengerBooking.getKey()) == null) {
-            view.addMarkerForNoChoosenPassenger(passengerBooking, position);
+            addMarkerNoChoosenPassenger(passengerBooking, position);
         } else {
             view.addMarkerForAlreadyChoosenByDriverPassenger(passengerBooking, position);
+        }
+    }
+
+    private void addMarkerNoChoosenPassenger(@NonNull PassengerBooking passengerBooking, int position) {
+        if (!PassengerInfoRequest.STATUS_ACCEPTED.equalsIgnoreCase(passengerBooking.status)) {
+            view.addMarkerForNoChoosenPassenger(passengerBooking, position);
         }
     }
 

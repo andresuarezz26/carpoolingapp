@@ -23,7 +23,7 @@ public class MyBookingPassengerService extends BaseFirebaseService {
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put(MY_BOOKING_PASSENGER_SLASH + bookingsRoute + currentUserUid + StringUtils.SLASH + driverInfoRequest.getKey(), null);
         childUpdates.put(MY_BOOKING_DRIVER_SLASH + bookingsRoute + driverInfoRequest.getKey() + StringUtils.SLASH + currentUserUid, null);
-        childUpdates.put(bookingsRoute + driverInfoRequest.passengerUid + STATUS, PassengerInfoRequest.STATUS_WAITING);
+        childUpdates.put(bookingsRoute + currentUserUid + STATUS, PassengerInfoRequest.STATUS_WAITING);
         databaseReference.updateChildren(childUpdates);
     }
 

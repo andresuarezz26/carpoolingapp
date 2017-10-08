@@ -107,7 +107,6 @@ public final class StringUtils {
         if (dateString.equalsIgnoreCase(finalDate)) {
             return TODAY_STRING;
         } else {
-
             return formatString(dateString);
         }
     }

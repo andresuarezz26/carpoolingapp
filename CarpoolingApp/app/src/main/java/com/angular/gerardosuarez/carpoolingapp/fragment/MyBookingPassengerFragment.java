@@ -18,7 +18,6 @@ import butterknife.OnClick;
 
 public class MyBookingPassengerFragment extends BaseMapPreferenceFragment {
 
-    public static final String TAG = "my_booking_passenger";
     private MyBookingPassengerFragmentPresenter presenter;
 
     @Override
@@ -43,17 +42,23 @@ public class MyBookingPassengerFragment extends BaseMapPreferenceFragment {
     @Override
     public void onResume() {
         super.onResume();
-        presenter.getDriversRequestInfo();
+        if (presenter != null) {
+            presenter.getDriversRequestInfo();
+        }
     }
 
     @OnClick(R.id.btn_cancel_booking)
     void onCancelBooking() {
-        presenter.onCancelBookingClick();
+        if (presenter != null) {
+            presenter.onCancelBookingClick();
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        presenter.unsuscribeFirebaseListener();
+        if (presenter != null) {
+            presenter.unsuscribeFirebaseListener();
+        }
     }
 }

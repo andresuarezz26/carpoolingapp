@@ -42,7 +42,7 @@ public class MyBookingPassengerView extends FragmentView<MyBookingPassengerFragm
             ButterKnife.bind(this, fragment.getView());
     }
 
-    public void init(String date, String hour) {
+    public void setDateAndHourSelected(String date, String hour) {
         textDriverDate.setText(StringUtils.formatDateWithTodayLogic(date));
         textDriverHour.setText(StringUtils.formatHour(hour));
         imagePhoto.setImageResource(R.drawable.searching_driver_image);
@@ -107,13 +107,27 @@ public class MyBookingPassengerView extends FragmentView<MyBookingPassengerFragm
     }
 
     public void setInitialSearchingDriverInfo() {
-        textDriverName.setText(getActivity().getResources().getText(R.string.my_booking_passenger_searching));
-        textDriverPhone.setText(StringUtils.EMPTY_STRING);
-        textDriverDeparture.setText(getActivity().getResources().getText(R.string.my_booking_passenger_description));
-        textDriverDate.setText(StringUtils.EMPTY_STRING);
-        textDriverHour.setText(StringUtils.EMPTY_STRING);
-        btnCancelButton.setText(R.string.my_booking_passenger_button_cancel_booking);
-        imagePhoto.setImageResource(R.drawable.searching_driver_image);
-        makeButtonAndImageVisibles();
+        setTextDriverNameBySearching();
+        if (getActivity() != null) {
+            textDriverPhone.setText(StringUtils.EMPTY_STRING);
+            textDriverDeparture.setText(getActivity().getResources().getText(R.string.my_booking_passenger_description));
+            textDriverDate.setText(StringUtils.EMPTY_STRING);
+            textDriverHour.setText(StringUtils.EMPTY_STRING);
+            btnCancelButton.setText(R.string.my_booking_passenger_button_cancel_booking);
+            imagePhoto.setImageResource(R.drawable.searching_driver_image);
+            makeButtonAndImageVisibles();
+        }
+    }
+
+    public void setTextDriverNameBySearching() {
+        if (getActivity() != null) {
+            textDriverName.setText(getActivity().getResources().getText(R.string.my_booking_passenger_searching));
+        }
+    }
+
+    public void setTextDriverPhonebySearchingMessage() {
+        if (getActivity() != null) {
+            textDriverPhone.setText(getActivity().getResources().getText(R.string.my_booking_passenger_description));
+        }
     }
 }
