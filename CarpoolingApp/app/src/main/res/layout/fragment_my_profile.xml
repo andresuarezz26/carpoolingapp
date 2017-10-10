@@ -18,15 +18,17 @@
 
         <com.angular.gerardosuarez.carpoolingapp.customviews.dialog.views.RoundedImageView
             android:id="@+id/photo_user"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="@dimen/profile_image_side"
+            android:layout_height="@dimen/profile_image_side"
             android:contentDescription="@null" />
 
         <TextView
             android:id="@+id/txt_my_profile_name"
             style="@style/GrayBigTextTitles"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLength="25" />
 
         <TextView
             android:id="@+id/txt_my_profile_description"
@@ -52,7 +54,8 @@
             android:id="@+id/txt_my_profile_date"
             style="@style/MyBookingDriverTextName"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="hello" />
 
         <TextView
             android:id="@+id/txt_my_profile_hour"
@@ -98,7 +101,7 @@
 
     <TextView
         android:id="@+id/txt_btn_passenger"
-        android:layout_width="100dp"
+        android:layout_width="@dimen/my_profile_button_size"
         android:layout_height="wrap_content"
         android:layout_above="@id/container_my_profile_community"
         android:layout_alignParentEnd="true"
@@ -109,7 +112,7 @@
 
     <TextView
         android:id="@+id/txt_button_driver"
-        android:layout_width="100dp"
+        android:layout_width="@dimen/my_profile_button_size"
         android:layout_height="wrap_content"
         android:layout_above="@id/container_my_profile_community"
         android:layout_marginBottom="@dimen/margin_large"
@@ -120,8 +123,8 @@
 
     <ImageButton
         android:id="@+id/btn_driver"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="@dimen/my_profile_button_size"
+        android:layout_height="120dp"
         android:layout_above="@id/txt_button_driver"
         android:layout_marginStart="@dimen/margin_large"
         android:background="@drawable/my_profile_car"
@@ -129,8 +132,8 @@
 
     <ImageButton
         android:id="@+id/btn_passenger"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_above="@id/txt_btn_passenger"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="@dimen/margin_large"

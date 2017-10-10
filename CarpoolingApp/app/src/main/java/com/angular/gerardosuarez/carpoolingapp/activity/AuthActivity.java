@@ -30,7 +30,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-//facebook imports
+//TODO: refactor all this class with MVP
 
 public class AuthActivity extends BaseActivity implements OnCompleteListener<AuthResult> {
 
@@ -111,7 +111,8 @@ public class AuthActivity extends BaseActivity implements OnCompleteListener<Aut
                     FirebaseUser user = firebaseAuth.getCurrentUser();
                     Log.d(TAG, "user:" + user);
                     if (user != null) {
-                        presenter.createOrUpdateUser(user);
+                        presenter.createOrUpdateAuxUser(user);
+                        presenter.createUserIfItDoesntExist(user);
                         presenter.showMain();
                         removeAuthListener();
                         mLoginButton.unregisterCallback(mCallbackManager);

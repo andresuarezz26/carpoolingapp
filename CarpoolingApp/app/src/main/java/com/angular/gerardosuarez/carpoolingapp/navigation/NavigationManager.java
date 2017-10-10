@@ -114,12 +114,10 @@ public class NavigationManager {
     }
 
     public void goToMyProfileFragment() {
-        popEveryFragment();
         open(new MyProfileFragment());
     }
 
     private void goToMyProfileFragmentWithoutBackStack() {
-        popEveryFragment();
         open(new MyProfileFragment());
     }
 

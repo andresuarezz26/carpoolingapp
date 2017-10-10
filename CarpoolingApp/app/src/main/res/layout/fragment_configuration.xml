@@ -16,7 +16,7 @@
         android:gravity="center"
         android:text="@string/text_configuration" />
 
-    <Button
+    <TextView
         android:id="@+id/btn_report_issue"
         style="@style/WhiteRectangularButton"
         android:layout_width="match_parent"
@@ -24,31 +24,40 @@
         android:layout_below="@id/txt_configuration_title"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/margin_large"
+        android:drawableEnd="@drawable/config_icon_last"
         android:gravity="start|center_vertical"
+        android:paddingBottom="@dimen/padding_configuration_button"
+        android:paddingTop="@dimen/padding_configuration_button"
         android:text="@string/report_issue"
         android:textAllCaps="false" />
 
-    <Button
+    <TextView
         android:id="@+id/btn_active_user"
         style="@style/WhiteRectangularButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/btn_report_issue"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/margin_normal"
+        android:layout_marginTop="@dimen/margin_small"
+        android:drawableEnd="@drawable/config_icon_last"
         android:gravity="start|center_vertical"
+        android:paddingBottom="@dimen/padding_configuration_button"
+        android:paddingTop="@dimen/padding_configuration_button"
         android:text="@string/certificate_user"
         android:textAllCaps="false" />
 
-    <Button
+    <TextView
         android:id="@+id/btn_report_user"
         style="@style/WhiteRectangularButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/btn_active_user"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/margin_normal"
+        android:layout_marginTop="@dimen/margin_small"
+        android:drawableEnd="@drawable/config_icon_last"
         android:gravity="start|center_vertical"
+        android:paddingBottom="@dimen/padding_configuration_button"
+        android:paddingTop="@dimen/padding_configuration_button"
         android:text="@string/report_user"
         android:textAllCaps="false" />
 
@@ -73,6 +82,7 @@
         android:layout_below="@id/btn_close_facebook"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/margin_large"
-        android:text="@string/close_sesion" />
+        android:text="@string/close_sesion"
+        android:textAllCaps="false" />
 
 </RelativeLayout>

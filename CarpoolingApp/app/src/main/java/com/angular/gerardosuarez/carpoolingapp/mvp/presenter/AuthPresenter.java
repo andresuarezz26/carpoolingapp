@@ -15,6 +15,9 @@ import com.angular.gerardosuarez.carpoolingapp.utils.Validator;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import timber.log.Timber;
 
@@ -34,9 +37,26 @@ public class AuthPresenter {
 
     }
 
-    public void createOrUpdateUser(@NonNull final FirebaseUser firebaseUser) {
+    public void createOrUpdateAuxUser(@NonNull final FirebaseUser firebaseUser) {
         final User user = userService.mapFirebaseUserToUser(firebaseUser);
         createAuxUserNode(user);
+    }
+
+    public void createUserIfItDoesntExist(final FirebaseUser firebaseUser) {
+        userService.getUserByUid(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                if (user == null) {
+                    userService.createOrUpdateUser(userService.mapFirebaseUserToUser(firebaseUser));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void createAuxUserNode(@NonNull final User user) {

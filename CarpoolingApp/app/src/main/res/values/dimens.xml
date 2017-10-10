@@ -21,6 +21,9 @@
     <dimen name="small_text_size">14sp</dimen>
     <dimen name="super_small_text_size">11sp</dimen>
     <dimen name="scroll_view_heigth">400dp</dimen>
+    <dimen name="profile_image_side">110dp</dimen>
+    <dimen name="my_profile_button_size">120dp</dimen>
+    <dimen name="padding_configuration_button">8dp</dimen>
 
 
 </resources>
