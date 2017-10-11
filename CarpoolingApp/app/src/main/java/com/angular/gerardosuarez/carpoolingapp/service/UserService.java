@@ -35,4 +35,13 @@ public class UserService extends BaseFirebaseService {
         appUser.email = user.getEmail();
         return appUser;
     }
+
+    public User mapFirebaseUserToUserWithImage(@NonNull FirebaseUser user, @NonNull String imageUrl) {
+        User appUser = new User();
+        appUser.setKey(user.getUid());
+        appUser.name = user.getDisplayName();
+        appUser.photo_uri = imageUrl;
+        appUser.email = user.getEmail();
+        return appUser;
+    }
 }

@@ -1,5 +1,6 @@
 package com.angular.gerardosuarez.carpoolingapp.mvp.presenter;
 
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
@@ -8,6 +9,10 @@ import com.angular.gerardosuarez.carpoolingapp.mvp.base.BaseFragmentPresenter;
 import com.angular.gerardosuarez.carpoolingapp.mvp.model.User;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.RegisterView;
 import com.angular.gerardosuarez.carpoolingapp.service.UserService;
+import com.angular.gerardosuarez.carpoolingapp.utils.StringUtils;
+import com.google.firebase.auth.FacebookAuthProvider;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
@@ -69,9 +74,14 @@ public class RegisterPresenter extends BaseFragmentPresenter {
     public boolean saveUserData() {
         User user = view.createUserFromForm();
         if (validatePhoneNumber(user)) {
-            User userFromFirebase = getCurrentUser();
-            if (userFromFirebase != null) {
-                user.photo_uri = userFromFirebase.photo_uri;
+            User currentUserFromFirebaseDatabase = getCurrentUser();
+            FirebaseUser firebaseUser = getFirebaseUser();
+            if (firebaseUser != null) {
+                user.photo_uri = getPhotoUrl(firebaseUser);
+            } else {
+                if (currentUserFromFirebaseDatabase != null) {
+                    user.photo_uri = currentUserFromFirebaseDatabase.photo_uri;
+                }
             }
             if (getMyUid() != null) {
                 user.setKey(getMyUid());
@@ -84,6 +94,21 @@ public class RegisterPresenter extends BaseFragmentPresenter {
             }
         } else {
             return false;
+        }
+    }
+
+    @Nullable
+    private String getPhotoUrl(final FirebaseUser user) {
+        String facebookUserId = StringUtils.EMPTY_STRING;
+        if (user != null) {
+            for (UserInfo profile : user.getProviderData()) {
+                if (FacebookAuthProvider.PROVIDER_ID.equals(profile.getProviderId())) {
+                    facebookUserId = profile.getUid();
+                }
+            }
+            return "https://graph.facebook.com/" + facebookUserId + "/picture?height=200";
+        } else {
+            return facebookUserId;
         }
     }
 

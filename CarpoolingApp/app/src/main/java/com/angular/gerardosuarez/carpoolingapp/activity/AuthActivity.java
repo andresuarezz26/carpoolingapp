@@ -108,6 +108,7 @@ public class AuthActivity extends BaseActivity implements OnCompleteListener<Aut
                 if (!task.isSuccessful()) {
                     Toast.makeText(getApplicationContext(), R.string.loginfirebase_error, Toast.LENGTH_LONG).show();
                 } else {
+                    String facebookUserId = "";
                     FirebaseUser user = firebaseAuth.getCurrentUser();
                     Log.d(TAG, "user:" + user);
                     if (user != null) {

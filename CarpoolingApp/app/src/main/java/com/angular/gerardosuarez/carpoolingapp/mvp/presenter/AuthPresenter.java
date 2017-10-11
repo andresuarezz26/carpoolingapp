@@ -2,6 +2,7 @@ package com.angular.gerardosuarez.carpoolingapp.mvp.presenter;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.angular.gerardosuarez.carpoolingapp.R;
@@ -11,10 +12,13 @@ import com.angular.gerardosuarez.carpoolingapp.mvp.model.User;
 import com.angular.gerardosuarez.carpoolingapp.mvp.view.AuthView;
 import com.angular.gerardosuarez.carpoolingapp.service.AuthUserService;
 import com.angular.gerardosuarez.carpoolingapp.service.UserService;
+import com.angular.gerardosuarez.carpoolingapp.utils.StringUtils;
 import com.angular.gerardosuarez.carpoolingapp.utils.Validator;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -43,12 +47,13 @@ public class AuthPresenter {
     }
 
     public void createUserIfItDoesntExist(final FirebaseUser firebaseUser) {
+        final String newPhotoUrl = getPhotoUrl(firebaseUser);
         userService.getUserByUid(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 if (user == null) {
-                    userService.createOrUpdateUser(userService.mapFirebaseUserToUser(firebaseUser));
+                    userService.createOrUpdateUser(userService.mapFirebaseUserToUserWithImage(firebaseUser, newPhotoUrl));
                 }
             }
 
@@ -57,6 +62,21 @@ public class AuthPresenter {
 
             }
         });
+    }
+
+    @Nullable
+    private String getPhotoUrl(final FirebaseUser user) {
+        String facebookUserId = StringUtils.EMPTY_STRING;
+        if (user != null) {
+            for (UserInfo profile : user.getProviderData()) {
+                if (FacebookAuthProvider.PROVIDER_ID.equals(profile.getProviderId())) {
+                    facebookUserId = profile.getUid();
+                }
+            }
+            return "https://graph.facebook.com/" + facebookUserId + "/picture?height=200";
+        } else {
+            return facebookUserId;
+        }
     }
 
     private void createAuxUserNode(@NonNull final User user) {

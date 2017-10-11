@@ -96,6 +96,11 @@ public class BaseFragmentPresenter {
         return userService.mapFirebaseUserToUser(firebaseUser);
     }
 
+    @Nullable
+    protected FirebaseUser getFirebaseUser() {
+        return firebaseAuth.getCurrentUser();
+    }
+
     protected void resetMapPreferencesUsedInMapFragment() {
         mapPreference.putDate(null);
         mapPreference.putTime(null);
